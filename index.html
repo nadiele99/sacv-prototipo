@@ -460,6 +460,37 @@
 <!-- ================= PERFIL GERENTES ================= -->
 <div class="app-wrap" id="perfil-gerente">
 
+  <!-- GB — Base do SILS -->
+  <div class="screen" id="scr-GB">
+    <div class="shell">
+      <div class="sidebar">
+        <div class="avatar">J</div>
+        <div class="sidebar-steps-label">Etapas</div>
+        <div class="sidebar-steps"></div>
+      </div>
+      <div class="main">
+        <div class="topnav"><div class="brand"><div class="dot"></div>SEDUC · GELOT</div><div class="help">Ajuda</div></div>
+        <div class="breadcrumb">⌂ Início &nbsp;›&nbsp; <b>Base do SILS</b></div>
+        <div class="content">
+          <div class="card">
+            <div class="title-band">Base do SILS — importação e status <span class="tag">RF001 · RN027</span></div>
+            <div class="body">
+              <div class="note">A importação da base do SILS é uma ação <b>exclusiva sua</b> (Gerência) — os Analistas nunca importam, só acessam os registros já trazidos para dentro de um ciclo de análise (RF001/RN027). A base sobe uma vez e vale para todos os ciclos até que você importe uma nova; ela fica <b>fixa durante todo o ciclo aberto</b> (RN034/RN040).</div>
+              <div class="note warn">Se você importar uma nova base enquanto houver ciclo(s) aberto(s), o sistema cancela automaticamente esse(s) ciclo(s) antes de aceitar o novo arquivo — a troca de base em ciclo aberto (reconciliação linha a linha) foi descartada como regra (RN049/RF036).</div>
+              <div class="field-head"><label>Base vigente</label></div>
+              <div class="muni-row" style="margin-bottom:16px;">
+                <div><div class="name" id="gbBaseLabel">—</div><div class="meta">usada por todos os ciclos até a próxima importação</div></div>
+                <button class="btn btn-navy" onclick="openImportarBase()">📥 Importar nova base do SILS</button>
+              </div>
+              <div class="legend">Depois de importar, use <a href="#" onclick="go('GR');return false;">Regras padrão</a> para definir filtros reutilizáveis com base nesses dados, e <a href="#" onclick="go('G0');return false;">Ciclos de análise</a> para abrir uma nova análise.</div>
+            </div>
+          </div>
+        </div>
+        <div class="footer"><div class="grad"></div><div class="in"><div class="brandline">SEDUC AM · GELOT</div><div>Manaus – AM</div></div><div class="bottom">SEDUC AM | Protótipo de fluxo — 2026</div></div>
+      </div>
+    </div>
+  </div>
+
   <!-- GR — Regras padrão -->
   <div class="screen" id="scr-GR">
     <div class="shell">
@@ -476,6 +507,7 @@
             <div class="title-band">Regras padrão — filtros reutilizáveis entre ciclos <span class="tag">RN044</span></div>
             <div class="body">
               <div class="note">Cadastre aqui os filtros que devem valer, por padrão, para os Analistas — usando os <b>mesmos campos do filtro deles</b> (RF013/RN029). Ao abrir um novo ciclo, você escolhe qual regra padrão aplicar (ou nenhuma); ela é pré-carregada no filtro de cada Analista do ciclo, que ainda pode ajustar os valores — mudanças em relação ao padrão ficam sinalizadas para você, sem bloquear nada (RN045/RN046).</div>
+              <div class="legend" id="grBaseNota"></div>
               <div id="regrasPadraoList"></div>
               <div class="actions-row" style="margin-top:6px;">
                 <button class="btn btn-navy" onclick="openNovaRegraPadrao()">+ Nova regra padrão</button>
@@ -503,8 +535,7 @@
           <div class="card">
             <div class="title-band">Controle de ciclos de análise <span class="tag">RN034 · RF023</span></div>
             <div class="body">
-              <div class="note">A importação da base do SILS é uma ação <b>exclusiva sua</b> (Gerência) — os Analistas nunca importam, só acessam os registros já trazidos para dentro de um ciclo (RF001/RN027). A base sobe uma vez e vale para todos os ciclos até que você importe uma nova; ela fica <b>fixa durante todo o ciclo aberto</b> (RN034/RN040). Nenhum analista consegue reivindicar ou analisar um município sem que você inicie um ciclo de análise. Cada ciclo pertence a um único tipo (Regular ou Indígena) — só pode haver <b>um ciclo aberto por tipo</b> ao mesmo tempo, mas Regular e Indígena podem estar abertos em paralelo, cada um com seu próprio painel, sempre usando a mesma base vigente. Um ciclo fecha automaticamente quando você valida o consolidado dele — a partir daí, é preciso iniciar um novo ciclo para aquele tipo.</div>
-              <div class="note warn">Se você importar uma nova base enquanto houver ciclo(s) aberto(s), o sistema cancela automaticamente esse(s) ciclo(s) antes de aceitar o novo arquivo — a troca de base em ciclo aberto (reconciliação linha a linha) foi descartada como regra (RN049/RF036).</div>
+              <div class="note">Nenhum analista consegue reivindicar ou analisar um município sem que você inicie um ciclo de análise. Cada ciclo pertence a um único tipo (Regular ou Indígena) — só pode haver <b>um ciclo aberto por tipo</b> ao mesmo tempo, mas Regular e Indígena podem estar abertos em paralelo, cada um com seu próprio painel, sempre usando a base vigente (veja <a href="#" onclick="go('GB');return false;">Base do SILS</a>). Um ciclo fecha automaticamente quando você valida o consolidado dele — a partir daí, é preciso iniciar um novo ciclo para aquele tipo.</div>
               <div class="kpi-row" id="cicloStatusRow"></div>
               <div id="cicloAcaoWrap"></div>
               <div class="field-head" style="margin-top:22px;"><label>Histórico de ciclos</label></div>
@@ -649,6 +680,7 @@ const flows = {
     {id:'A5', label:'Conclusão'},
   ],
   gerente: [
+    {id:'GB', label:'Base do SILS'},
     {id:'GR', label:'Regras padrão'},
     {id:'G0', label:'Ciclos de análise'},
     {id:'G1', label:'Painel Gerente'},
@@ -697,6 +729,7 @@ function showScreen(){
   if (el) el.style.display = 'block';
   const label = (flows[perfil].find(s => s.id === current) || {}).label || current;
   document.getElementById('flowLabel').textContent = 'Tela atual: ' + current + ' — ' + label;
+  if (current === 'GB') renderBase();
   if (current === 'GR') renderRegrasPadrao();
   if (current === 'G0') renderCiclos();
   if (current === 'A1') atualizaBloqueioA1();
@@ -1493,6 +1526,8 @@ function novoCamposUIVazio(){
 function renderRegrasPadrao(){
   const list = document.getElementById('regrasPadraoList');
   if (!list) return;
+  const baseNota = document.getElementById('grBaseNota');
+  if (baseNota) baseNota.innerHTML = 'Estas regras usam como referência os valores da base vigente: <b>' + baseAtualLabel + '</b>.';
   if (regrasPadrao.length === 0){
     list.innerHTML = '<div class="legend">Nenhuma regra padrão cadastrada ainda.</div>';
     return;
@@ -1670,6 +1705,11 @@ function tipoLabel(tipo){ return tipo === 'regular' ? 'Tipo Regular' : 'Tipo Ind
 function statusTipo(tipo){ return ciclosHistorico.find(c => c.status === 'aberto' && c.tipo === tipo); }
 function tiposAbertos(){ return ['regular','indigena'].filter(ed => statusTipo(ed)); }
 
+function renderBase(){
+  const label = document.getElementById('gbBaseLabel');
+  if (label) label.textContent = baseAtualLabel;
+}
+
 function renderCiclos(){
   const statusRow = document.getElementById('cicloStatusRow');
   const acaoWrap = document.getElementById('cicloAcaoWrap');
@@ -1684,9 +1724,8 @@ function renderCiclos(){
     `;
   }).join('');
   acaoWrap.innerHTML = `
-    <div class="note">Base vigente, usada por todos os ciclos até que uma nova seja importada: <b>${baseAtualLabel}</b>. Importar é uma ação <b>exclusiva sua</b> (Gerência) — Analistas não têm acesso a essa tela (RF001/RN027). O histórico abaixo mostra qual base cada ciclo usou.</div>
+    <div class="note">Base vigente, usada por este e por todos os ciclos até que uma nova seja importada: <b>${baseAtualLabel}</b>. O histórico abaixo mostra qual base cada ciclo usou. Para importar uma nova base, acesse <a href="#" onclick="go('GB');return false;">Base do SILS</a>.</div>
     <div class="actions-row">
-      <button class="btn btn-outline" onclick="openImportarBase()">📥 Importar nova base do SILS</button>
       <button class="btn btn-navy" onclick="openAbrirCiclo()">Iniciar nova análise</button>
     </div>
   `;
@@ -1790,6 +1829,8 @@ function confirmarImportarBase(){
   const hoje = new Date().toLocaleDateString('pt-BR');
   baseAtualLabel = 'Importação #' + baseVersaoAtual + ' — ' + hoje + ' (nova planilha)';
   renderCiclos();
+  renderBase();
+  renderRegrasPadrao();
   const box = document.getElementById('modalBox');
   box.className = 'modal-aviso green';
   box.innerHTML = `
@@ -1817,6 +1858,8 @@ function confirmarImportarBaseComCancelamento(){
   renderPainelG1();
   renderPainelG4();
   atualizaBloqueioA1();
+  renderBase();
+  renderRegrasPadrao();
   const box = document.getElementById('modalBox');
   box.className = 'modal-aviso green';
   const listaCiclos = abertos.map(c => '#' + c.id).join(', ');
