@@ -322,6 +322,7 @@
 
               <div id="tab-cargas" class="tab-panel">
                 <div class="note">As regras não são fixas no sistema — é você quem marca quais campos usar como critério. <b>Por padrão, toda carga permanece na lista</b>; as regras abaixo servem para <b>excluir</b> o que não deve entrar. Todos os campos da base importada aparecem aqui, mesmo os que você não costuma usar. <b>Não existe um botão separado de salvar:</b> assim que você marca um campo, digita um valor ou seleciona uma opção, a regra já vale — para este município, imediatamente. Para parar de aplicar uma regra, desmarque o campo correspondente.</div>
+                <div class="note warn">O campo <b>Motivo</b> vem preenchido direto da base quando o próprio registro já sinaliza um problema (ex.: dado incompleto). Nesse caso a carga vira <b>pendência para você justificar</b>, independente das regras marcadas abaixo. Só quando o Motivo vem vazio é que as regras de filtro decidem se a carga vale como vaga.</div>
 
                 <div style="margin-bottom:16px;">
                   <div class="field-head"><label>Regras em vigor agora — Manaus, Coordenadoria 3</label><span class="badge green" id="ruleSavedBadge">atualizado automaticamente às 15:12</span></div>
@@ -329,7 +330,7 @@
                 </div>
 
                 <div class="field-head"><label>Todos os campos da base importada (colunas do arquivo SILS)</label><button class="icon-btn">+ Campo personalizado</button></div>
-                <div class="legend">Município não aparece aqui — você já está analisando só o município que reivindicou (indicado acima, ao lado de "Início"). Tipo também não é um filtro: Regular e Indígena são reivindicados, analisados e fechados separadamente, cada um com seu próprio relatório — veja a nota acima. Motivo/Pendência não entra como regra em massa: cada pendência é tratada linha a linha, direto na tabela abaixo.</div>
+                <div class="legend">Município não aparece aqui — você já está analisando só o município que reivindicou (indicado acima, ao lado de "Início"). Tipo também não é um filtro: Regular e Indígena são reivindicados, analisados e fechados separadamente, cada um com seu próprio relatório — veja a nota acima. Quando uma carga já vem com Motivo preenchido pela base, ela vira pendência individual e não depende deste filtro — veja a tabela de cargas mais abaixo.</div>
                 <div class="legend">Cada linha marcada funciona como: <b>excluir carga quando</b> [Campo] [Condição] [um ou mais valores]. O que não for marcado permanece na lista normalmente. O resumo acima ("Regras em vigor agora") mostra as regras com efeito nesta lista de cargas — clique no × de um chip para desvincular rapidamente.</div>
                 <div class="rules-wrap">
                   <table class="rules-table">
@@ -338,22 +339,22 @@
                       <tr id="ruleRowLocalidade"><td><input type="checkbox" id="chkLocalidade" onchange="onFiltroCampoChanged()"></td><td>Localidade</td><td><select id="condLocalidade"><option>Igual a</option><option>Diferente de</option></select></td>
                         <td><div class="chip-input" id="val-localidade"><button class="chip-add" onclick="openValuePicker('localidade')">Selecionar valores…</button></div></td>
                         <td id="origemLocalidade"></td></tr>
-                      <tr id="ruleRowHoras"><td><input type="checkbox" id="chkHoras" onchange="onFiltroCampoChanged()"></td><td>Carga horária</td><td><select id="condHoras"><option>Menor que</option><option>Maior que</option></select></td>
+                      <tr id="ruleRowHoras"><td><input type="checkbox" id="chkHoras" onchange="onFiltroCampoChanged()"></td><td>Horas</td><td><select id="condHoras"><option>Menor que</option><option>Maior que</option></select></td>
                         <td><input id="valHoras" style="max-width:100px;" oninput="onFiltroCampoChanged()"></td>
                         <td id="origemHoras"></td></tr>
-                      <tr id="ruleRowTipoCurso"><td><input type="checkbox" id="chkTipoCurso" onchange="onFiltroCampoChanged()"></td><td>Tipo de curso</td><td><select id="condTipoCurso"><option>Igual a</option><option>Diferente de</option></select></td>
+                      <tr id="ruleRowTipoCurso"><td><input type="checkbox" id="chkTipoCurso" onchange="onFiltroCampoChanged()"></td><td>Curso/Projeto</td><td><select id="condTipoCurso"><option>Igual a</option><option>Diferente de</option></select></td>
                         <td><div class="chip-input" id="val-tipoCurso"><button class="chip-add" onclick="openValuePicker('tipoCurso')">Selecionar valores…</button></div></td>
                         <td id="origemTipoCurso"></td></tr>
-                      <tr id="ruleRowEscola"><td><input type="checkbox" id="chkEscola" onchange="onFiltroCampoChanged()"></td><td>Escola</td><td><select id="condEscola"><option>Igual a</option><option>Diferente de</option></select></td>
+                      <tr id="ruleRowEscola"><td><input type="checkbox" id="chkEscola" onchange="onFiltroCampoChanged()"></td><td>Nome Escola</td><td><select id="condEscola"><option>Igual a</option><option>Diferente de</option></select></td>
                         <td><div class="chip-input" id="val-escola"><button class="chip-add" onclick="openValuePicker('escola')">Selecionar valores…</button></div></td>
                         <td id="origemEscola"></td></tr>
-                      <tr id="ruleRowCoordenadoria"><td><input type="checkbox" id="chkCoordenadoria" onchange="onFiltroCampoChanged()"></td><td>Coordenadoria</td><td><select id="condCoordenadoria"><option>Igual a</option></select></td>
+                      <tr id="ruleRowCoordenadoria"><td><input type="checkbox" id="chkCoordenadoria" onchange="onFiltroCampoChanged()"></td><td>Nome DDZ</td><td><select id="condCoordenadoria"><option>Igual a</option></select></td>
                         <td><div class="chip-input" id="val-coordenadoria"><button class="chip-add" onclick="openValuePicker('coordenadoria')">Selecionar valores…</button></div></td>
                         <td id="origemCoordenadoria"></td></tr>
                       <tr id="ruleRowEndereco"><td><input type="checkbox" id="chkEndereco" onchange="onFiltroCampoChanged()"></td><td>Endereço / Comunidade</td><td><select id="condEndereco"><option>Igual a</option></select></td>
                         <td><div class="chip-input" id="val-endereco"><button class="chip-add" onclick="openValuePicker('endereco')">Selecionar valores…</button></div></td>
                         <td id="origemEndereco"></td></tr>
-                      <tr id="ruleRowDisciplina"><td><input type="checkbox" id="chkDisciplina" onchange="onFiltroCampoChanged()"></td><td>Disciplina</td><td><select id="condDisciplina"><option>Igual a</option><option>Diferente de</option></select></td>
+                      <tr id="ruleRowDisciplina"><td><input type="checkbox" id="chkDisciplina" onchange="onFiltroCampoChanged()"></td><td>Disciplinas</td><td><select id="condDisciplina"><option>Igual a</option><option>Diferente de</option></select></td>
                         <td><div class="chip-input" id="val-disciplina"><button class="chip-add" onclick="openValuePicker('disciplina')">Selecionar valores…</button></div></td>
                         <td id="origemDisciplina"></td></tr>
                       <tr id="ruleRowSequencialEja"><td><input type="checkbox" id="chkSequencialEja" onchange="onFiltroCampoChanged()"></td><td>Sequencial EJA</td><td><select id="condSequencialEja"><option>Igual a</option></select></td>
@@ -363,56 +364,39 @@
                         <td><div class="chip-input" id="val-situacao"><button class="chip-add" onclick="openValuePicker('situacao')">Selecionar valores…</button></div></td>
                         <td id="origemSituacao"></td></tr>
                       <tr id="ruleRowDataImportacao"><td><input type="checkbox" id="chkDataImportacao" onchange="onFiltroCampoChanged()"></td><td>Data de importação</td><td><select id="condDataImportacao"><option>Igual a</option></select></td><td><input type="date" id="val-dataImportacao" oninput="onFiltroCampoChanged()"></td><td id="origemDataImportacao"></td></tr>
-                      <tr id="ruleRowMatricula"><td><input type="checkbox" id="chkMatricula" onchange="onFiltroCampoChanged()"></td><td>Matrícula do professor</td><td><select id="condMatricula"><option>Igual a</option></select></td>
+                      <tr id="ruleRowMatricula"><td><input type="checkbox" id="chkMatricula" onchange="onFiltroCampoChanged()"></td><td>Seq. Matrícula</td><td><select id="condMatricula"><option>Igual a</option></select></td>
                         <td><div class="chip-input" id="val-matricula"><button class="chip-add" onclick="openValuePicker('matricula')">Buscar por nome ou matrícula…</button></div></td>
                         <td id="origemMatricula"></td></tr>
+                      <tr id="ruleRowNomeEnsino"><td><input type="checkbox" id="chkNomeEnsino" onchange="onFiltroCampoChanged()"></td><td>Nome Ensino</td><td><select id="condNomeEnsino"><option>Igual a</option><option>Diferente de</option></select></td>
+                        <td><div class="chip-input" id="val-nomeEnsino"><button class="chip-add" onclick="openValuePicker('nomeEnsino')">Selecionar valores…</button></div></td>
+                        <td id="origemNomeEnsino"></td></tr>
+                      <tr id="ruleRowAreaEixo"><td><input type="checkbox" id="chkAreaEixo" onchange="onFiltroCampoChanged()"></td><td>Área/Eixo</td><td><select id="condAreaEixo"><option>Igual a</option><option>Diferente de</option></select></td>
+                        <td><div class="chip-input" id="val-areaEixo"><button class="chip-add" onclick="openValuePicker('areaEixo')">Selecionar valores…</button></div></td>
+                        <td id="origemAreaEixo"></td></tr>
+                      <tr id="ruleRowMotivo"><td><input type="checkbox" id="chkMotivo" onchange="onFiltroCampoChanged()"></td><td>Motivo</td><td><select id="condMotivo"><option>Igual a</option></select></td>
+                        <td><div class="chip-input" id="val-motivo"><button class="chip-add" onclick="openValuePicker('motivo')">Selecionar valores…</button></div></td>
+                        <td id="origemMotivo"></td></tr>
+                      <tr id="ruleRowPendenciaCarga"><td><input type="checkbox" id="chkPendenciaCarga" onchange="onFiltroCampoChanged()"></td><td>Pendência Carga</td><td><select id="condPendenciaCarga"><option>Igual a</option></select></td>
+                        <td><div class="chip-input" id="val-pendenciaCarga"><button class="chip-add" onclick="openValuePicker('pendenciaCarga')">Selecionar valores…</button></div></td>
+                        <td id="origemPendenciaCarga"></td></tr>
                     </tbody>
                   </table>
                 </div>
                 <div class="legend" style="margin-top:-8px;">Coluna <b>Origem</b>: mostra se o campo é <b>de origem do ciclo</b> — a regra padrão que a Gerência carregou ao abrir o ciclo (RN044/RN045), igual ou já divergente do que ela definiu (RN046, não bloqueia) — ou se é <b>sua regra</b>, marcada por você por conta própria, sem vir do padrão.</div>
 
                 <div class="note">As regras podem mudar a qualquer momento antes de fechar o município — a coluna <b>Observação</b> abaixo sempre mostra a regra que gerou o status atual de cada carga. É sempre a versão mais recente que vale, aplicada assim que você altera algo.</div>
-                <table id="cargasTable">
-                  <thead><tr><th>Escola</th><th>Disciplina</th><th>Horas</th><th>Observação — regra aplicada</th><th>Vale como vaga?</th><th>Situação</th><th>Ação</th></tr></thead>
-                  <tbody>
-                    <tr id="rowCentral">
-                      <td>E.E. Central</td><td>Matemática</td><td>20h</td>
-                      <td id="obsCentral">Confirmada — não se enquadra em nenhuma regra de exclusão vigente</td>
-                      <td><span class="badge green" id="valeCentral">Sim</span></td>
-                      <td><span class="badge green" id="badgeCentral">Vaga confirmada</span></td>
-                      <td id="acaoCentral">—</td>
-                    </tr>
-                    <tr id="rowMayara">
-                      <td>E.E. Mayara</td><td>Português</td><td>12h</td>
-                      <td id="obsMayara">Confirmada — não se enquadra em nenhuma regra de exclusão vigente</td>
-                      <td><span class="badge green" id="valeMayara">Sim</span></td>
-                      <td><span class="badge green" id="badgeMayara">Vaga confirmada</span></td>
-                      <td id="acaoMayara">—</td>
-                    </tr>
-                    <tr id="rowPend">
-                      <td>E.E. Vitória Régia</td><td>Português</td><td>14h</td>
-                      <td id="obsPend">Pendência da base: registro sem informação suficiente — precisa da sua justificativa manual</td>
-                      <td><span class="badge gray" id="valePend">—</span></td>
-                      <td><span class="badge yellow" id="badgePend">Pendência — precisa justificar</span></td>
-                      <td id="acaoPendTd"><button class="icon-btn" id="acaoPendBtn" onclick="openJustify()">Justificar</button> <button class="icon-btn" onclick="openAnexarPend()">📎 Anexar documento</button></td>
-                    </tr>
-                    <tr id="rowSaoJose">
-                      <td>E.E. São José</td><td>Física</td><td>8h</td>
-                      <td id="obsSaoJose">Confirmada — não se enquadra em nenhuma regra de exclusão vigente</td>
-                      <td><span class="badge green" id="valeSaoJose">Sim</span></td>
-                      <td><span class="badge green" id="badgeSaoJose">Vaga confirmada</span></td>
-                      <td id="acaoSaoJose">—</td>
-                    </tr>
-                    <tr id="rowNovaAlianca">
-                      <td>E.E. Nova Aliança</td><td>Curso Técnico</td><td>16h</td>
-                      <td id="obsNovaAlianca">Confirmada — não se enquadra em nenhuma regra de exclusão vigente</td>
-                      <td><span class="badge green" id="valeNovaAlianca">Sim</span></td>
-                      <td><span class="badge green" id="badgeNovaAlianca">Vaga confirmada</span></td>
-                      <td id="acaoNovaAlianca">—</td>
-                    </tr>
-                  </tbody>
-                </table>
-                <div class="legend" style="margin-top:-8px;">Experimente: em "Tipo de curso" ▸ + valor, marque também <b>Técnico</b> e aplique — a linha da E.E. Nova Aliança muda de status e a observação é atualizada na hora.</div>
+                <div class="field-head">
+                  <label>Cargas importadas da base</label>
+                  <button class="icon-btn" onclick="toggleColunasCargas()" id="btnToggleColunas">👁 Mostrar mais colunas</button>
+                </div>
+                <div class="picker-list" id="colunasCargasPicker" style="display:none;border:1px solid var(--gray-300);border-radius:8px;padding:12px 14px;margin-bottom:14px;max-height:220px;overflow-y:auto;"></div>
+                <div style="overflow-x:auto;">
+                  <table id="cargasTable">
+                    <thead><tr id="cargasTableHead"></tr></thead>
+                    <tbody id="cargasTableBody"></tbody>
+                  </table>
+                </div>
+                <div class="legend" style="margin-top:-8px;">Experimente: em "Curso/Projeto" ▸ + valor, marque também <b>Técnico</b> e aplique — a linha da E.E. Nova Aliança muda de status e a observação é atualizada na hora.</div>
                 <div class="actions-row" style="margin-top:20px;">
                   <button class="btn btn-outline" onclick="go('A1')">← Voltar ao painel</button>
                 </div>
@@ -773,6 +757,10 @@ const FIELD_OPTIONS = {
   sequencialEja: ['Sim','Não'],
   situacao: ['Vaga confirmada','Pendência','Excluída'],
   matricula: ['123456 — João Silva','234567 — Maria Souza','345678 — Carlos Lima','456789 — Ana Pereira'],
+  nomeEnsino: ['Ensino Fundamental','Ensino Médio','EJA','Educação Profissional'],
+  areaEixo: ['Exatas','Linguagens','Humanas','Técnico'],
+  motivo: ['Registro incompleto','Pendência cadastral','Divergência de carga horária'],
+  pendenciaCarga: ['Sim','Não'],
 };
 let pickerTarget = null;
 let pickerSelected = new Set();
@@ -846,7 +834,6 @@ function avaliarCargas(){
   const chkTipoCurso = document.getElementById('chkTipoCurso');
   const chkEscola = document.getElementById('chkEscola');
   Object.keys(CARGA_FIELDS).forEach(rowId => {
-    if (rowId === 'rowPend') return; // pendência da base, fluxo separado (RF005/RN030)
     const f = CARGA_FIELDS[rowId];
     const row = document.getElementById(rowId);
     if (!row) return;
@@ -864,17 +851,36 @@ function avaliarCargas(){
       if (acao) acao.textContent = '—';
       return;
     }
-    const motivos = [];
-    if (chkLocalidade && chkLocalidade.checked && localidadeVals.includes(f.localidade)) motivos.push('Localidade = ' + localidadeVals.join(', '));
-    if (chkHoras && chkHoras.checked && limite !== null && f.horas < limite) motivos.push('Carga horária < ' + limite + 'h');
-    if (chkTipoCurso && chkTipoCurso.checked && tipoCursoVals.includes(f.tipoCurso)) motivos.push('Tipo de curso = ' + tipoCursoVals.join(', '));
-    if (chkEscola && chkEscola.checked && escolaVals.includes(f.escola)) motivos.push('Escola = ' + escolaVals.join(', '));
-    if (motivos.length){
+    if (f.motivo && f.motivo.trim() !== ''){
+      const j = justificativas[rowId];
+      const anexoNome = anexos[rowId];
+      row.classList.remove('excluded');
+      delete row.dataset.excludedBy;
+      if (!j){
+        if (badge){ badge.className = 'badge yellow'; badge.textContent = 'Pendência — precisa justificar'; }
+        if (vale){ vale.className = 'badge gray'; vale.textContent = '—'; }
+        if (obs) obs.textContent = 'Pendência da base: ' + f.motivo + ' — precisa da sua justificativa manual' + (anexoNome ? (' · comprovante anexado: ' + anexoNome) : '');
+        if (acao) acao.innerHTML = '<button class="icon-btn" onclick="openJustify(\'' + rowId + '\')">Justificar</button> <button class="icon-btn" onclick="openAnexarPend(\'' + rowId + '\')">📎 ' + (anexoNome ? anexoNome : 'Anexar documento') + '</button>';
+      } else {
+        const valeSim = j.valeVaga === 'sim';
+        if (badge){ badge.className = valeSim ? 'badge green' : 'badge red'; badge.textContent = valeSim ? 'Vaga confirmada (justificada)' : 'Excluída (justificada)'; }
+        if (vale){ vale.className = valeSim ? 'badge green' : 'badge red'; vale.textContent = valeSim ? 'Sim' : 'Não'; }
+        if (obs) obs.textContent = (valeSim ? 'Justificada por você: pendência da base analisada e considerada carga vaga' : 'Justificada por você: pendência da base analisada e NÃO considerada carga vaga') + (anexoNome ? (' · comprovante anexado: ' + anexoNome) : '');
+        if (acao) acao.innerHTML = '<button class="icon-btn" onclick="openJustify(\'' + rowId + '\')">Ver justificativa</button> <button class="icon-btn" onclick="openAnexarPend(\'' + rowId + '\')">📎 ' + (anexoNome ? anexoNome : 'Anexar documento') + '</button> <a href="#" onclick="desfazerJustificativaPend(\'' + rowId + '\');return false;" style="font-size:11.5px;color:var(--muted);margin-left:6px;">↺ desfazer (testar bloqueio)</a>';
+      }
+      return;
+    }
+    const motivosExclusao = [];
+    if (chkLocalidade && chkLocalidade.checked && localidadeVals.includes(f.localidade)) motivosExclusao.push('Localidade = ' + localidadeVals.join(', '));
+    if (chkHoras && chkHoras.checked && limite !== null && f.horas < limite) motivosExclusao.push('Horas < ' + limite + 'h');
+    if (chkTipoCurso && chkTipoCurso.checked && tipoCursoVals.includes(f.tipoCurso)) motivosExclusao.push('Curso/Projeto = ' + tipoCursoVals.join(', '));
+    if (chkEscola && chkEscola.checked && escolaVals.includes(f.escola)) motivosExclusao.push('Nome Escola = ' + escolaVals.join(', '));
+    if (motivosExclusao.length){
       row.classList.add('excluded');
-      row.dataset.excludedBy = motivos[0].startsWith('Escola') ? 'escola' : motivos[0].startsWith('Carga') ? 'cargaHoraria' : motivos[0].startsWith('Tipo') ? 'tipoCurso' : 'localidade';
+      row.dataset.excludedBy = motivosExclusao[0].startsWith('Nome Escola') ? 'escola' : motivosExclusao[0].startsWith('Horas') ? 'cargaHoraria' : motivosExclusao[0].startsWith('Curso') ? 'tipoCurso' : 'localidade';
       if (badge){ badge.className = 'badge red'; badge.textContent = 'Excluída — ' + row.dataset.excludedBy; }
       if (vale){ vale.className = 'badge red'; vale.textContent = 'Não'; }
-      if (obs) obs.textContent = 'Excluída pela regra: ' + motivos.join(' e ') + '.';
+      if (obs) obs.textContent = 'Excluída pela regra: ' + motivosExclusao.join(' e ') + '.';
       if (acao) acao.innerHTML = '<button class="icon-btn" onclick="reincluirGenerico(\'' + rowId + '\')">Reincluir</button>';
     } else {
       row.classList.remove('excluded');
@@ -914,26 +920,112 @@ function renderChips(){
   }
   if (activeRules.has('cargaHoraria')){
     const input = document.getElementById('valHoras');
-    parts.push(chipHtml('cargaHoraria', 'Carga horária < ' + (input ? input.value : '10') + 'h'));
+    parts.push(chipHtml('cargaHoraria', 'Horas < ' + (input ? input.value : '10') + 'h'));
   }
   if (activeRules.has('tipoCurso')){
     const vals = getChipValues('tipoCurso');
-    parts.push(chipHtml('tipoCurso', 'Tipo de curso = ' + (vals.join(', ') || '(sem valor)')));
+    parts.push(chipHtml('tipoCurso', 'Curso/Projeto = ' + (vals.join(', ') || '(sem valor)')));
   }
   if (activeRules.has('escola')){
     const vals = getChipValues('escola');
-    parts.push(chipHtml('escola', 'Escola = ' + (vals.join(', ') || '(sem valor)')));
+    parts.push(chipHtml('escola', 'Nome Escola = ' + (vals.join(', ') || '(sem valor)')));
   }
   box.innerHTML = parts.join('') || '<span class="legend" style="margin:0;">Nenhuma regra em vigor no momento.</span>';
 }
 
 const CARGA_FIELDS = {
-  rowCentral:     { localidade: 'Urbana', horas: 20, tipoCurso: 'Regular', escola: 'E.E. Central' },
-  rowMayara:      { localidade: 'Urbana', horas: 12, tipoCurso: 'Regular', escola: 'E.E. Mayara' },
-  rowPend:        { localidade: 'Urbana', horas: 14, tipoCurso: 'Regular', escola: 'E.E. Vitória Régia' },
-  rowSaoJose:     { localidade: 'Urbana', horas: 8,  tipoCurso: 'Regular', escola: 'E.E. São José' },
-  rowNovaAlianca: { localidade: 'Urbana', horas: 16, tipoCurso: 'Técnico', escola: 'E.E. Nova Aliança' },
+  rowCentral:     { dataRef:'24/07/2026', codDdz:'DDZ-03', nomeDdz:'Manaus — Coordenadoria 3', codEscola:'ESC-1091', localidade:'Urbana', endereco:'Av. Getúlio Vargas, 450', comunidade:'—', turno:'Matutino', nomeEnsino:'Ensino Fundamental', tipoCurso:'Regular', areaEixo:'Exatas', disciplinas:'Matemática', fasesTurmas:'8º ano — Turma B', horas:20, motivo:'', codCargaHoraria:'CH-20', pendenciaCarga:'Não', dtIncCarga:'20/07/2026', dtAltCarga:'24/07/2026', cursoTec:'Não', seqMatricula:'—', numProcesso:'2026/00118', escola:'E.E. Central' },
+  rowMayara:      { dataRef:'24/07/2026', codDdz:'DDZ-03', nomeDdz:'Manaus — Coordenadoria 3', codEscola:'ESC-1187', localidade:'Urbana', endereco:'Rua Sete de Setembro, 210', comunidade:'—', turno:'Vespertino', nomeEnsino:'Ensino Fundamental', tipoCurso:'Regular', areaEixo:'Linguagens', disciplinas:'Português', fasesTurmas:'6º ano — Turma A', horas:12, motivo:'', codCargaHoraria:'CH-12', pendenciaCarga:'Não', dtIncCarga:'20/07/2026', dtAltCarga:'24/07/2026', cursoTec:'Não', seqMatricula:'—', numProcesso:'2026/00119', escola:'E.E. Mayara' },
+  rowPend:        { dataRef:'24/07/2026', codDdz:'DDZ-03', nomeDdz:'Manaus — Coordenadoria 3', codEscola:'ESC-1204', localidade:'Urbana', endereco:'Rua Vitória Régia, 88', comunidade:'—', turno:'Vespertino', nomeEnsino:'Ensino Fundamental', tipoCurso:'Regular', areaEixo:'Linguagens', disciplinas:'Português', fasesTurmas:'7º ano — Turma C', horas:14, motivo:'Registro sem informação suficiente para classificar automaticamente', codCargaHoraria:'CH-14', pendenciaCarga:'Sim', dtIncCarga:'20/07/2026', dtAltCarga:'24/07/2026', cursoTec:'Não', seqMatricula:'—', numProcesso:'2026/00120', escola:'E.E. Vitória Régia' },
+  rowSaoJose:     { dataRef:'24/07/2026', codDdz:'DDZ-03', nomeDdz:'Manaus — Coordenadoria 3', codEscola:'ESC-1052', localidade:'Urbana', endereco:'Rua São José, 33', comunidade:'—', turno:'Matutino', nomeEnsino:'Ensino Médio', tipoCurso:'Regular', areaEixo:'Exatas', disciplinas:'Física', fasesTurmas:'1ª série — Turma A', horas:8, motivo:'', codCargaHoraria:'CH-08', pendenciaCarga:'Não', dtIncCarga:'20/07/2026', dtAltCarga:'24/07/2026', cursoTec:'Não', seqMatricula:'—', numProcesso:'2026/00121', escola:'E.E. São José' },
+  rowNovaAlianca: { dataRef:'24/07/2026', codDdz:'DDZ-03', nomeDdz:'Manaus — Coordenadoria 3', codEscola:'ESC-1316', localidade:'Urbana', endereco:'Rua Nova Aliança, 500', comunidade:'—', turno:'Noturno', nomeEnsino:'Educação Profissional', tipoCurso:'Técnico', areaEixo:'Técnico', disciplinas:'Informática', fasesTurmas:'Módulo II — Turma Única', horas:16, motivo:'', codCargaHoraria:'CH-16', pendenciaCarga:'Não', dtIncCarga:'20/07/2026', dtAltCarga:'24/07/2026', cursoTec:'Sim', seqMatricula:'—', numProcesso:'2026/00122', escola:'E.E. Nova Aliança' },
 };
+
+// Todas as colunas reais da base do SILS (RF001). 'visible:true' são as que ficam à mostra por
+// padrão na tabela de cargas; as demais ficam ocultas atrás do botão 'Mostrar mais colunas',
+// igual a um filtro de ver/não ver — não mudam nenhuma regra, são só apresentação.
+const CARGA_COLUMNS = [
+  { key:'dataRef',         label:'Data Ref.',            field:'dataRef',         visible:false },
+  { key:'codDdz',          label:'Cód. DDZ',             field:'codDdz',          visible:false },
+  { key:'nomeDdz',         label:'Nome DDZ',             field:'nomeDdz',         visible:true  },
+  { key:'codEscola',       label:'Cód. Escola',          field:'codEscola',       visible:false },
+  { key:'nomeEscola',      label:'Nome Escola',          field:'escola',          visible:true  },
+  { key:'localidade',      label:'Localidade',           field:'localidade',      visible:true  },
+  { key:'endereco',        label:'Endereço',             field:'endereco',        visible:false },
+  { key:'comunidade',      label:'Comunidade',           field:'comunidade',      visible:false },
+  { key:'turno',           label:'Turno',                field:'turno',           visible:false },
+  { key:'nomeEnsino',      label:'Nome Ensino',          field:'nomeEnsino',      visible:true  },
+  { key:'cursoProjeto',    label:'Curso/Projeto',        field:'tipoCurso',       visible:false },
+  { key:'areaEixo',        label:'Área/Eixo',            field:'areaEixo',        visible:true  },
+  { key:'disciplinas',     label:'Disciplinas',          field:'disciplinas',     visible:true  },
+  { key:'fasesTurmas',     label:'Fases/Turmas',         field:'fasesTurmas',     visible:false },
+  { key:'horas',           label:'Horas',                field:'horas',           visible:true, suffix:'h' },
+  { key:'motivo',          label:'Motivo',               field:'motivo',          visible:true  },
+  { key:'codCargaHoraria', label:'Cód. Carga Horária',   field:'codCargaHoraria', visible:false },
+  { key:'pendenciaCarga',  label:'Pendência Carga',      field:'pendenciaCarga',  visible:true  },
+  { key:'dtIncCarga',      label:'Dt. Inclusão Carga',   field:'dtIncCarga',      visible:false },
+  { key:'dtAltCarga',      label:'Dt. Alteração Carga',  field:'dtAltCarga',      visible:false },
+  { key:'cursoTec',        label:'Curso Téc.',           field:'cursoTec',        visible:false },
+  { key:'seqMatricula',    label:'Seq. Matrícula',       field:'seqMatricula',    visible:true  },
+  { key:'numProcesso',     label:'Núm. Processo',        field:'numProcesso',     visible:false },
+];
+let colunasExtrasVisiveis = new Set();
+let justificativas = {}; // { [rowId]: { valeVaga: 'sim'|'nao' } } — decisão do Analista por carga com Motivo preenchido
+let anexos = {}; // { [rowId]: nomeDoArquivo }
+
+function colunasVisiveisAtuais(){
+  return CARGA_COLUMNS.filter(c => c.visible || colunasExtrasVisiveis.has(c.key));
+}
+
+function renderCargasTable(){
+  const head = document.getElementById('cargasTableHead');
+  const body = document.getElementById('cargasTableBody');
+  const btn = document.getElementById('btnToggleColunas');
+  if (!head || !body) return;
+  const colunas = colunasVisiveisAtuais();
+  const extrasOcultas = CARGA_COLUMNS.length - colunas.length;
+  if (btn) btn.textContent = '👁 Mostrar mais colunas' + (extrasOcultas > 0 ? ' (' + extrasOcultas + ')' : ' (todas visíveis)');
+  head.innerHTML = colunas.map(c => '<th>' + c.label + '</th>').join('') +
+    '<th>Observação — regra aplicada</th><th>Vale como vaga?</th><th>Situação</th><th>Ação</th>';
+  body.innerHTML = Object.keys(CARGA_FIELDS).map(rowId => {
+    const f = CARGA_FIELDS[rowId];
+    const sufixo = rowId.replace('row', '');
+    const tds = colunas.map(c => {
+      let v = f[c.field];
+      if (v === undefined || v === null || v === '') v = '—';
+      else if (c.suffix) v = v + c.suffix;
+      return '<td>' + v + '</td>';
+    }).join('');
+    return '<tr id="' + rowId + '">' + tds +
+      '<td id="obs' + sufixo + '"></td>' +
+      '<td><span class="badge gray" id="vale' + sufixo + '">—</span></td>' +
+      '<td><span class="badge gray" id="badge' + sufixo + '">—</span></td>' +
+      '<td id="acao' + sufixo + '">—</td></tr>';
+  }).join('');
+}
+
+function toggleColunasCargas(){
+  const picker = document.getElementById('colunasCargasPicker');
+  if (!picker) return;
+  const abrindo = picker.style.display === 'none';
+  if (abrindo){
+    const ocultas = CARGA_COLUMNS.filter(c => !c.visible);
+    picker.innerHTML = ocultas.map(c =>
+      '<label class="picker-opt"><input type="checkbox" ' + (colunasExtrasVisiveis.has(c.key) ? 'checked' : '') + ' onchange="toggleColunaExtra(\'' + c.key + '\', this.checked)"> ' + c.label + '</label>'
+    ).join('');
+    picker.style.display = 'flex';
+    picker.style.flexDirection = 'column';
+    picker.style.gap = '8px';
+  } else {
+    picker.style.display = 'none';
+  }
+}
+
+function toggleColunaExtra(key, checked){
+  if (checked) colunasExtrasVisiveis.add(key); else colunasExtrasVisiveis.delete(key);
+  renderCargasTable();
+  avaliarCargas();
+}
 
 function checklistRow(regraLabel, valorCarga, excluiu){
   const badge = excluiu ? '<span class="badge red">excluiu esta carga</span>' : '<span class="badge gray">não se aplica</span>';
@@ -950,24 +1042,22 @@ function buildRuleChecklistRows(rowId){
   }
   if (activeRules.has('cargaHoraria')){
     const limite = document.getElementById('valHoras') ? Number(document.getElementById('valHoras').value) : 10;
-    rows.push(checklistRow('Carga horária < ' + limite + 'h', 'Carga horária desta carga: ' + f.horas + 'h', f.horas < limite));
+    rows.push(checklistRow('Horas < ' + limite + 'h', 'Horas desta carga: ' + f.horas + 'h', f.horas < limite));
   }
   if (activeRules.has('tipoCurso')){
     const vals = getChipValues('tipoCurso');
-    rows.push(checklistRow('Tipo de curso = ' + (vals.join(', ') || '(sem valor)'), 'Tipo de curso desta carga: ' + f.tipoCurso, vals.includes(f.tipoCurso)));
+    rows.push(checklistRow('Curso/Projeto = ' + (vals.join(', ') || '(sem valor)'), 'Curso/Projeto desta carga: ' + f.tipoCurso, vals.includes(f.tipoCurso)));
   }
   if (activeRules.has('escola')){
     const vals = getChipValues('escola');
-    rows.push(checklistRow('Escola = ' + (vals.join(', ') || '(sem valor)'), 'Escola desta carga: ' + f.escola, vals.includes(f.escola)));
+    rows.push(checklistRow('Nome Escola = ' + (vals.join(', ') || '(sem valor)'), 'Nome Escola desta carga: ' + f.escola, vals.includes(f.escola)));
   }
-  if (rowId === 'rowPend'){
-    const badgeEl = document.getElementById('badgePend');
-    const justificada = badgeEl && badgeEl.textContent.includes('justificada');
-    rows.push(`<tr><td>Pendência da base: registro sem informação suficiente</td><td>—</td><td><span class="badge ${justificada ? 'green' : 'yellow'}">${justificada ? 'justificada por você' : 'aguardando sua justificativa'}</span></td></tr>`);
+  if (f.motivo && f.motivo.trim() !== ''){
+    const justificada = !!justificativas[rowId];
+    rows.push(`<tr><td>Pendência da base: ${f.motivo}</td><td>—</td><td><span class="badge ${justificada ? 'green' : 'yellow'}">${justificada ? 'justificada por você' : 'aguardando sua justificativa'}</span></td></tr>`);
   }
   return rows.join('') || '<tr><td colspan="3">Nenhuma regra ativa avaliada para esta carga.</td></tr>';
 }
-
 // Categoriza cada carga para o filtro do Resumo: cargas que dependeram de uma decisão manual
 // do Analista (pendência da base, justificada ou ainda aguardando) entram em "justificativas" —
 // mesmo que o resultado final seja "confirmada" ou "excluída" — porque são as que realmente
@@ -989,8 +1079,11 @@ function renderResumo(){
   const dest = document.getElementById('resumoBody');
   if (!dest) return;
   const itens = [...rows].map(row => {
-    const tds = row.querySelectorAll('td');
-    return { row, tds, categoria: categoriaResumo(tds[5].textContent) };
+    const rowId = row.id;
+    const sufixo = rowId.replace('row', '');
+    const badgeEl = document.getElementById('badge' + sufixo);
+    const situacaoText = badgeEl ? badgeEl.textContent : '';
+    return { rowId, sufixo, categoria: categoriaResumo(situacaoText) };
   });
   const contagem = { todas: itens.length, justificativas: 0, confirmadas: 0, excluidas: 0 };
   itens.forEach(it => { contagem[it.categoria]++; });
@@ -1004,13 +1097,17 @@ function renderResumo(){
     filtroBar.querySelectorAll('span[data-filtro]').forEach(s => s.classList.toggle('active', s.dataset.filtro === resumoFiltroAtivo));
   }
   const visiveis = itens.filter(it => resumoFiltroAtivo === 'todas' || it.categoria === resumoFiltroAtivo);
-  dest.innerHTML = visiveis.length ? visiveis.map(({row, tds}) => {
-    const escola = tds[0].textContent;
-    const disciplina = tds[1].textContent;
-    const horas = tds[2].textContent;
-    const obs = tds[3].textContent;
-    const vale = tds[4].innerHTML;
-    const situacao = tds[5].innerHTML;
+  dest.innerHTML = visiveis.length ? visiveis.map(({rowId, sufixo}) => {
+    const f = CARGA_FIELDS[rowId];
+    const obsEl = document.getElementById('obs' + sufixo);
+    const valeEl = document.getElementById('vale' + sufixo);
+    const badgeEl = document.getElementById('badge' + sufixo);
+    const escola = f.escola || '—';
+    const disciplina = f.disciplinas || '—';
+    const horas = (f.horas !== undefined ? f.horas + 'h' : '—');
+    const obs = obsEl ? obsEl.textContent : '';
+    const vale = valeEl ? valeEl.outerHTML : '';
+    const situacao = badgeEl ? badgeEl.outerHTML : '';
     return `
       <div class="rule-card">
         <div class="rule-card-head">
@@ -1023,7 +1120,7 @@ function renderResumo(){
         <div class="legend" style="margin:0 0 8px 0;"><b>Observação:</b> ${obs}</div>
         <table class="rules-table">
           <thead><tr><th>Regra avaliada</th><th>Valor desta carga</th><th>Resultado</th></tr></thead>
-          <tbody>${buildRuleChecklistRows(row.id)}</tbody>
+          <tbody>${buildRuleChecklistRows(rowId)}</tbody>
         </table>
       </div>`;
   }).join('') : '<div class="legend">Nenhuma carga nesta categoria no momento.</div>';
@@ -1068,19 +1165,24 @@ function bumpSavedTimestamp(){
   el.textContent = 'atualizado automaticamente às ' + hh + ':' + mm;
 }
 
-function openJustify(){
+let justificarRowIdAtual = null;
+
+function openJustify(rowId){
+  justificarRowIdAtual = rowId;
+  const f = CARGA_FIELDS[rowId];
+  const jAtual = justificativas[rowId];
   const box = document.getElementById('modalBox');
   box.className = 'modal-aviso green';
   box.innerHTML = `
     <div class="icon-circle">✓</div>
-    <h3>Justificar pendência — E.E. Vitória Régia</h3>
-    <p>Este registro veio da base com uma pendência sinalizada, sem informação suficiente para decidir sozinho. Registre o motivo e diga se esta carga deve valer como vaga. Se precisar anexar um comprovante, use a ação "📎 Anexar documento" ao lado desta, na tabela de cargas (RN026/RN030, opcional).</p>
+    <h3>Justificar pendência — ${f.escola}</h3>
+    <p>Este registro veio da base com o motivo "<b>${f.motivo}</b>" — sem informação suficiente para decidir sozinho. Registre o motivo e diga se esta carga deve valer como vaga. Se precisar anexar um comprovante, use a ação "📎 Anexar documento" ao lado desta, na tabela de cargas (RN026/RN030, opcional).</p>
     <div class="field" style="margin-bottom:14px;"><label>Justificativa</label><textarea placeholder="Descreva o motivo da sua decisão..."></textarea></div>
     <div class="field" style="margin-bottom:14px;">
       <label>Esta pendência vale como carga vaga?</label>
       <div style="display:flex;gap:18px;margin-top:6px;">
-        <label style="display:flex;align-items:center;gap:6px;font-size:13.5px;font-weight:400;text-transform:none;color:var(--text);"><input type="radio" name="valeVaga" value="sim" checked> Sim, considerar como vaga</label>
-        <label style="display:flex;align-items:center;gap:6px;font-size:13.5px;font-weight:400;text-transform:none;color:var(--text);"><input type="radio" name="valeVaga" value="nao"> Não considerar</label>
+        <label style="display:flex;align-items:center;gap:6px;font-size:13.5px;font-weight:400;text-transform:none;color:var(--text);"><input type="radio" name="valeVaga" value="sim" ${(!jAtual || jAtual.valeVaga==='sim') ? 'checked' : ''}> Sim, considerar como vaga</label>
+        <label style="display:flex;align-items:center;gap:6px;font-size:13.5px;font-weight:400;text-transform:none;color:var(--text);"><input type="radio" name="valeVaga" value="nao" ${(jAtual && jAtual.valeVaga==='nao') ? 'checked' : ''}> Não considerar</label>
       </div>
     </div>
     <div class="actions">
@@ -1091,72 +1193,25 @@ function openJustify(){
 }
 function confirmJustify(){
   const choice = document.querySelector('input[name="valeVaga"]:checked').value;
-  const row = document.getElementById('rowPend');
-  const badge = document.getElementById('badgePend');
-  const vale = document.getElementById('valePend');
-  if (choice === 'sim'){
-    row.classList.remove('excluded');
-    badge.className = 'badge green';
-    badge.textContent = 'Vaga confirmada (justificada)';
-    vale.className = 'badge green';
-    vale.textContent = 'Sim';
-  } else {
-    row.classList.add('excluded');
-    badge.className = 'badge red';
-    badge.textContent = 'Excluída (justificada)';
-    vale.className = 'badge red';
-    vale.textContent = 'Não';
-  }
-  renderObsPend();
-  renderAcaoPend();
-  atualizaGateFechamento();
+  if (!justificarRowIdAtual) return;
+  justificativas[justificarRowIdAtual] = { valeVaga: choice };
+  avaliarCargas();
   renderResumo();
   closeModal();
 }
 
-// Mantém a Observação da pendência (E.E. Vitória Régia) sincronizada com o status atual da
-// justificativa e, se houver, o comprovante anexado (RN026/RN030) — chamada sempre que um dos
-// dois muda, para nunca ficar com texto desatualizado nas telas de Cargas e Resumo.
-function renderObsPend(){
-  const obs = document.getElementById('obsPend');
-  const badge = document.getElementById('badgePend');
-  if (!obs || !badge) return;
-  let texto;
-  if (badge.textContent === 'Vaga confirmada (justificada)'){
-    texto = 'Justificada por você: pendência da base analisada e considerada carga vaga';
-  } else if (badge.textContent === 'Excluída (justificada)'){
-    texto = 'Justificada por você: pendência da base analisada e NÃO considerada carga vaga';
-  } else {
-    texto = 'Pendência da base: registro sem informação suficiente — precisa da sua justificativa manual';
-  }
-  if (anexoPendNome) texto += ' · comprovante anexado: ' + anexoPendNome;
-  obs.textContent = texto;
-}
-
-// Reconstrói a coluna Ação da pendência a partir do estado atual (justificada ou não, com ou
-// sem anexo) — chamada depois de justificar, desfazer a justificativa, ou anexar um documento.
-function renderAcaoPend(){
-  const acaoTd = document.getElementById('acaoPendTd');
-  const badge = document.getElementById('badgePend');
-  if (!acaoTd || !badge) return;
-  const justificada = badge.textContent.includes('justificada');
-  const anexoLabel = anexoPendNome ? ('📎 ' + anexoPendNome) : '📎 Anexar documento';
-  acaoTd.innerHTML =
-    '<button class="icon-btn" id="acaoPendBtn" onclick="openJustify()">' + (justificada ? 'Ver justificativa' : 'Justificar') + '</button> ' +
-    '<button class="icon-btn" onclick="openAnexarPend()">' + anexoLabel + '</button>' +
-    (justificada ? ' <a href="#" onclick="desfazerJustificativaPend();return false;" style="font-size:11.5px;color:var(--muted);margin-left:6px;">↺ desfazer (testar bloqueio)</a>' : '');
-}
-
-// Anexo de comprovante da pendência (E.E. Vitória Régia) — ação independente de justificar:
-// o Analista pode anexar um documento de apoio a qualquer momento, tenha ou não decidido ainda
-// se a carga vale como vaga (RN026/RN030, opcional).
-let anexoPendNome = null;
-function openAnexarPend(){
+// Anexo de comprovante de uma pendência (qualquer carga com Motivo preenchido) — ação
+// independente de justificar: o Analista pode anexar um documento de apoio a qualquer
+// momento, tenha ou não decidido ainda se a carga vale como vaga (RN026/RN030, opcional).
+let anexarRowIdAtual = null;
+function openAnexarPend(rowId){
+  anexarRowIdAtual = rowId;
+  const f = CARGA_FIELDS[rowId];
   const box = document.getElementById('modalBox');
   box.className = 'modal-aviso green';
   box.innerHTML = `
     <div class="icon-circle">📎</div>
-    <h3>Anexar documento — E.E. Vitória Régia</h3>
+    <h3>Anexar documento — ${f.escola}</h3>
     <p>Anexe um comprovante que apoie sua decisão sobre esta pendência. Isso é opcional e independente de justificar (RN026/RN030).</p>
     <div class="field" style="margin-bottom:14px;">
       <label>Arquivo</label>
@@ -1169,10 +1224,10 @@ function openAnexarPend(){
   document.getElementById('overlay').classList.add('show');
 }
 function confirmAnexarPend(){
+  if (!anexarRowIdAtual) return;
   const input = document.getElementById('anexoPendInput');
-  anexoPendNome = (input && input.files && input.files[0]) ? input.files[0].name : 'comprovante.pdf';
-  renderObsPend();
-  renderAcaoPend();
+  anexos[anexarRowIdAtual] = (input && input.files && input.files[0]) ? input.files[0].name : 'comprovante.pdf';
+  avaliarCargas();
   renderResumo();
   closeModal();
 }
@@ -1187,8 +1242,8 @@ function atualizaGateFechamento(){
   const rows = document.querySelectorAll('#cargasTable tbody tr');
   let pendencias = 0;
   rows.forEach(row => {
-    const situacao = row.querySelectorAll('td')[5];
-    if (situacao && situacao.textContent.includes('Pendência')) pendencias++;
+    const badgeEl = document.getElementById('badge' + row.id.replace('row', ''));
+    if (badgeEl && badgeEl.textContent.includes('Pendência')) pendencias++;
   });
   if (pendencias > 0){
     gate.className = 'note warn';
@@ -1211,18 +1266,9 @@ function atualizaGateFechamento(){
 
 // Ação só de teste do protótipo: simula reabrir uma pendência já justificada, pra provar
 // ao vivo que o gate de fechamento volta a travar quando algo muda depois de reaberto.
-function desfazerJustificativaPend(){
-  const row = document.getElementById('rowPend');
-  const badge = document.getElementById('badgePend');
-  const vale = document.getElementById('valePend');
-  row.classList.remove('excluded');
-  badge.className = 'badge yellow';
-  badge.textContent = 'Pendência — precisa justificar';
-  vale.className = 'badge gray';
-  vale.textContent = '—';
-  renderObsPend();
-  renderAcaoPend();
-  atualizaGateFechamento();
+function desfazerJustificativaPend(rowId){
+  delete justificativas[rowId];
+  avaliarCargas();
   renderResumo();
 }
 function enterAnalise(municipio, tipo){
@@ -1242,6 +1288,9 @@ function enterAnalise(municipio, tipo){
     }
   }
   manualOverrides = new Set();
+  justificativas = {};
+  anexos = {};
+  renderCargasTable();
   aplicarRegraPadraoNoFiltro(regraPadraoIdDoCicloAtual());
   avaliarCargas();
   renderChips();
@@ -1470,16 +1519,20 @@ function sampleMunicipios(tudoFechadoERevisado, total, nFechados, nEmAndamento){
 // e divergências ficam sinalizadas, sem bloquear (RN046).
 const CAMPOS_REGRA = [
   { key:'localidade',     label:'Localidade',             type:'chip',   condicoes:['Igual a','Diferente de'], chk:'chkLocalidade',     cond:'condLocalidade',     val:'val-localidade',     row:'ruleRowLocalidade',     origem:'origemLocalidade' },
-  { key:'cargaHoraria',   label:'Carga horária',          type:'numero', condicoes:['Menor que','Maior que'],  chk:'chkHoras',          cond:'condHoras',          val:'valHoras',           row:'ruleRowHoras',          origem:'origemHoras' },
-  { key:'tipoCurso',      label:'Tipo de curso',          type:'chip',   condicoes:['Igual a','Diferente de'], chk:'chkTipoCurso',      cond:'condTipoCurso',      val:'val-tipoCurso',      row:'ruleRowTipoCurso',      origem:'origemTipoCurso' },
-  { key:'escola',         label:'Escola',                 type:'chip',   condicoes:['Igual a','Diferente de'], chk:'chkEscola',         cond:'condEscola',         val:'val-escola',         row:'ruleRowEscola',         origem:'origemEscola' },
-  { key:'coordenadoria',  label:'Coordenadoria',          type:'chip',   condicoes:['Igual a'],                chk:'chkCoordenadoria',  cond:'condCoordenadoria',  val:'val-coordenadoria',  row:'ruleRowCoordenadoria',  origem:'origemCoordenadoria' },
+  { key:'cargaHoraria',   label:'Horas',                   type:'numero', condicoes:['Menor que','Maior que'],  chk:'chkHoras',          cond:'condHoras',          val:'valHoras',           row:'ruleRowHoras',          origem:'origemHoras' },
+  { key:'tipoCurso',      label:'Curso/Projeto',          type:'chip',   condicoes:['Igual a','Diferente de'], chk:'chkTipoCurso',      cond:'condTipoCurso',      val:'val-tipoCurso',      row:'ruleRowTipoCurso',      origem:'origemTipoCurso' },
+  { key:'escola',         label:'Nome Escola',            type:'chip',   condicoes:['Igual a','Diferente de'], chk:'chkEscola',         cond:'condEscola',         val:'val-escola',         row:'ruleRowEscola',         origem:'origemEscola' },
+  { key:'coordenadoria',  label:'Nome DDZ',                type:'chip',   condicoes:['Igual a'],                chk:'chkCoordenadoria',  cond:'condCoordenadoria',  val:'val-coordenadoria',  row:'ruleRowCoordenadoria',  origem:'origemCoordenadoria' },
   { key:'endereco',       label:'Endereço / Comunidade',  type:'chip',   condicoes:['Igual a'],                chk:'chkEndereco',       cond:'condEndereco',       val:'val-endereco',       row:'ruleRowEndereco',       origem:'origemEndereco' },
-  { key:'disciplina',     label:'Disciplina',             type:'chip',   condicoes:['Igual a','Diferente de'], chk:'chkDisciplina',     cond:'condDisciplina',     val:'val-disciplina',     row:'ruleRowDisciplina',     origem:'origemDisciplina' },
+  { key:'disciplina',     label:'Disciplinas',            type:'chip',   condicoes:['Igual a','Diferente de'], chk:'chkDisciplina',     cond:'condDisciplina',     val:'val-disciplina',     row:'ruleRowDisciplina',     origem:'origemDisciplina' },
   { key:'sequencialEja',  label:'Sequencial EJA',         type:'chip',   condicoes:['Igual a'],                chk:'chkSequencialEja',  cond:'condSequencialEja',  val:'val-sequencialEja',  row:'ruleRowSequencialEja',  origem:'origemSequencialEja' },
   { key:'situacao',       label:'Situação da carga',      type:'chip',   condicoes:['Igual a'],                chk:'chkSituacao',       cond:'condSituacao',       val:'val-situacao',       row:'ruleRowSituacao',       origem:'origemSituacao' },
   { key:'dataImportacao', label:'Data de importação',     type:'data',   condicoes:['Igual a'],                chk:'chkDataImportacao', cond:'condDataImportacao', val:'val-dataImportacao', row:'ruleRowDataImportacao', origem:'origemDataImportacao' },
-  { key:'matricula',      label:'Matrícula do professor', type:'chip',   condicoes:['Igual a'],                chk:'chkMatricula',      cond:'condMatricula',      val:'val-matricula',      row:'ruleRowMatricula',      origem:'origemMatricula' },
+  { key:'matricula',      label:'Seq. Matrícula',         type:'chip',   condicoes:['Igual a'],                chk:'chkMatricula',      cond:'condMatricula',      val:'val-matricula',      row:'ruleRowMatricula',      origem:'origemMatricula' },
+  { key:'nomeEnsino',     label:'Nome Ensino',            type:'chip',   condicoes:['Igual a','Diferente de'], chk:'chkNomeEnsino',     cond:'condNomeEnsino',     val:'val-nomeEnsino',     row:'ruleRowNomeEnsino',     origem:'origemNomeEnsino' },
+  { key:'areaEixo',       label:'Área/Eixo',              type:'chip',   condicoes:['Igual a','Diferente de'], chk:'chkAreaEixo',       cond:'condAreaEixo',       val:'val-areaEixo',       row:'ruleRowAreaEixo',       origem:'origemAreaEixo' },
+  { key:'motivo',         label:'Motivo',                 type:'chip',   condicoes:['Igual a'],                chk:'chkMotivo',         cond:'condMotivo',         val:'val-motivo',         row:'ruleRowMotivo',         origem:'origemMotivo' },
+  { key:'pendenciaCarga', label:'Pendência Carga',        type:'chip',   condicoes:['Igual a'],                chk:'chkPendenciaCarga', cond:'condPendenciaCarga', val:'val-pendenciaCarga', row:'ruleRowPendenciaCarga', origem:'origemPendenciaCarga' },
 ];
 
 let regrasPadrao = [
