@@ -2202,10 +2202,17 @@ function confirmAbrirCiclo(){
   const novoId = Math.max(...ciclosHistorico.map(c => c.id)) + 1;
   const hoje = new Date().toLocaleDateString('pt-BR');
   const totalMunicipios = tipo === 'regular' ? 12 : 5;
+  // O ciclo nasce com alguns municípios já fechados/em andamento (exemplo), não tudo "não
+  // reivindicado" — assim a Gerência já tem o que revisar assim que abre um ciclo novo, sem
+  // depender de simular manualmente um Analista fechando algo primeiro. A mistura espelha o
+  // mesmo tipo de cenário que o Analista já vê no painel dele (A1): parte fechada aguardando
+  // revisão, parte em andamento, o resto disponível para reivindicar.
+  const nFechadosInicial = tipo === 'regular' ? 3 : 2;
+  const nEmAndamentoInicial = tipo === 'regular' ? 2 : 1;
   ciclosHistorico.push({
     id: novoId, tipo, base: baseAtualLabel, abertoPor: 'Jane', abertura: hoje, fechamento: null, status: 'aberto', regraPadraoId,
-    painel: { fechados: 0, total: totalMunicipios, aguardandoRevisao: 0, pendencias: 0 },
-    municipios: sampleMunicipios(false, totalMunicipios, 0, 0)
+    painel: { fechados: nFechadosInicial, total: totalMunicipios, aguardandoRevisao: nFechadosInicial, pendencias: 0 },
+    municipios: sampleMunicipios(false, totalMunicipios, nFechadosInicial, nEmAndamentoInicial)
   });
   cicloSelecionado = novoId;
   closeModal();
