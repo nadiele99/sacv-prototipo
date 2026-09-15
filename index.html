@@ -168,6 +168,19 @@
   .field-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;}
   .field-head label{font-size:12px;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.03em;}
 
+  .filtros-toggle{
+    display:flex;align-items:center;gap:10px;cursor:pointer;user-select:none;
+    background:var(--gray-100);border:1.5px solid var(--gray-300);border-radius:8px;
+    padding:13px 16px;margin-bottom:8px;transition:background .15s,border-color .15s;
+  }
+  .filtros-toggle:hover{background:var(--gray-200);border-color:var(--navy-600);}
+  .filtros-toggle:focus-visible{outline:2px solid var(--navy-600);outline-offset:2px;}
+  .filtros-toggle-chevron{font-size:14px;color:var(--navy-700);transition:transform .15s;display:inline-block;}
+  .filtros-toggle.open .filtros-toggle-chevron{transform:rotate(90deg);}
+  .filtros-toggle-label{font-size:12.5px;color:var(--navy-700);font-weight:700;text-transform:uppercase;letter-spacing:.03em;flex:1;}
+  .filtros-toggle-hint{font-size:12px;color:var(--navy-700);font-weight:700;background:#fff;border:1px solid var(--gray-300);border-radius:5px;padding:3px 9px;}
+
+
   .chip-input{display:flex;flex-wrap:wrap;gap:6px;align-items:center;min-height:30px;}
   .mini-chip{background:var(--navy-700);color:#fff;border-radius:14px;padding:3px 8px;font-size:11.5px;display:inline-flex;align-items:center;gap:6px;}
   .mini-chip button{border:none;background:transparent;color:#cfe0ff;cursor:pointer;font-weight:700;font-size:12px;padding:0;line-height:1;}
@@ -329,7 +342,7 @@
                   <div style="display:flex;gap:8px;flex-wrap:wrap;" id="savedChips"></div>
                 </div>
 
-                <div class="field-head" style="cursor:pointer;" onclick="toggleFiltrosAvancados()"><label>Todos os campos da base importada (colunas do arquivo SILS) <span id="filtrosAvancadosChevron" style="font-size:11px;color:var(--muted);font-weight:400;">▸ mostrar</span></label><button class="icon-btn" onclick="event.stopPropagation()">+ Campo personalizado</button></div>
+                <div class="filtros-toggle" id="filtrosAvancadosToggle" onclick="toggleFiltrosAvancados()" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();toggleFiltrosAvancados();}" role="button" tabindex="0" aria-expanded="false"><span class="filtros-toggle-chevron" id="filtrosAvancadosChevron">▸</span><span class="filtros-toggle-label">Todos os campos da base importada (colunas do arquivo SILS)</span><span class="filtros-toggle-hint" id="filtrosAvancadosHint">mostrar filtros</span></div>
                 <div id="filtrosAvancadosBody" style="display:none;">
                 <div class="legend">Município não aparece aqui — você já está analisando só o município que reivindicou (indicado acima, ao lado de "Início"). Tipo também não é um filtro: Regular e Indígena são reivindicados, analisados e fechados separadamente, cada um com seu próprio relatório — veja a nota acima. Quando uma carga já vem com Motivo preenchido pela base, ela vira pendência individual e não depende deste filtro — veja a tabela de cargas mais abaixo.</div>
                 <div class="legend">Cada linha marcada funciona como: <b>excluir carga quando</b> [Campo] [Condição] [um ou mais valores]. O que não for marcado permanece na lista normalmente. O resumo acima ("Regras em vigor agora") mostra as regras com efeito nesta lista de cargas — clique no × de um chip para desvincular rapidamente.</div>
@@ -1296,11 +1309,13 @@ function atualizaGateFechamento(){
 
 function toggleFiltrosAvancados(){
   const body = document.getElementById('filtrosAvancadosBody');
-  const chevron = document.getElementById('filtrosAvancadosChevron');
+  const toggle = document.getElementById('filtrosAvancadosToggle');
+  const hint = document.getElementById('filtrosAvancadosHint');
   if (!body) return;
   const abrindo = body.style.display === 'none';
   body.style.display = abrindo ? '' : 'none';
-  if (chevron) chevron.textContent = abrindo ? '▾ ocultar' : '▸ mostrar';
+  if (toggle){ toggle.classList.toggle('open', abrindo); toggle.setAttribute('aria-expanded', abrindo ? 'true' : 'false'); }
+  if (hint) hint.textContent = abrindo ? 'ocultar filtros' : 'mostrar filtros';
 }
 
 // Ação só de teste do protótipo: simula reabrir uma pendência já justificada, pra provar
