@@ -687,14 +687,17 @@
                 <div id="g2AlteracoesBox" style="margin-top:14px;"></div>
               </div>
               <div class="legend">Cargas de exemplo — este wireframe reaproveita a mesma lista ilustrativa para qualquer município selecionado, para permitir testar o fluxo de aprovação/reprovação.</div>
-              <table>
-                <thead><tr><th>Escola</th><th>Disciplina</th><th>Situação</th><th>Ação</th></tr></thead>
-                <tbody>
-                  <tr id="g2Row0"><td>E.E. Ribeirinha</td><td>Geografia</td><td id="g2Situacao0"><span class="badge green">Vaga confirmada</span></td><td id="g2Acao0"><button class="icon-btn" onclick="abrirEdicaoGerente(0)">Editar</button> <button class="icon-btn" onclick="verJustificativaG2(0)">Ver justificativa</button></td></tr>
-                  <tr id="g2Row1"><td>E.E. Central Itacoatiara</td><td>História</td><td id="g2Situacao1"><span class="badge yellow">Vaga confirmada — exceção manual</span></td><td id="g2Acao1"><button class="icon-btn" onclick="abrirEdicaoGerente(1)">Editar</button> <button class="icon-btn" onclick="verJustificativaG2(1)">Ver justificativa</button></td></tr>
-                  <tr id="g2Row2" class="excluded"><td>E.E. Comunidade Rio Preto</td><td>Ciências</td><td id="g2Situacao2"><span class="badge red">Excluída</span></td><td id="g2Acao2"><button class="icon-btn" onclick="abrirReincluirGerente(2)">Reincluir</button> <button class="icon-btn" onclick="verJustificativaG2(2)">Ver justificativa</button></td></tr>
-                </tbody>
-              </table>
+              <div class="field-head">
+                <label>Cargas do município</label>
+                <button class="icon-btn" onclick="toggleG2Colunas()" id="btnG2ToggleColunas">👁 Mostrar mais colunas</button>
+              </div>
+              <div class="picker-list" id="g2ColunasPicker" style="display:none;border:1px solid var(--gray-300);border-radius:8px;padding:12px 14px;margin-bottom:14px;max-height:220px;overflow-y:auto;"></div>
+              <div style="overflow-x:auto;">
+                <table id="g2CargasTable">
+                  <thead><tr id="g2CargasTableHead"></tr></thead>
+                  <tbody id="g2CargasTableBody"></tbody>
+                </table>
+              </div>
               <div class="actions-row between">
                 <button class="btn btn-outline" onclick="go('G4')">← Voltar sem decidir</button>
                 <div style="display:flex;gap:10px;">
@@ -2448,6 +2451,7 @@ function renderG2(){
   if (btnAprovar){ btnAprovar.disabled = travado; btnAprovar.style.opacity = travado ? '.5' : ''; btnAprovar.style.cursor = travado ? 'not-allowed' : ''; }
   if (btnReprovar){ btnReprovar.disabled = travado; btnReprovar.style.opacity = travado ? '.5' : ''; btnReprovar.style.cursor = travado ? 'not-allowed' : ''; }
   renderG2Regras();
+  renderG2CargasTable();
   [0,1,2].forEach(renderG2CargaRow);
 }
 
@@ -2488,10 +2492,87 @@ function renderG2Regras(){
     '<div class="note warn"><span class="badge gray" style="margin-right:6px;">Regra ajustada</span> Critério de Localidade foi restringido pelo analista para excluir comunidades fora do perímetro urbano.</div>';
 }
 const G2_CARGAS_EXEMPLO = [
-  { escola:'E.E. Ribeirinha', regras:[], justificativa:'Carga confirmada conforme a regra padrão do ciclo — nenhuma exceção foi necessária.' },
-  { escola:'E.E. Central Itacoatiara', regras:['Horas','Localidade'], justificativa:'A escola comprovou, por ofício, que a carga é regular apesar da carga horária reduzida e da localidade divergente. Reincluída como exceção manual.' },
-  { escola:'E.E. Comunidade Rio Preto', regras:['Localidade','Curso/Projeto'], justificativa:'' }
+  { escola:'E.E. Ribeirinha', regras:[], tipoOriginal:'confirmada', justificativa:'Carga confirmada conforme a regra padrão do ciclo — nenhuma exceção foi necessária.',
+    campos:{ escola:'E.E. Ribeirinha', disciplinas:'Geografia', localidade:'Rural', horas:22, tipoCurso:'Regular', nomeDdz:'Coordenadoria 3', nomeEnsino:'Ensino Médio', areaEixo:'Ciências Humanas' } },
+  { escola:'E.E. Central Itacoatiara', regras:['Horas','Localidade'], tipoOriginal:'excecao-analista', justificativa:'A escola comprovou, por ofício, que a carga é regular apesar da carga horária reduzida e da localidade divergente. Reincluída como exceção manual.',
+    campos:{ escola:'E.E. Central Itacoatiara', disciplinas:'História', localidade:'Urbana', horas:8, tipoCurso:'Regular', nomeDdz:'Coordenadoria 3', nomeEnsino:'Ensino Médio', areaEixo:'Ciências Humanas' } },
+  { escola:'E.E. Comunidade Rio Preto', regras:['Localidade','Curso/Projeto'], tipoOriginal:'excluida', justificativa:'',
+    campos:{ escola:'E.E. Comunidade Rio Preto', disciplinas:'Ciências', localidade:'Rural', horas:14, tipoCurso:'EJA', nomeDdz:'Coordenadoria 3', nomeEnsino:'Ensino Fundamental', areaEixo:'Ciências da Natureza' } }
 ];
+let g2ColunasExtrasVisiveis = new Set();
+const G2_COLUNAS_PADRAO = new Set(['nomeEscola','disciplinas']); // hoje fica como está: Escola + Disciplina — o resto é opcional, igual à Análise de Cargas
+function g2ColunasVisiveisAtuais(){
+  return CARGA_COLUMNS.filter(c => G2_COLUNAS_PADRAO.has(c.key) || g2ColunasExtrasVisiveis.has(c.key));
+}
+function g2FraseRegras(labels){
+  if (!labels || !labels.length) return 'passando por cima da regra em vigor';
+  if (labels.length === 1) return 'passando por cima da regra de ' + labels[0];
+  return 'passando por cima das regras de ' + labels.join(', ');
+}
+function g2ObsOriginal(i){
+  const c = G2_CARGAS_EXEMPLO[i];
+  if (c.tipoOriginal === 'excluida'){
+    return 'Excluída pela regra — critérios enquadrados: ' + (c.regras && c.regras.length ? c.regras.join(', ') : '—') + '.';
+  }
+  if (c.tipoOriginal === 'excecao-analista'){
+    return 'Exceção manual do Analista: mantida como vaga, ' + g2FraseRegras(c.regras) + '. Justificativa: ' + (c.justificativa && c.justificativa.trim() ? c.justificativa : '(nenhuma registrada)') + '.';
+  }
+  return 'Confirmada — não se enquadra em nenhuma regra de exclusão vigente.';
+}
+function g2ObsAtual(i){
+  const d = g2Decisoes[i];
+  if (d && d.tipo === 'reinclusao'){
+    return 'Exceção do Gerente: mantida como vaga, ' + g2FraseRegras(d.regras) + '. Justificativa: ' + (d.texto && d.texto.trim() ? d.texto : '(nenhuma registrada)') + '.';
+  }
+  if (d && d.tipo === 'edicao'){
+    return 'Decisão do Gerente: ' + (d.valeVaga ? 'carga considerada como vaga' : 'carga excluída') + ', se sobrepondo à análise do Analista. Justificativa: ' + (d.texto && d.texto.trim() ? d.texto : '(nenhuma registrada)') + '.';
+  }
+  return g2ObsOriginal(i);
+}
+function renderG2CargasTable(){
+  const head = document.getElementById('g2CargasTableHead');
+  const body = document.getElementById('g2CargasTableBody');
+  const btn = document.getElementById('btnG2ToggleColunas');
+  if (!head || !body) return;
+  const colunas = g2ColunasVisiveisAtuais();
+  const extrasOcultas = CARGA_COLUMNS.length - colunas.length;
+  if (btn) btn.textContent = '👁 Mostrar mais colunas' + (extrasOcultas > 0 ? ' (' + extrasOcultas + ')' : ' (todas visíveis)');
+  head.innerHTML = colunas.map(c => '<th>' + c.label + '</th>').join('') +
+    '<th>Observação — regra aplicada</th><th>Situação</th><th>Ação</th>';
+  body.innerHTML = G2_CARGAS_EXEMPLO.map((c, i) => {
+    const tds = colunas.map(col => {
+      let v = c.campos ? c.campos[col.field] : undefined;
+      if (v === undefined || v === null || v === '') v = '—';
+      else if (col.suffix) v = v + col.suffix;
+      return '<td>' + v + '</td>';
+    }).join('');
+    return '<tr id="g2Row' + i + '"' + (c.tipoOriginal === 'excluida' ? ' class="excluded"' : '') + '>' + tds +
+      '<td id="g2Obs' + i + '"></td>' +
+      '<td id="g2Situacao' + i + '"></td>' +
+      '<td id="g2Acao' + i + '"></td></tr>';
+  }).join('');
+}
+function toggleG2Colunas(){
+  const picker = document.getElementById('g2ColunasPicker');
+  if (!picker) return;
+  const abrindo = picker.style.display === 'none';
+  if (abrindo){
+    const ocultas = CARGA_COLUMNS.filter(c => !G2_COLUNAS_PADRAO.has(c.key));
+    picker.innerHTML = ocultas.map(c =>
+      '<label class="picker-opt"><input type="checkbox" ' + (g2ColunasExtrasVisiveis.has(c.key) ? 'checked' : '') + ' onchange="toggleG2ColunaExtra(\'' + c.key + '\', this.checked)"> ' + c.label + '</label>'
+    ).join('');
+    picker.style.display = 'flex';
+    picker.style.flexDirection = 'column';
+    picker.style.gap = '8px';
+  } else {
+    picker.style.display = 'none';
+  }
+}
+function toggleG2ColunaExtra(key, checked){
+  if (checked) g2ColunasExtrasVisiveis.add(key); else g2ColunasExtrasVisiveis.delete(key);
+  renderG2CargasTable();
+  [0,1,2].forEach(renderG2CargaRow);
+}
 
 // ===== G2: Gerente pode se sobrepor à análise do Analista (editar situação ou reincluir), sempre com justificativa =====
 const G2_SITUACAO_ORIGINAL = {
@@ -2507,8 +2588,10 @@ function renderG2CargaRow(i){
   const d = g2Decisoes[i];
   const situacaoTd = document.getElementById('g2Situacao' + i);
   const acaoTd = document.getElementById('g2Acao' + i);
+  const obsTd = document.getElementById('g2Obs' + i);
   const row = document.getElementById('g2Row' + i);
   if (!situacaoTd || !acaoTd || !row) return;
+  if (obsTd) obsTd.textContent = g2ObsAtual(i);
   if (d && d.tipo === 'reinclusao'){
     row.classList.remove('excluded');
     situacaoTd.innerHTML = '<span class="badge yellow">Vaga confirmada — exceção do Gerente</span>';
