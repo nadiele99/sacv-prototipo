@@ -152,6 +152,7 @@
   .badge.gray{background:var(--gray-100);color:var(--muted);}
   .badge.yellow{background:#FEF3D6;color:#8A6100;}
   .badge.red{background:#FBE4E2;color:var(--red-dark);}
+  .badge.blue{background:#E4ECF7;color:var(--navy-700);}
   .icon-btn{border:1.5px solid var(--gray-300);background:#fff;border-radius:6px;padding:5px 9px;font-size:12px;cursor:pointer;font-weight:700;color:var(--navy-700);}
   .note{background:#F4F7FC;border-left:3px solid var(--navy-600);padding:10px 14px;border-radius:6px;font-size:12.5px;color:#3a4459;margin-bottom:16px;}
   .note.warn{background:#FEF3E1;border-left-color:var(--yellow);color:#7a5b00;}
@@ -689,9 +690,9 @@
               <table>
                 <thead><tr><th>Escola</th><th>Disciplina</th><th>Situação</th><th>Ação</th></tr></thead>
                 <tbody>
-                  <tr><td>E.E. Ribeirinha</td><td>Geografia</td><td><span class="badge green">Vaga confirmada</span></td><td><button class="icon-btn">Editar</button> <button class="icon-btn" onclick="verJustificativaG2(0)">Ver justificativa</button></td></tr>
-                  <tr><td>E.E. Central Itacoatiara</td><td>História</td><td><span class="badge yellow">Vaga confirmada — exceção manual</span></td><td><button class="icon-btn">Editar</button> <button class="icon-btn" onclick="verJustificativaG2(1)">Ver justificativa</button></td></tr>
-                  <tr class="excluded"><td>E.E. Comunidade Rio Preto</td><td>Ciências</td><td><span class="badge red">Excluída</span></td><td><button class="icon-btn">Reincluir</button> <button class="icon-btn" onclick="verJustificativaG2(2)">Ver justificativa</button></td></tr>
+                  <tr id="g2Row0"><td>E.E. Ribeirinha</td><td>Geografia</td><td id="g2Situacao0"><span class="badge green">Vaga confirmada</span></td><td id="g2Acao0"><button class="icon-btn" onclick="abrirEdicaoGerente(0)">Editar</button> <button class="icon-btn" onclick="verJustificativaG2(0)">Ver justificativa</button></td></tr>
+                  <tr id="g2Row1"><td>E.E. Central Itacoatiara</td><td>História</td><td id="g2Situacao1"><span class="badge yellow">Vaga confirmada — exceção manual</span></td><td id="g2Acao1"><button class="icon-btn" onclick="abrirEdicaoGerente(1)">Editar</button> <button class="icon-btn" onclick="verJustificativaG2(1)">Ver justificativa</button></td></tr>
+                  <tr id="g2Row2" class="excluded"><td>E.E. Comunidade Rio Preto</td><td>Ciências</td><td id="g2Situacao2"><span class="badge red">Excluída</span></td><td id="g2Acao2"><button class="icon-btn" onclick="abrirReincluirGerente(2)">Reincluir</button> <button class="icon-btn" onclick="verJustificativaG2(2)">Ver justificativa</button></td></tr>
                 </tbody>
               </table>
               <div class="actions-row between">
@@ -2395,9 +2396,11 @@ function fecharMunicipioAtual(){
 
 // --- G2: Revisão de fechamento (Aprovar/Reprovar por município — RF017/RN007) ---
 let g2MunicipioAtual = null;
+let g2Decisoes = {}; // { [idx]: { tipo:'edicao'|'reinclusao', valeVaga, texto, regra } } — decisao do Gerente que se sobrepoe ao Analista (RN046/RN007)
 
 function abrirRevisaoMunicipio(nome){
   g2MunicipioAtual = nome;
+  g2Decisoes = {};
   go('G2');
 }
 
@@ -2431,6 +2434,7 @@ function renderG2(){
   if (btnAprovar){ btnAprovar.disabled = travado; btnAprovar.style.opacity = travado ? '.5' : ''; btnAprovar.style.cursor = travado ? 'not-allowed' : ''; }
   if (btnReprovar){ btnReprovar.disabled = travado; btnReprovar.style.opacity = travado ? '.5' : ''; btnReprovar.style.cursor = travado ? 'not-allowed' : ''; }
   renderG2Regras();
+  [0,1,2].forEach(renderG2CargaRow);
 }
 
 // ===== G2: regras aplicadas (padrão + alterações do analista) e justificativas por carga — nível informativo (RN007) =====
@@ -2474,6 +2478,106 @@ const G2_CARGAS_EXEMPLO = [
   { escola:'E.E. Central Itacoatiara', regra:'Horas', justificativa:'A escola comprovou, por ofício, que a carga é regular apesar da carga horária reduzida. Reincluída como exceção manual.' },
   { escola:'E.E. Comunidade Rio Preto', regra:'Localidade', justificativa:'' }
 ];
+
+// ===== G2: Gerente pode se sobrepor à análise do Analista (editar situação ou reincluir), sempre com justificativa =====
+const G2_SITUACAO_ORIGINAL = {
+  0: '<span class="badge green">Vaga confirmada</span>',
+  1: '<span class="badge yellow">Vaga confirmada — exceção manual</span>',
+  2: '<span class="badge red">Excluída</span>'
+};
+function g2AcaoOriginalHtml(i){
+  if (i === 2) return '<button class="icon-btn" onclick="abrirReincluirGerente(2)">Reincluir</button> <button class="icon-btn" onclick="verJustificativaG2(2)">Ver justificativa</button>';
+  return '<button class="icon-btn" onclick="abrirEdicaoGerente(' + i + ')">Editar</button> <button class="icon-btn" onclick="verJustificativaG2(' + i + ')">Ver justificativa</button>';
+}
+function renderG2CargaRow(i){
+  const d = g2Decisoes[i];
+  const situacaoTd = document.getElementById('g2Situacao' + i);
+  const acaoTd = document.getElementById('g2Acao' + i);
+  const row = document.getElementById('g2Row' + i);
+  if (!situacaoTd || !acaoTd || !row) return;
+  if (d && d.tipo === 'reinclusao'){
+    row.classList.remove('excluded');
+    situacaoTd.innerHTML = '<span class="badge yellow">Vaga confirmada — exceção do Gerente</span>';
+    acaoTd.innerHTML = '<button class="icon-btn" onclick="abrirReincluirGerente(' + i + ')">Ver decisão do Gerente</button> <a href="#" onclick="desfazerDecisaoGerente(' + i + ');return false;" style="font-size:11.5px;color:var(--muted);margin-left:6px;">↺ desfazer</a> <button class="icon-btn" onclick="verJustificativaG2(' + i + ')">Ver justificativa</button>';
+  } else if (d && d.tipo === 'edicao'){
+    row.classList.toggle('excluded', d.valeVaga === false);
+    situacaoTd.innerHTML = d.valeVaga
+      ? '<span class="badge blue">Vaga confirmada — decisão do Gerente</span>'
+      : '<span class="badge red">Excluída — decisão do Gerente</span>';
+    acaoTd.innerHTML = '<button class="icon-btn" onclick="abrirEdicaoGerente(' + i + ')">Editar</button> <a href="#" onclick="desfazerDecisaoGerente(' + i + ');return false;" style="font-size:11.5px;color:var(--muted);margin-left:6px;">↺ desfazer</a> <button class="icon-btn" onclick="verJustificativaG2(' + i + ')">Ver justificativa</button>';
+  } else {
+    row.classList.toggle('excluded', i === 2);
+    situacaoTd.innerHTML = G2_SITUACAO_ORIGINAL[i];
+    acaoTd.innerHTML = g2AcaoOriginalHtml(i);
+  }
+}
+function desfazerDecisaoGerente(i){
+  delete g2Decisoes[i];
+  renderG2CargaRow(i);
+}
+let g2EdicaoIdxAtual = null;
+function abrirEdicaoGerente(i){
+  g2EdicaoIdxAtual = i;
+  const c = G2_CARGAS_EXEMPLO[i];
+  const dAtual = g2Decisoes[i];
+  const box = document.getElementById('modalBox');
+  box.className = 'modal-aviso';
+  box.innerHTML = `
+    <div class="icon-circle">⚖</div>
+    <h3>Editar decisão — ${c.escola}</h3>
+    <p>Como Gerente, você pode se sobrepor à análise feita pelo Analista para esta carga. A consideração original dele continua disponível em "Ver justificativa". Registre sua própria decisão e a justificativa — a situação vai passar a mostrar que foi confirmada por você.</p>
+    <div class="field" style="margin-bottom:14px;"><label>Justificativa da sua decisão</label><textarea id="g2EdicaoTextoInput" placeholder="Descreva o motivo da sua decisão...">${dAtual && dAtual.tipo==='edicao' && dAtual.texto ? dAtual.texto : ''}</textarea></div>
+    <div class="field" style="margin-bottom:14px;">
+      <label>Esta carga vale como vaga?</label>
+      <div style="display:flex;gap:18px;margin-top:6px;">
+        <label style="display:flex;align-items:center;gap:6px;font-size:13.5px;font-weight:400;text-transform:none;color:var(--text);"><input type="radio" name="valeVagaGerente" value="sim" ${(!dAtual || dAtual.tipo!=='edicao' || dAtual.valeVaga) ? 'checked' : ''}> Sim, considerar como vaga</label>
+        <label style="display:flex;align-items:center;gap:6px;font-size:13.5px;font-weight:400;text-transform:none;color:var(--text);"><input type="radio" name="valeVagaGerente" value="nao" ${(dAtual && dAtual.tipo==='edicao' && !dAtual.valeVaga) ? 'checked' : ''}> Não vale vaga</label>
+      </div>
+    </div>
+    <div class="actions">
+      <button class="btn btn-outline" onclick="closeModal()">Cancelar</button>
+      <button class="btn btn-navy" onclick="confirmarEdicaoGerente()">Confirmar decisão</button>
+    </div>`;
+  document.getElementById('overlay').classList.add('show');
+}
+function confirmarEdicaoGerente(){
+  if (g2EdicaoIdxAtual === null) return;
+  const choiceEl = document.querySelector('input[name="valeVagaGerente"]:checked');
+  const choice = choiceEl ? choiceEl.value : 'sim';
+  const textoEl = document.getElementById('g2EdicaoTextoInput');
+  const texto = textoEl ? textoEl.value.trim() : '';
+  g2Decisoes[g2EdicaoIdxAtual] = { tipo:'edicao', valeVaga: choice === 'sim', texto };
+  renderG2CargaRow(g2EdicaoIdxAtual);
+  closeModal();
+}
+let g2ReincluirIdxAtual = null;
+function abrirReincluirGerente(i){
+  g2ReincluirIdxAtual = i;
+  const c = G2_CARGAS_EXEMPLO[i];
+  const dAtual = g2Decisoes[i];
+  const regraLabel = c.regra || 'em vigor';
+  const box = document.getElementById('modalBox');
+  box.className = 'modal-aviso green';
+  box.innerHTML = `
+    <div class="icon-circle">⚠</div>
+    <h3>Reincluir carga (Gerente) — ${c.escola}</h3>
+    <p>Esta carga foi excluída pela regra de <b>${regraLabel}</b>. Como Gerente, você pode reincluí-la mesmo assim, se sobrepondo à análise do Analista — a regra continua valendo para as demais cargas. Registre a justificativa da sua decisão.</p>
+    <div class="field" style="margin-bottom:14px;"><label>Justificativa da exceção</label><textarea id="g2ReincluirTextoInput" placeholder="Descreva o motivo da exceção...">${dAtual && dAtual.tipo==='reinclusao' && dAtual.texto ? dAtual.texto : ''}</textarea></div>
+    <div class="actions">
+      <button class="btn btn-outline" onclick="closeModal()">Cancelar</button>
+      <button class="btn btn-green" onclick="confirmarReincluirGerente()">Confirmar reinclusão</button>
+    </div>`;
+  document.getElementById('overlay').classList.add('show');
+}
+function confirmarReincluirGerente(){
+  if (g2ReincluirIdxAtual === null) return;
+  const textoEl = document.getElementById('g2ReincluirTextoInput');
+  const texto = textoEl ? textoEl.value.trim() : '';
+  const c = G2_CARGAS_EXEMPLO[g2ReincluirIdxAtual];
+  g2Decisoes[g2ReincluirIdxAtual] = { tipo:'reinclusao', texto, regra: c.regra };
+  renderG2CargaRow(g2ReincluirIdxAtual);
+  closeModal();
+}
 function verJustificativaG2(i){
   const c = G2_CARGAS_EXEMPLO[i];
   if (!c) return;
