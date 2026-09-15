@@ -414,7 +414,7 @@
                   <div style="display:flex;gap:8px;flex-wrap:wrap;" id="savedChips"></div>
                 </div>
 
-                <div class="filtros-toggle" id="filtrosAvancadosToggle" onclick="toggleFiltrosAvancados()" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();toggleFiltrosAvancados();}" role="button" tabindex="0" aria-expanded="false"><span class="filtros-toggle-chevron" id="filtrosAvancadosChevron">▸</span><span class="filtros-toggle-label">Todos os campos da base importada (colunas do arquivo SILS)</span><span class="filtros-toggle-hint" id="filtrosAvancadosHint">mostrar filtros</span></div>
+                <div class="filtros-toggle" id="filtrosAvancadosToggle" onclick="toggleFiltrosAvancados()" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();toggleFiltrosAvancados();}" role="button" tabindex="0" aria-expanded="false"><span class="filtros-toggle-chevron" id="filtrosAvancadosChevron">▸</span><span class="filtros-toggle-label">Regras em vigor</span><span class="filtros-toggle-hint" id="filtrosAvancadosHint">mostrar filtros</span></div>
                 <div id="filtrosAvancadosBody" style="display:none;">
                 <div class="legend">Município não aparece aqui — você já está analisando só o município que reivindicou (indicado acima, ao lado de "Início"). Tipo também não é um filtro: Regular e Indígena são reivindicados, analisados e fechados separadamente, cada um com seu próprio relatório — veja a nota acima. Quando uma carga já vem com Motivo preenchido pela base, ela vira pendência individual e não depende deste filtro — veja a tabela de cargas mais abaixo.</div>
                 <div class="legend">Cada linha marcada funciona como: <b>excluir carga quando</b> [Campo] [Condição] [um ou mais valores]. O que não for marcado permanece na lista normalmente. O resumo acima ("Regras em vigor agora") mostra as regras com efeito nesta lista de cargas — clique no × de um chip para desvincular rapidamente.</div>
@@ -434,7 +434,7 @@
                       <tr id="ruleRowEscola"><td><input type="checkbox" id="chkEscola" onchange="onFiltroCampoChanged()"></td><td>Nome Escola</td><td><select id="condEscola"><option>Igual a</option><option>Diferente de</option></select></td>
                         <td><div class="chip-input" id="val-escola"><button class="chip-add" onclick="openValuePicker('escola')">Selecionar valores…</button></div></td>
                         <td id="origemEscola"></td></tr>
-                      <tr id="ruleRowCoordenadoria"><td><input type="checkbox" id="chkCoordenadoria" onchange="onFiltroCampoChanged()"></td><td>Nome DDZ</td><td><select id="condCoordenadoria"><option>Igual a</option></select></td>
+                      <tr id="ruleRowCoordenadoria"><td><input type="checkbox" id="chkCoordenadoria" onchange="onFiltroCampoChanged()"></td><td>Coordenadoria/Município</td><td><select id="condCoordenadoria"><option>Igual a</option></select></td>
                         <td><div class="chip-input" id="val-coordenadoria"><button class="chip-add" onclick="openValuePicker('coordenadoria')">Selecionar valores…</button></div></td>
                         <td id="origemCoordenadoria"></td></tr>
                       <tr id="ruleRowEndereco"><td><input type="checkbox" id="chkEndereco" onchange="onFiltroCampoChanged()"></td><td>Endereço / Comunidade</td><td><select id="condEndereco"><option>Igual a</option></select></td>
@@ -910,9 +910,46 @@ function removeChip(btn){
 // exceção pontual por carga, a regra continua valendo para as demais (mesmo padrão do
 // protótipo anterior, agora generalizado para qualquer regra/linha).
 let manualOverrides = new Set();
-function reincluirGenerico(rowId){
-  manualOverrides.add(rowId);
+let reinclusoes = {}; // { [rowId]: { texto, regra } } — excecao manual do Analista sobre uma carga excluida por regra
+const REGRA_LABELS_EXCLUSAO = { localidade:'Localidade', cargaHoraria:'Horas', tipoCurso:'Curso/Projeto', escola:'Nome Escola' };
+let reincluirRowIdAtual = null;
+function openReincluir(rowId){
+  reincluirRowIdAtual = rowId;
+  const f = CARGA_FIELDS[rowId];
+  const row = document.getElementById(rowId);
+  const regraKey = row ? row.dataset.excludedBy : null;
+  const regraLabel = regraKey ? (REGRA_LABELS_EXCLUSAO[regraKey] || regraKey) : 'em vigor';
+  const rAtual = reinclusoes[rowId];
+  const box = document.getElementById('modalBox');
+  box.className = 'modal-aviso green';
+  box.innerHTML = `
+    <div class="icon-circle">⚠</div>
+    <h3>Reincluir carga — ${f.escola}</h3>
+    <p>Esta carga foi excluída pela regra de <b>${regraLabel}</b>. Reincluir mantém uma exceção manual só para este registro — a regra continua valendo para as demais cargas. Registre por que esta carga deve valer como vaga mesmo assim.</p>
+    <div class="field" style="margin-bottom:14px;"><label>Justificativa da exceção</label><textarea id="reincluirTextoInput" placeholder="Descreva o motivo da exceção...">${rAtual && rAtual.texto ? rAtual.texto : ''}</textarea></div>
+    <div class="actions">
+      <button class="btn btn-outline" onclick="closeModal()">Cancelar</button>
+      <button class="btn btn-green" onclick="confirmReincluir()">Confirmar reinclusão</button>
+    </div>`;
+  document.getElementById('overlay').classList.add('show');
+}
+function confirmReincluir(){
+  if (!reincluirRowIdAtual) return;
+  const textoEl = document.getElementById('reincluirTextoInput');
+  const texto = textoEl ? textoEl.value.trim() : '';
+  const row = document.getElementById(reincluirRowIdAtual);
+  const regra = row ? row.dataset.excludedBy : null;
+  reinclusoes[reincluirRowIdAtual] = { texto, regra };
+  manualOverrides.add(reincluirRowIdAtual);
   avaliarCargas();
+  renderResumo();
+  closeModal();
+}
+function desfazerReinclusao(rowId){
+  manualOverrides.delete(rowId);
+  delete reinclusoes[rowId];
+  avaliarCargas();
+  renderResumo();
 }
 
 // Reavalia TODAS as cargas do município (exceto a pendência da base, tratada à parte por
@@ -939,12 +976,13 @@ function avaliarCargas(){
     const vale = document.getElementById('vale' + sufixo);
     const acao = document.getElementById('acao' + sufixo);
     if (manualOverrides.has(rowId)){
+      const rec = reinclusoes[rowId];
+      const regraLabel = rec && rec.regra ? (REGRA_LABELS_EXCLUSAO[rec.regra] || rec.regra) : null;
       row.classList.remove('excluded');
-      delete row.dataset.excludedBy;
-      if (badge){ badge.className = 'badge green'; badge.textContent = 'Vaga confirmada'; }
+      if (badge){ badge.className = 'badge yellow'; badge.textContent = 'Vaga confirmada — exceção manual'; }
       if (vale){ vale.className = 'badge green'; vale.textContent = 'Sim'; }
-      if (obs) obs.textContent = 'Reincluída manualmente por você — a regra que a excluía continua ativa, mas esta carga foi mantida como exceção.';
-      if (acao) acao.textContent = '—';
+      if (obs) obs.textContent = 'Exceção manual: mantida como vaga por você, passando por cima da regra' + (regraLabel ? (' de ' + regraLabel) : '') + '. Justificativa: ' + (rec && rec.texto && rec.texto.trim() ? rec.texto : '(nenhuma registrada)') + '.';
+      if (acao) acao.innerHTML = '<button class="icon-btn" onclick="openReincluir(\'' + rowId + '\')">Ver justificativa</button> <a href="#" onclick="desfazerReinclusao(\'' + rowId + '\');return false;" style="font-size:11.5px;color:var(--muted);margin-left:6px;">↺ desfazer</a>';
       return;
     }
     if (f.motivo && f.motivo.trim() !== ''){
@@ -977,7 +1015,7 @@ function avaliarCargas(){
       if (badge){ badge.className = 'badge red'; badge.textContent = 'Excluída — ' + row.dataset.excludedBy; }
       if (vale){ vale.className = 'badge red'; vale.textContent = 'Não'; }
       if (obs) obs.textContent = 'Excluída pela regra: ' + motivosExclusao.join(' e ') + '.';
-      if (acao) acao.innerHTML = '<button class="icon-btn" onclick="reincluirGenerico(\'' + rowId + '\')">Reincluir</button>';
+      if (acao) acao.innerHTML = '<button class="icon-btn" onclick="openReincluir(\'' + rowId + '\')">Reincluir</button>';
     } else {
       row.classList.remove('excluded');
       delete row.dataset.excludedBy;
@@ -1043,7 +1081,7 @@ const CARGA_FIELDS = {
 const CARGA_COLUMNS = [
   { key:'dataRef',         label:'Data Ref.',            field:'dataRef',         visible:false },
   { key:'codDdz',          label:'Cód. DDZ',             field:'codDdz',          visible:false },
-  { key:'nomeDdz',         label:'Nome DDZ',             field:'nomeDdz',         visible:true  },
+  { key:'nomeDdz',         label:'Coordenadoria/Município',             field:'nomeDdz',         visible:true  },
   { key:'codEscola',       label:'Cód. Escola',          field:'codEscola',       visible:false },
   { key:'nomeEscola',      label:'Nome Escola',          field:'escola',          visible:true  },
   { key:'localidade',      label:'Localidade',           field:'localidade',      visible:true  },
@@ -1212,6 +1250,13 @@ function renderResumo(){
       '<div><b>Considerada como vaga:</b> ' + (j.valeVaga === 'sim' ? 'Sim' : 'Não') + (anexoNome ? ' · <b>Comprovante:</b> 📎 ' + anexoNome : '') + '</div>' +
       '</div>'
     ) : '';
+    const rec = reinclusoes[rowId];
+    const reinclusaoHtml = rec ? (
+      '<div class="legend" style="margin:0 0 8px 0;background:#FEF3D6;padding:8px 10px;border-radius:6px;">' +
+      '<div><b>⚠ Exceção manual — regra ignorada:</b> ' + (REGRA_LABELS_EXCLUSAO[rec.regra] || rec.regra || '—') + '</div>' +
+      '<div><b>Justificativa:</b> ' + (rec.texto && rec.texto.trim() ? rec.texto : '<i>(nenhum texto registrado)</i>') + '</div>' +
+      '</div>'
+    ) : '';
     return `
       <div class="rule-card">
         <div class="rule-card-head">
@@ -1223,6 +1268,7 @@ function renderResumo(){
         </div>
         <div class="legend" style="margin:0 0 8px 0;"><b>Observação:</b> ${obs}</div>
         ${justificativaHtml}
+        ${reinclusaoHtml}
         <table class="rules-table">
           <thead><tr><th>Regra avaliada</th><th>Valor desta carga</th><th>Resultado</th></tr></thead>
           <tbody>${buildRuleChecklistRows(rowId)}</tbody>
@@ -1424,6 +1470,7 @@ function enterAnalise(municipio, tipo){
   manualOverrides = new Set();
   justificativas = {};
   anexos = {};
+  reinclusoes = {};
   renderCargasTable();
   aplicarRegraPadraoNoFiltro(regraPadraoIdDoCicloAtual());
   avaliarCargas();
@@ -1656,7 +1703,7 @@ const CAMPOS_REGRA = [
   { key:'cargaHoraria',   label:'Horas',                   type:'numero', condicoes:['Menor que','Maior que'],  chk:'chkHoras',          cond:'condHoras',          val:'valHoras',           row:'ruleRowHoras',          origem:'origemHoras' },
   { key:'tipoCurso',      label:'Curso/Projeto',          type:'chip',   condicoes:['Igual a','Diferente de'], chk:'chkTipoCurso',      cond:'condTipoCurso',      val:'val-tipoCurso',      row:'ruleRowTipoCurso',      origem:'origemTipoCurso' },
   { key:'escola',         label:'Nome Escola',            type:'chip',   condicoes:['Igual a','Diferente de'], chk:'chkEscola',         cond:'condEscola',         val:'val-escola',         row:'ruleRowEscola',         origem:'origemEscola' },
-  { key:'coordenadoria',  label:'Nome DDZ',                type:'chip',   condicoes:['Igual a'],                chk:'chkCoordenadoria',  cond:'condCoordenadoria',  val:'val-coordenadoria',  row:'ruleRowCoordenadoria',  origem:'origemCoordenadoria' },
+  { key:'coordenadoria',  label:'Coordenadoria/Município',                type:'chip',   condicoes:['Igual a'],                chk:'chkCoordenadoria',  cond:'condCoordenadoria',  val:'val-coordenadoria',  row:'ruleRowCoordenadoria',  origem:'origemCoordenadoria' },
   { key:'endereco',       label:'Endereço / Comunidade',  type:'chip',   condicoes:['Igual a'],                chk:'chkEndereco',       cond:'condEndereco',       val:'val-endereco',       row:'ruleRowEndereco',       origem:'origemEndereco' },
   { key:'disciplina',     label:'Disciplinas',            type:'chip',   condicoes:['Igual a','Diferente de'], chk:'chkDisciplina',     cond:'condDisciplina',     val:'val-disciplina',     row:'ruleRowDisciplina',     origem:'origemDisciplina' },
   { key:'sequencialEja',  label:'Sequencial EJA',         type:'chip',   condicoes:['Igual a'],                chk:'chkSequencialEja',  cond:'condSequencialEja',  val:'val-sequencialEja',  row:'ruleRowSequencialEja',  origem:'origemSequencialEja' },
