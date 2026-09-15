@@ -676,13 +676,22 @@
             <div class="body">
               <div class="note" id="g2Nota"></div>
               <div class="note warn" id="g2HistoricoNota" style="display:none;"></div>
+              <div class="filtros-toggle" id="g2RegrasToggle" onclick="toggleG2Regras()" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();toggleG2Regras();}" role="button" tabindex="0" aria-expanded="false">
+                <span class="filtros-toggle-chevron">▸</span>
+                <span class="filtros-toggle-label">Regras aplicadas nesta análise</span>
+                <span class="filtros-toggle-hint" id="g2RegrasHint">mostrar regras e justificativas</span>
+              </div>
+              <div id="g2RegrasBody" style="display:none;margin-bottom:16px;">
+                <div id="g2RegraPadraoBox"></div>
+                <div id="g2AlteracoesBox" style="margin-top:14px;"></div>
+              </div>
               <div class="legend">Cargas de exemplo — este wireframe reaproveita a mesma lista ilustrativa para qualquer município selecionado, para permitir testar o fluxo de aprovação/reprovação.</div>
               <table>
                 <thead><tr><th>Escola</th><th>Disciplina</th><th>Situação</th><th>Ação</th></tr></thead>
                 <tbody>
-                  <tr><td>E.E. Ribeirinha</td><td>Geografia</td><td><span class="badge green">Vaga confirmada</span></td><td><button class="icon-btn">Editar</button></td></tr>
-                  <tr><td>E.E. Central Itacoatiara</td><td>História</td><td><span class="badge green">Vaga confirmada</span></td><td><button class="icon-btn">Editar</button></td></tr>
-                  <tr class="excluded"><td>E.E. Comunidade Rio Preto</td><td>Ciências</td><td><span class="badge red">Excluída</span></td><td><button class="icon-btn">Reincluir</button></td></tr>
+                  <tr><td>E.E. Ribeirinha</td><td>Geografia</td><td><span class="badge green">Vaga confirmada</span></td><td><button class="icon-btn">Editar</button> <button class="icon-btn" onclick="verJustificativaG2(0)">Ver justificativa</button></td></tr>
+                  <tr><td>E.E. Central Itacoatiara</td><td>História</td><td><span class="badge yellow">Vaga confirmada — exceção manual</span></td><td><button class="icon-btn">Editar</button> <button class="icon-btn" onclick="verJustificativaG2(1)">Ver justificativa</button></td></tr>
+                  <tr class="excluded"><td>E.E. Comunidade Rio Preto</td><td>Ciências</td><td><span class="badge red">Excluída</span></td><td><button class="icon-btn">Reincluir</button> <button class="icon-btn" onclick="verJustificativaG2(2)">Ver justificativa</button></td></tr>
                 </tbody>
               </table>
               <div class="actions-row between">
@@ -2421,6 +2430,61 @@ function renderG2(){
   const travado = c.status === 'fechado' || c.status === 'cancelado';
   if (btnAprovar){ btnAprovar.disabled = travado; btnAprovar.style.opacity = travado ? '.5' : ''; btnAprovar.style.cursor = travado ? 'not-allowed' : ''; }
   if (btnReprovar){ btnReprovar.disabled = travado; btnReprovar.style.opacity = travado ? '.5' : ''; btnReprovar.style.cursor = travado ? 'not-allowed' : ''; }
+  renderG2Regras();
+}
+
+// ===== G2: regras aplicadas (padrão + alterações do analista) e justificativas por carga — nível informativo (RN007) =====
+function toggleG2Regras(){
+  const body = document.getElementById('g2RegrasBody');
+  const toggle = document.getElementById('g2RegrasToggle');
+  const hint = document.getElementById('g2RegrasHint');
+  if (!body || !toggle) return;
+  const abrindo = body.style.display === 'none';
+  body.style.display = abrindo ? 'block' : 'none';
+  toggle.classList.toggle('open', abrindo);
+  toggle.setAttribute('aria-expanded', String(abrindo));
+  if (hint) hint.textContent = abrindo ? 'ocultar regras e justificativas' : 'mostrar regras e justificativas';
+}
+function renderG2Regras(){
+  const c = ciclosHistorico.find(c => c.id === cicloSelecionado);
+  const box = document.getElementById('g2RegraPadraoBox');
+  const altBox = document.getElementById('g2AlteracoesBox');
+  if (!box || !altBox || !c) return;
+  const regra = regrasPadrao.find(r => r.id === c.regraPadraoId);
+  if (regra){
+    const chaves = Object.keys(regra.campos);
+    const linhas = chaves.map(key => {
+      const f = CAMPOS_REGRA.find(f => f.key === key);
+      const campo = regra.campos[key];
+      const valorTxt = campo.valores ? campo.valores.join(', ') : campo.valor;
+      return '<tr><td>' + (f ? f.label : key) + '</td><td>' + campo.condicao + '</td><td>' + valorTxt + '</td></tr>';
+    }).join('');
+    box.innerHTML = '<div class="legend" style="margin-bottom:8px;"><b>Regra padrão do ciclo:</b> ' + regra.nome + '</div>' +
+      (linhas ? '<table class="rules-table"><thead><tr><th>Campo</th><th>Condição</th><th>Valor</th></tr></thead><tbody>' + linhas + '</tbody></table>'
+              : '<div class="note">Esta regra padrão não tem critérios ativos configurados.</div>');
+  } else {
+    box.innerHTML = '<div class="note">Nenhuma regra padrão foi definida para este ciclo — o analista usou os filtros que considerou necessários, sem um ponto de partida pré-carregado.</div>';
+  }
+  altBox.innerHTML = '<div class="legend" style="margin-bottom:8px;"><b>Alterações feitas pelo Analista (exemplo):</b></div>' +
+    '<div class="note" style="margin-bottom:6px;"><span class="badge yellow" style="margin-right:6px;">Exceção manual</span> Carga de <b>E.E. Central Itacoatiara</b> reincluída manualmente, passando por cima da regra de Horas.</div>' +
+    '<div class="note warn"><span class="badge gray" style="margin-right:6px;">Regra ajustada</span> Critério de Localidade foi restringido pelo analista para excluir comunidades fora do perímetro urbano.</div>';
+}
+const G2_CARGAS_EXEMPLO = [
+  { escola:'E.E. Ribeirinha', regra:null, justificativa:'Carga confirmada conforme a regra padrão do ciclo — nenhuma exceção foi necessária.' },
+  { escola:'E.E. Central Itacoatiara', regra:'Horas', justificativa:'A escola comprovou, por ofício, que a carga é regular apesar da carga horária reduzida. Reincluída como exceção manual.' },
+  { escola:'E.E. Comunidade Rio Preto', regra:'Localidade', justificativa:'' }
+];
+function verJustificativaG2(i){
+  const c = G2_CARGAS_EXEMPLO[i];
+  if (!c) return;
+  const box = document.getElementById('modalBox');
+  box.className = 'modal-aviso';
+  box.innerHTML = '<div class="icon-circle">📄</div>' +
+    '<h3>Justificativa — ' + c.escola + '</h3>' +
+    (c.regra ? '<p><b>Regra aplicada nesta carga:</b> ' + c.regra + '</p>' : '') +
+    '<p>' + (c.justificativa ? c.justificativa : '<i>O analista não registrou justificativa para esta carga.</i>') + '</p>' +
+    '<div class="actions"><button class="btn btn-navy" onclick="closeModal()">Fechar</button></div>';
+  document.getElementById('overlay').classList.add('show');
 }
 
 function aprovarMunicipioG2(){
