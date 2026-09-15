@@ -329,7 +329,8 @@
                   <div style="display:flex;gap:8px;flex-wrap:wrap;" id="savedChips"></div>
                 </div>
 
-                <div class="field-head"><label>Todos os campos da base importada (colunas do arquivo SILS)</label><button class="icon-btn">+ Campo personalizado</button></div>
+                <div class="field-head" style="cursor:pointer;" onclick="toggleFiltrosAvancados()"><label>Todos os campos da base importada (colunas do arquivo SILS) <span id="filtrosAvancadosChevron" style="font-size:11px;color:var(--muted);font-weight:400;">▸ mostrar</span></label><button class="icon-btn" onclick="event.stopPropagation()">+ Campo personalizado</button></div>
+                <div id="filtrosAvancadosBody" style="display:none;">
                 <div class="legend">Município não aparece aqui — você já está analisando só o município que reivindicou (indicado acima, ao lado de "Início"). Tipo também não é um filtro: Regular e Indígena são reivindicados, analisados e fechados separadamente, cada um com seu próprio relatório — veja a nota acima. Quando uma carga já vem com Motivo preenchido pela base, ela vira pendência individual e não depende deste filtro — veja a tabela de cargas mais abaixo.</div>
                 <div class="legend">Cada linha marcada funciona como: <b>excluir carga quando</b> [Campo] [Condição] [um ou mais valores]. O que não for marcado permanece na lista normalmente. O resumo acima ("Regras em vigor agora") mostra as regras com efeito nesta lista de cargas — clique no × de um chip para desvincular rapidamente.</div>
                 <div class="rules-wrap">
@@ -384,7 +385,7 @@
                 </div>
                 <div class="legend" style="margin-top:-8px;">Coluna <b>Origem</b>: mostra se o campo é <b>de origem do ciclo</b> — a regra padrão que a Gerência carregou ao abrir o ciclo (RN044/RN045), igual ou já divergente do que ela definiu (RN046, não bloqueia) — ou se é <b>sua regra</b>, marcada por você por conta própria, sem vir do padrão.</div>
 
-                <div class="note">As regras podem mudar a qualquer momento antes de fechar o município — a coluna <b>Observação</b> abaixo sempre mostra a regra que gerou o status atual de cada carga. É sempre a versão mais recente que vale, aplicada assim que você altera algo.</div>
+                </div><div class="note">As regras podem mudar a qualquer momento antes de fechar o município — a coluna <b>Observação</b> abaixo sempre mostra a regra que gerou o status atual de cada carga. É sempre a versão mais recente que vale, aplicada assim que você altera algo.</div>
                 <div class="field-head">
                   <label>Cargas importadas da base</label>
                   <button class="icon-btn" onclick="toggleColunasCargas()" id="btnToggleColunas">👁 Mostrar mais colunas</button>
@@ -397,8 +398,10 @@
                   </table>
                 </div>
                 <div class="legend" style="margin-top:-8px;">Experimente: em "Curso/Projeto" ▸ + valor, marque também <b>Técnico</b> e aplique — a linha da E.E. Nova Aliança muda de status e a observação é atualizada na hora.</div>
-                <div class="actions-row" style="margin-top:20px;">
+                <div class="note warn" id="cargasPendNote" style="margin-top:16px;"></div>
+                <div class="actions-row between" style="margin-top:12px;">
                   <button class="btn btn-outline" onclick="go('A1')">← Voltar ao painel</button>
+                  <button class="btn btn-outline" id="btnIrResumo" disabled style="opacity:.5;cursor:not-allowed;" onclick="switchTab('resumo')">Ir para o Resumo →</button>
                 </div>
               </div>
 
@@ -406,11 +409,11 @@
                 <div class="note warn">Esta é a revisão final antes de fechar o município. Para cada carga, veja <b>todas as regras avaliadas</b> — não só a observação resumida — pra confirmar por que ela ficou com aquela situação.</div>
                 <div class="legend">O formato resumido (por escola/observação/situação, sem o detalhamento de regras) volta a aparecer, de forma mais enxuta, na área da Gerência — isso é para uma etapa futura, não faz parte deste protótipo.</div>
                 <div class="steps-tab" id="resumoFiltro">
-                  <span class="active" data-filtro="todas" onclick="filtrarResumo('todas')">Todas<span id="cntTodas"></span></span><span data-filtro="justificativas" onclick="filtrarResumo('justificativas')">Precisam justificativa<span id="cntJustificativas"></span></span><span data-filtro="confirmadas" onclick="filtrarResumo('confirmadas')">Confirmadas<span id="cntConfirmadas"></span></span><span data-filtro="excluidas" onclick="filtrarResumo('excluidas')">Excluídas<span id="cntExcluidas"></span></span>
+                  <span class="active" data-filtro="todas" onclick="filtrarResumo('todas')">Todas<span id="cntTodas"></span></span><span data-filtro="justificativas" onclick="filtrarResumo('justificativas')">Aguardando justificativa<span id="cntJustificativas"></span></span><span data-filtro="confirmadas" onclick="filtrarResumo('confirmadas')">Confirmadas<span id="cntConfirmadas"></span></span><span data-filtro="excluidas" onclick="filtrarResumo('excluidas')">Excluídas<span id="cntExcluidas"></span></span>
                 </div>
-                <div class="legend" style="margin-top:-10px;">A maior parte das confirmações vem da regra padrão da Gerente e não costuma precisar da sua atenção — use <b>"Precisam justificativa"</b> para focar direto nas cargas que dependeram de uma decisão sua.</div>
+                <div class="legend" style="margin-top:-10px;">A maior parte das confirmações vem da regra padrão da Gerente e não costuma precisar da sua atenção — use <b>"Aguardando justificativa"</b> para focar direto nas cargas que dependeram de uma decisão sua.</div>
                 <div id="resumoBody"></div>
-                <div class="note warn" id="closeGateNote" style="margin-top:16px;">Você só poderá fechar a análise quando <b>todas as regras estiverem aplicadas</b> e <b>todas as pendências da base estiverem justificadas</b>. Faltam: <b>1 pendência</b> (E.E. Vitória Régia).</div>
+                <div class="note warn" id="closeGateNote" style="margin-top:16px;"></div>
                 <div class="actions-row between">
                   <button class="btn btn-outline" onclick="switchTab('cargas')">← Voltar às cargas</button>
                   <button class="btn btn-outline" id="btnFechar" disabled style="opacity:.5;cursor:not-allowed;" onclick="openModal('fechar')">Fechar análise do município</button>
@@ -1064,7 +1067,7 @@ function buildRuleChecklistRows(rowId){
 // merecem revisão; a maioria das confirmações via regra padrão da Gerente fica em "confirmadas"
 // e não precisa de atenção extra.
 function categoriaResumo(situacaoText){
-  if (situacaoText.includes('Pendência') || situacaoText.includes('justificad')) return 'justificativas';
+  if (situacaoText.includes('Pendência')) return 'justificativas';
   if (situacaoText.includes('Exclu')) return 'excluidas';
   return 'confirmadas';
 }
@@ -1108,6 +1111,14 @@ function renderResumo(){
     const obs = obsEl ? obsEl.textContent : '';
     const vale = valeEl ? valeEl.outerHTML : '';
     const situacao = badgeEl ? badgeEl.outerHTML : '';
+    const j = justificativas[rowId];
+    const anexoNome = anexos[rowId];
+    const justificativaHtml = j ? (
+      '<div class="legend" style="margin:0 0 8px 0;background:var(--gray-100);padding:8px 10px;border-radius:6px;">' +
+      '<div><b>Sua justificativa:</b> ' + (j.texto && j.texto.trim() ? j.texto : '<i>(nenhum texto registrado — abra "Ver justificativa" para completar)</i>') + '</div>' +
+      '<div><b>Considerada como vaga:</b> ' + (j.valeVaga === 'sim' ? 'Sim' : 'Não') + (anexoNome ? ' · <b>Comprovante:</b> 📎 ' + anexoNome : '') + '</div>' +
+      '</div>'
+    ) : '';
     return `
       <div class="rule-card">
         <div class="rule-card-head">
@@ -1118,6 +1129,7 @@ function renderResumo(){
           </div>
         </div>
         <div class="legend" style="margin:0 0 8px 0;"><b>Observação:</b> ${obs}</div>
+        ${justificativaHtml}
         <table class="rules-table">
           <thead><tr><th>Regra avaliada</th><th>Valor desta carga</th><th>Resultado</th></tr></thead>
           <tbody>${buildRuleChecklistRows(rowId)}</tbody>
@@ -1177,7 +1189,7 @@ function openJustify(rowId){
     <div class="icon-circle">✓</div>
     <h3>Justificar pendência — ${f.escola}</h3>
     <p>Este registro veio da base com o motivo "<b>${f.motivo}</b>" — sem informação suficiente para decidir sozinho. Registre o motivo e diga se esta carga deve valer como vaga. Se precisar anexar um comprovante, use a ação "📎 Anexar documento" ao lado desta, na tabela de cargas (RN026/RN030, opcional).</p>
-    <div class="field" style="margin-bottom:14px;"><label>Justificativa</label><textarea placeholder="Descreva o motivo da sua decisão..."></textarea></div>
+    <div class="field" style="margin-bottom:14px;"><label>Justificativa</label><textarea id="justificativaTextoInput" placeholder="Descreva o motivo da sua decisão...">${jAtual && jAtual.texto ? jAtual.texto : ''}</textarea></div>
     <div class="field" style="margin-bottom:14px;">
       <label>Esta pendência vale como carga vaga?</label>
       <div style="display:flex;gap:18px;margin-top:6px;">
@@ -1193,8 +1205,10 @@ function openJustify(rowId){
 }
 function confirmJustify(){
   const choice = document.querySelector('input[name="valeVaga"]:checked').value;
+  const textoEl = document.getElementById('justificativaTextoInput');
+  const texto = textoEl ? textoEl.value.trim() : '';
   if (!justificarRowIdAtual) return;
-  justificativas[justificarRowIdAtual] = { valeVaga: choice };
+  justificativas[justificarRowIdAtual] = { valeVaga: choice, texto };
   avaliarCargas();
   renderResumo();
   closeModal();
@@ -1236,32 +1250,57 @@ function confirmAnexarPend(){
 // roda de novo toda vez que a aba Resumo é aberta ou que uma pendência é (des)justificada,
 // então também revalida corretamente depois de reabrir um município já fechado (RF031/RN031).
 function atualizaGateFechamento(){
-  const gate = document.getElementById('closeGateNote');
-  const btn = document.getElementById('btnFechar');
-  if (!gate || !btn) return;
   const rows = document.querySelectorAll('#cargasTable tbody tr');
   let pendencias = 0;
+  const escolasPendentes = [];
   rows.forEach(row => {
     const badgeEl = document.getElementById('badge' + row.id.replace('row', ''));
-    if (badgeEl && badgeEl.textContent.includes('Pendência')) pendencias++;
+    if (badgeEl && badgeEl.textContent.includes('Pendência')){
+      pendencias++;
+      const f = CARGA_FIELDS[row.id];
+      if (f && f.escola) escolasPendentes.push(f.escola);
+    }
   });
-  if (pendencias > 0){
-    gate.className = 'note warn';
-    gate.innerHTML = 'Você só poderá fechar a análise quando <b>todas as regras estiverem aplicadas</b> e <b>todas as pendências da base estiverem justificadas</b>. Faltam: <b>' + pendencias + ' pendência' + (pendencias > 1 ? 's' : '') + '</b> (E.E. Vitória Régia).';
-    btn.disabled = true;
-    btn.classList.remove('btn-navy');
-    btn.classList.add('btn-outline');
-    btn.style.opacity = '.5';
-    btn.style.cursor = 'not-allowed';
-  } else {
-    gate.className = 'note';
-    gate.innerHTML = 'Todas as regras aplicadas e todas as pendências justificadas — você já pode fechar a análise deste município.';
-    btn.disabled = false;
-    btn.classList.remove('btn-outline');
-    btn.classList.add('btn-navy');
-    btn.style.opacity = '';
-    btn.style.cursor = '';
+  const listaEscolas = escolasPendentes.length ? ' (' + escolasPendentes.slice(0,3).join(', ') + (escolasPendentes.length > 3 ? '…' : '') + ')' : '';
+
+  const cargasNote = document.getElementById('cargasPendNote');
+  const btnIrResumo = document.getElementById('btnIrResumo');
+  if (cargasNote){
+    cargasNote.className = pendencias > 0 ? 'note warn' : 'note';
+    cargasNote.innerHTML = pendencias > 0
+      ? 'Faltam <b>' + pendencias + ' carga' + (pendencias > 1 ? 's' : '') + ' a justificar</b>' + listaEscolas + ' antes de seguir para o Resumo.'
+      : 'Todas as pendências foram justificadas — você já pode seguir para o Resumo e fechar a análise deste município.';
   }
+  if (btnIrResumo){
+    btnIrResumo.disabled = pendencias > 0;
+    btnIrResumo.classList.toggle('btn-outline', pendencias > 0);
+    btnIrResumo.classList.toggle('btn-navy', pendencias === 0);
+    btnIrResumo.style.opacity = pendencias > 0 ? '.5' : '';
+    btnIrResumo.style.cursor = pendencias > 0 ? 'not-allowed' : '';
+  }
+
+  const gate = document.getElementById('closeGateNote');
+  const btn = document.getElementById('btnFechar');
+  if (gate && btn){
+    gate.className = pendencias > 0 ? 'note warn' : 'note';
+    gate.innerHTML = pendencias > 0
+      ? 'Você só poderá fechar a análise quando <b>todas as regras estiverem aplicadas</b> e <b>todas as pendências da base estiverem justificadas</b>. Faltam: <b>' + pendencias + ' pendência' + (pendencias > 1 ? 's' : '') + '</b>' + listaEscolas + '.'
+      : 'Todas as regras aplicadas e todas as pendências justificadas — você já pode fechar a análise deste município.';
+    btn.disabled = pendencias > 0;
+    btn.classList.toggle('btn-outline', pendencias > 0);
+    btn.classList.toggle('btn-navy', pendencias === 0);
+    btn.style.opacity = pendencias > 0 ? '.5' : '';
+    btn.style.cursor = pendencias > 0 ? 'not-allowed' : '';
+  }
+}
+
+function toggleFiltrosAvancados(){
+  const body = document.getElementById('filtrosAvancadosBody');
+  const chevron = document.getElementById('filtrosAvancadosChevron');
+  if (!body) return;
+  const abrindo = body.style.display === 'none';
+  body.style.display = abrindo ? '' : 'none';
+  if (chevron) chevron.textContent = abrindo ? '▾ ocultar' : '▸ mostrar';
 }
 
 // Ação só de teste do protótipo: simula reabrir uma pendência já justificada, pra provar
