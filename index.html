@@ -922,20 +922,33 @@ function removeChip(btn){
 let manualOverrides = new Set();
 let reinclusoes = {}; // { [rowId]: { texto, regra } } — excecao manual do Analista sobre uma carga excluida por regra
 const REGRA_LABELS_EXCLUSAO = { localidade:'Localidade', cargaHoraria:'Horas', tipoCurso:'Curso/Projeto', escola:'Nome Escola' };
+// Uma carga pode se enquadrar em mais de um criterio de exclusao ao mesmo tempo (ex.: Horas E Localidade) — por isso
+// as regras que a afetam sao sempre tratadas como uma LISTA, nunca uma unica regra fixa.
+function regraLabelsFromKeys(keys){
+  return (keys || []).filter(Boolean).map(k => REGRA_LABELS_EXCLUSAO[k] || k);
+}
+function fraseRegrasIgnoradas(keys){
+  const labels = regraLabelsFromKeys(keys);
+  if (!labels.length) return 'passando por cima da regra em vigor';
+  if (labels.length === 1) return 'passando por cima da regra de ' + labels[0];
+  return 'passando por cima das regras de ' + labels.join(', ');
+}
 let reincluirRowIdAtual = null;
 function openReincluir(rowId){
   reincluirRowIdAtual = rowId;
   const f = CARGA_FIELDS[rowId];
   const row = document.getElementById(rowId);
-  const regraKey = row ? row.dataset.excludedBy : null;
-  const regraLabel = regraKey ? (REGRA_LABELS_EXCLUSAO[regraKey] || regraKey) : 'em vigor';
+  const regraKeys = row && row.dataset.excludedBy ? row.dataset.excludedBy.split(',').filter(Boolean) : [];
+  const regraLabels = regraLabelsFromKeys(regraKeys);
+  const plural = regraLabels.length > 1;
+  const regraLabelTxt = regraLabels.length ? regraLabels.join(', ') : 'em vigor';
   const rAtual = reinclusoes[rowId];
   const box = document.getElementById('modalBox');
   box.className = 'modal-aviso green';
   box.innerHTML = `
     <div class="icon-circle">⚠</div>
     <h3>Reincluir carga — ${f.escola}</h3>
-    <p>Esta carga foi excluída pela regra de <b>${regraLabel}</b>. Reincluir mantém uma exceção manual só para este registro — a regra continua valendo para as demais cargas. Registre por que esta carga deve valer como vaga mesmo assim.</p>
+    <p>Esta carga foi excluída pela${plural ? 's regras de' : ' regra de'} <b>${regraLabelTxt}</b>. Reincluir mantém uma exceção manual só para este registro — a${plural ? 's regras continuam' : ' regra continua'} valendo para as demais cargas. Registre por que esta carga deve valer como vaga mesmo assim.</p>
     <div class="field" style="margin-bottom:14px;"><label>Justificativa da exceção</label><textarea id="reincluirTextoInput" placeholder="Descreva o motivo da exceção...">${rAtual && rAtual.texto ? rAtual.texto : ''}</textarea></div>
     <div class="actions">
       <button class="btn btn-outline" onclick="closeModal()">Cancelar</button>
@@ -948,8 +961,8 @@ function confirmReincluir(){
   const textoEl = document.getElementById('reincluirTextoInput');
   const texto = textoEl ? textoEl.value.trim() : '';
   const row = document.getElementById(reincluirRowIdAtual);
-  const regra = row ? row.dataset.excludedBy : null;
-  reinclusoes[reincluirRowIdAtual] = { texto, regra };
+  const regras = row && row.dataset.excludedBy ? row.dataset.excludedBy.split(',').filter(Boolean) : [];
+  reinclusoes[reincluirRowIdAtual] = { texto, regras };
   manualOverrides.add(reincluirRowIdAtual);
   avaliarCargas();
   renderResumo();
@@ -987,11 +1000,10 @@ function avaliarCargas(){
     const acao = document.getElementById('acao' + sufixo);
     if (manualOverrides.has(rowId)){
       const rec = reinclusoes[rowId];
-      const regraLabel = rec && rec.regra ? (REGRA_LABELS_EXCLUSAO[rec.regra] || rec.regra) : null;
       row.classList.remove('excluded');
       if (badge){ badge.className = 'badge yellow'; badge.textContent = 'Vaga confirmada — exceção manual'; }
       if (vale){ vale.className = 'badge green'; vale.textContent = 'Sim'; }
-      if (obs) obs.textContent = 'Exceção manual: mantida como vaga por você, passando por cima da regra' + (regraLabel ? (' de ' + regraLabel) : '') + '. Justificativa: ' + (rec && rec.texto && rec.texto.trim() ? rec.texto : '(nenhuma registrada)') + '.';
+      if (obs) obs.textContent = 'Exceção manual: mantida como vaga por você, ' + fraseRegrasIgnoradas(rec && rec.regras) + '. Justificativa: ' + (rec && rec.texto && rec.texto.trim() ? rec.texto : '(nenhuma registrada)') + '.';
       if (acao) acao.innerHTML = '<button class="icon-btn" onclick="openReincluir(\'' + rowId + '\')">Ver justificativa</button> <a href="#" onclick="desfazerReinclusao(\'' + rowId + '\');return false;" style="font-size:11.5px;color:var(--muted);margin-left:6px;">↺ desfazer</a>';
       return;
     }
@@ -1015,16 +1027,17 @@ function avaliarCargas(){
       return;
     }
     const motivosExclusao = [];
-    if (chkLocalidade && chkLocalidade.checked && localidadeVals.includes(f.localidade)) motivosExclusao.push('Localidade = ' + localidadeVals.join(', '));
-    if (chkHoras && chkHoras.checked && limite !== null && f.horas < limite) motivosExclusao.push('Horas < ' + limite + 'h');
-    if (chkTipoCurso && chkTipoCurso.checked && tipoCursoVals.includes(f.tipoCurso)) motivosExclusao.push('Curso/Projeto = ' + tipoCursoVals.join(', '));
-    if (chkEscola && chkEscola.checked && escolaVals.includes(f.escola)) motivosExclusao.push('Nome Escola = ' + escolaVals.join(', '));
+    const chavesExclusao = [];
+    if (chkLocalidade && chkLocalidade.checked && localidadeVals.includes(f.localidade)) { motivosExclusao.push('Localidade = ' + localidadeVals.join(', ')); chavesExclusao.push('localidade'); }
+    if (chkHoras && chkHoras.checked && limite !== null && f.horas < limite) { motivosExclusao.push('Horas < ' + limite + 'h'); chavesExclusao.push('cargaHoraria'); }
+    if (chkTipoCurso && chkTipoCurso.checked && tipoCursoVals.includes(f.tipoCurso)) { motivosExclusao.push('Curso/Projeto = ' + tipoCursoVals.join(', ')); chavesExclusao.push('tipoCurso'); }
+    if (chkEscola && chkEscola.checked && escolaVals.includes(f.escola)) { motivosExclusao.push('Nome Escola = ' + escolaVals.join(', ')); chavesExclusao.push('escola'); }
     if (motivosExclusao.length){
       row.classList.add('excluded');
-      row.dataset.excludedBy = motivosExclusao[0].startsWith('Nome Escola') ? 'escola' : motivosExclusao[0].startsWith('Horas') ? 'cargaHoraria' : motivosExclusao[0].startsWith('Curso') ? 'tipoCurso' : 'localidade';
-      if (badge){ badge.className = 'badge red'; badge.textContent = 'Excluída — ' + row.dataset.excludedBy; }
+      row.dataset.excludedBy = chavesExclusao.join(',');
+      if (badge){ badge.className = 'badge red'; badge.textContent = 'Excluída — regra'; }
       if (vale){ vale.className = 'badge red'; vale.textContent = 'Não'; }
-      if (obs) obs.textContent = 'Excluída pela regra: ' + motivosExclusao.join(' e ') + '.';
+      if (obs) obs.textContent = 'Excluída pela regra — critérios enquadrados: ' + motivosExclusao.join('; ') + '.';
       if (acao) acao.innerHTML = '<button class="icon-btn" onclick="openReincluir(\'' + rowId + '\')">Reincluir</button>';
     } else {
       row.classList.remove('excluded');
@@ -1261,9 +1274,10 @@ function renderResumo(){
       '</div>'
     ) : '';
     const rec = reinclusoes[rowId];
+    const recRegraLabels = rec ? regraLabelsFromKeys(rec.regras) : [];
     const reinclusaoHtml = rec ? (
       '<div class="legend" style="margin:0 0 8px 0;background:#FEF3D6;padding:8px 10px;border-radius:6px;">' +
-      '<div><b>⚠ Exceção manual — regra ignorada:</b> ' + (REGRA_LABELS_EXCLUSAO[rec.regra] || rec.regra || '—') + '</div>' +
+      '<div><b>⚠ Exceção manual — regra' + (recRegraLabels.length > 1 ? 's ignoradas' : ' ignorada') + ':</b> ' + (recRegraLabels.length ? recRegraLabels.join(', ') : '—') + '</div>' +
       '<div><b>Justificativa:</b> ' + (rec.texto && rec.texto.trim() ? rec.texto : '<i>(nenhum texto registrado)</i>') + '</div>' +
       '</div>'
     ) : '';
@@ -2470,13 +2484,13 @@ function renderG2Regras(){
     box.innerHTML = '<div class="note">Nenhuma regra padrão foi definida para este ciclo — o analista usou os filtros que considerou necessários, sem um ponto de partida pré-carregado.</div>';
   }
   altBox.innerHTML = '<div class="legend" style="margin-bottom:8px;"><b>Alterações feitas pelo Analista (exemplo):</b></div>' +
-    '<div class="note" style="margin-bottom:6px;"><span class="badge yellow" style="margin-right:6px;">Exceção manual</span> Carga de <b>E.E. Central Itacoatiara</b> reincluída manualmente, passando por cima da regra de Horas.</div>' +
+    '<div class="note" style="margin-bottom:6px;"><span class="badge yellow" style="margin-right:6px;">Exceção manual</span> Carga de <b>E.E. Central Itacoatiara</b> reincluída manualmente, passando por cima das regras de Horas e Localidade.</div>' +
     '<div class="note warn"><span class="badge gray" style="margin-right:6px;">Regra ajustada</span> Critério de Localidade foi restringido pelo analista para excluir comunidades fora do perímetro urbano.</div>';
 }
 const G2_CARGAS_EXEMPLO = [
-  { escola:'E.E. Ribeirinha', regra:null, justificativa:'Carga confirmada conforme a regra padrão do ciclo — nenhuma exceção foi necessária.' },
-  { escola:'E.E. Central Itacoatiara', regra:'Horas', justificativa:'A escola comprovou, por ofício, que a carga é regular apesar da carga horária reduzida. Reincluída como exceção manual.' },
-  { escola:'E.E. Comunidade Rio Preto', regra:'Localidade', justificativa:'' }
+  { escola:'E.E. Ribeirinha', regras:[], justificativa:'Carga confirmada conforme a regra padrão do ciclo — nenhuma exceção foi necessária.' },
+  { escola:'E.E. Central Itacoatiara', regras:['Horas','Localidade'], justificativa:'A escola comprovou, por ofício, que a carga é regular apesar da carga horária reduzida e da localidade divergente. Reincluída como exceção manual.' },
+  { escola:'E.E. Comunidade Rio Preto', regras:['Localidade','Curso/Projeto'], justificativa:'' }
 ];
 
 // ===== G2: Gerente pode se sobrepor à análise do Analista (editar situação ou reincluir), sempre com justificativa =====
@@ -2555,13 +2569,15 @@ function abrirReincluirGerente(i){
   g2ReincluirIdxAtual = i;
   const c = G2_CARGAS_EXEMPLO[i];
   const dAtual = g2Decisoes[i];
-  const regraLabel = c.regra || 'em vigor';
+  const temRegras = c.regras && c.regras.length;
+  const plural = temRegras && c.regras.length > 1;
+  const regraLabelTxt = temRegras ? c.regras.join(', ') : 'em vigor';
   const box = document.getElementById('modalBox');
   box.className = 'modal-aviso green';
   box.innerHTML = `
     <div class="icon-circle">⚠</div>
     <h3>Reincluir carga (Gerente) — ${c.escola}</h3>
-    <p>Esta carga foi excluída pela regra de <b>${regraLabel}</b>. Como Gerente, você pode reincluí-la mesmo assim, se sobrepondo à análise do Analista — a regra continua valendo para as demais cargas. Registre a justificativa da sua decisão.</p>
+    <p>Esta carga foi excluída pela${plural ? 's regras de' : ' regra de'} <b>${regraLabelTxt}</b>. Como Gerente, você pode reincluí-la mesmo assim, se sobrepondo à análise do Analista — a${plural ? 's regras continuam' : ' regra continua'} valendo para as demais cargas. Registre a justificativa da sua decisão.</p>
     <div class="field" style="margin-bottom:14px;"><label>Justificativa da exceção</label><textarea id="g2ReincluirTextoInput" placeholder="Descreva o motivo da exceção...">${dAtual && dAtual.tipo==='reinclusao' && dAtual.texto ? dAtual.texto : ''}</textarea></div>
     <div class="actions">
       <button class="btn btn-outline" onclick="closeModal()">Cancelar</button>
@@ -2574,7 +2590,7 @@ function confirmarReincluirGerente(){
   const textoEl = document.getElementById('g2ReincluirTextoInput');
   const texto = textoEl ? textoEl.value.trim() : '';
   const c = G2_CARGAS_EXEMPLO[g2ReincluirIdxAtual];
-  g2Decisoes[g2ReincluirIdxAtual] = { tipo:'reinclusao', texto, regra: c.regra };
+  g2Decisoes[g2ReincluirIdxAtual] = { tipo:'reinclusao', texto, regras: c.regras };
   renderG2CargaRow(g2ReincluirIdxAtual);
   closeModal();
 }
@@ -2583,9 +2599,10 @@ function verJustificativaG2(i){
   if (!c) return;
   const box = document.getElementById('modalBox');
   box.className = 'modal-aviso';
+  const temRegras = c.regras && c.regras.length;
   box.innerHTML = '<div class="icon-circle">📄</div>' +
     '<h3>Justificativa — ' + c.escola + '</h3>' +
-    (c.regra ? '<p><b>Regra aplicada nesta carga:</b> ' + c.regra + '</p>' : '') +
+    (temRegras ? '<p><b>' + (c.regras.length > 1 ? 'Regras aplicadas nesta carga:' : 'Regra aplicada nesta carga:') + '</b> ' + c.regras.join(', ') + '</p>' : '') +
     '<p>' + (c.justificativa ? c.justificativa : '<i>O analista não registrou justificativa para esta carga.</i>') + '</p>' +
     '<div class="actions"><button class="btn btn-navy" onclick="closeModal()">Fechar</button></div>';
   document.getElementById('overlay').classList.add('show');
