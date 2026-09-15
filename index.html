@@ -231,6 +231,69 @@
   .modal-aviso .actions{display:flex;justify-content:flex-end;gap:10px;}
 
   .flow-label{position:fixed;bottom:14px;left:16px;background:#20222A;color:#fff;font-size:11px;padding:6px 12px;border-radius:20px;z-index:180;opacity:.85;}
+
+  /* ===== Refinamento visual dos componentes internos (padrao shadcn/ui) =====
+     Mantem cores, navegacao, container branco e faixa de titulo como estao —
+     refina so os componentes internos: tabelas, badges, botoes, cards,
+     contadores, campos e avisos, para um visual mais limpo e consistente. */
+
+  table{border-collapse:separate;border-spacing:0;}
+  thead th{
+    background:var(--gray-100);color:var(--muted);font-size:12px;font-weight:600;
+    text-transform:none;letter-spacing:0;border-bottom:1px solid var(--gray-200);
+    padding:9px 12px;
+  }
+  table td{padding:11px 12px;border-bottom:1px solid var(--gray-100);}
+  table tbody tr:last-child td{border-bottom:none;}
+  table tbody tr:hover td{background:var(--gray-100);}
+  .rules-table thead th, .rules-table th{background:var(--gray-100);text-transform:none;font-weight:600;}
+  #cargasTable{border:1px solid var(--gray-200);border-radius:10px;overflow:hidden;}
+
+  .badge{border-radius:999px;font-weight:600;letter-spacing:.01em;border:1px solid transparent;}
+  .badge.green{border-color:#BFE6C9;}
+  .badge.gray{border-color:var(--gray-200);}
+  .badge.yellow{border-color:#F6DFA0;}
+  .badge.red{border-color:#F3C6C2;}
+
+  .btn{font-weight:600;box-shadow:0 1px 2px rgba(0,0,0,.04);transition:filter .12s,box-shadow .12s;}
+  .btn-outline:hover{background:var(--gray-100);}
+  .icon-btn{border-radius:8px;font-weight:600;transition:background .12s;}
+  .icon-btn:hover{background:var(--gray-100);}
+
+  .rule-card{box-shadow:0 1px 2px rgba(0,0,0,.04);}
+  .muni-row, .base-row{
+    background:#fff;border:1px solid var(--gray-200);border-radius:10px;
+    box-shadow:0 1px 2px rgba(0,0,0,.04);
+  }
+
+  .kpi-row{gap:12px;}
+  .kpi{
+    background:#fff;border:1px solid var(--gray-200);border-radius:10px;
+    box-shadow:0 1px 2px rgba(0,0,0,.04);padding:16px 18px;
+  }
+  .kpi .lbl{text-transform:uppercase;letter-spacing:.04em;font-size:11px;}
+  .kpi .num{font-size:24px;}
+
+  .note{border:1px solid #DCE3F0;}
+  .note.warn{border-color:#F5E3B8;}
+
+  .field-head label{text-transform:none;letter-spacing:0;font-size:12.5px;font-weight:600;}
+  .field label{text-transform:none;letter-spacing:0;font-weight:600;}
+  .field input, .field select, .field textarea,
+  .rules-table select, .rules-table input{
+    transition:border-color .12s,box-shadow .12s;
+  }
+  .field input:focus, .field select:focus, .field textarea:focus,
+  .rules-table select:focus, .rules-table input:focus{
+    outline:none;border-color:var(--navy-500);box-shadow:0 0 0 3px rgba(42,78,133,.15);
+  }
+
+  .steps-tab{background:var(--gray-100);border:1px solid var(--gray-200);}
+  .steps-tab span.active{box-shadow:0 1px 2px rgba(0,0,0,.06);}
+
+  .mini-chip{border-radius:999px;}
+  .chip-add{border-radius:999px;transition:border-color .12s,color .12s;}
+  .chip-add:hover{border-color:var(--navy-500);color:var(--navy-600);}
 </style>
 </head>
 <body>
