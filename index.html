@@ -486,7 +486,7 @@
                 <div class="note warn" id="cargasPendNote" style="margin-top:16px;"></div>
                 <div class="actions-row between" style="margin-top:12px;">
                   <button class="btn btn-outline" onclick="go('A1')">← Voltar ao painel</button>
-                  <button class="btn btn-outline" id="btnIrResumo" disabled style="opacity:.5;cursor:not-allowed;" onclick="switchTab('resumo')">Ir para o Resumo →</button>
+                  <button class="btn btn-navy" id="btnIrResumo" onclick="switchTab('resumo')">Ir para o Resumo →</button>
                 </div>
               </div>
 
@@ -1411,11 +1411,11 @@ function atualizaGateFechamento(){
       : 'Todas as pendências foram justificadas — você já pode seguir para o Resumo e fechar a análise deste município.';
   }
   if (btnIrResumo){
-    btnIrResumo.disabled = pendencias > 0;
-    btnIrResumo.classList.toggle('btn-outline', pendencias > 0);
-    btnIrResumo.classList.toggle('btn-navy', pendencias === 0);
-    btnIrResumo.style.opacity = pendencias > 0 ? '.5' : '';
-    btnIrResumo.style.cursor = pendencias > 0 ? 'not-allowed' : '';
+    btnIrResumo.disabled = false;
+    btnIrResumo.classList.remove('btn-outline');
+    btnIrResumo.classList.add('btn-navy');
+    btnIrResumo.style.opacity = '';
+    btnIrResumo.style.cursor = '';
   }
 
   const gate = document.getElementById('closeGateNote');
