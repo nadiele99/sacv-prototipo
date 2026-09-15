@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<title>SACV — Protótipo de Baixa Fidelidade</title>
+<title>SACV · Protótipo de Baixa Fidelidade</title>
 <style>
   :root{
     --navy-900:#0F1B33;
@@ -234,7 +234,7 @@
   .flow-label{position:fixed;bottom:14px;left:16px;background:#20222A;color:#fff;font-size:11px;padding:6px 12px;border-radius:20px;z-index:180;opacity:.85;}
 
   /* ===== Refinamento visual dos componentes internos (padrao shadcn/ui) =====
-     Mantem cores, navegacao, container branco e faixa de titulo como estao —
+     Mantem cores, navegacao, container branco e faixa de titulo como estao ·
      refina so os componentes internos: tabelas, badges, botoes, cards,
      contadores, campos e avisos, para um visual mais limpo e consistente. */
 
@@ -299,7 +299,7 @@
 </head>
 <body>
 <div id="protoBar">
-  <span><b>SACV</b> — protótipo de fluxo (baixa fidelidade)</span>
+  <span><b>SACV</b> · protótipo de fluxo (baixa fidelidade)</span>
   <div class="seg">
     <button id="segAnalista" class="active" onclick="setPerfil('analista')">Analista</button>
     <button id="segGerente" onclick="setPerfil('gerente')">Gerentes</button>
@@ -311,15 +311,15 @@
 <!-- ================= PERFIL ANALISTA ================= -->
 <div class="app-wrap" id="perfil-analista">
 
-  <!-- A0 — Sessão inicial -->
+  <!-- A0 · Sessão inicial -->
   <div class="screen" id="scr-A0">
     <div class="shell" style="align-items:center;justify-content:center;">
       <div style="max-width:560px;text-align:center;padding:40px;">
         <div style="width:64px;height:64px;border-radius:16px;background:var(--navy-700);margin:0 auto 20px;"></div>
-        <h1 style="color:var(--navy-700);font-size:26px;margin-bottom:10px;">SACV — Sistema de Automação de Cargas Vagas</h1>
+        <h1 style="color:var(--navy-700);font-size:26px;margin-bottom:10px;">SACV · Sistema de Automação de Cargas Vagas</h1>
         <p style="color:var(--muted);font-size:14.5px;line-height:1.6;margin-bottom:28px;">
           O SACV automatiza a identificação de cargas vagas para admissão de professores.
-          O sistema importa a base extraída do SILS, organiza por município e guia você — Analista GELOT —
+          O sistema importa a base extraída do SILS, organiza por município e guia você · Analista GELOT ·
           na conferência de cada carga até o fechamento e envio para validação da Gerência.
         </p>
         <button class="btn btn-navy" onclick="go('A1')">Começar &nbsp;→</button>
@@ -327,7 +327,7 @@
     </div>
   </div>
 
-  <!-- A1 — Painel do Analista -->
+  <!-- A1 · Painel do Analista -->
   <div class="screen" id="scr-A1">
     <div class="shell">
       <div class="sidebar">
@@ -340,17 +340,17 @@
         <div class="breadcrumb">⌂ Início &nbsp;›&nbsp; <b>Painel do Analista</b></div>
         <div class="content">
           <div class="card">
-            <div class="title-band">Municípios — Importação 24/07/2026 <span class="tag">RF001 · RF015</span></div>
+            <div class="title-band">Municípios · Importação 24/07/2026 <span class="tag">RF001 · RF015</span></div>
             <div class="body">
               <div class="field-head"><label>Esta análise é para qual tipo?</label></div>
               <div class="steps-tab" id="tipoToggle" style="max-width:360px;">
                 <span class="active" data-tipo="regular" onclick="setTipoContext('regular')">Tipo Regular</span>
                 <span data-tipo="indigena" onclick="setTipoContext('indigena')">Tipo Indígena</span>
               </div>
-              <div class="note" id="tipoContextNote">Mostrando municípios com vagas para o ensino <b>regular</b>. Reivindicações feitas aqui valem só para este tipo — a análise do Tipo Indígena é feita à parte, escolhendo a outra opção acima.</div>
+              <div class="note" id="tipoContextNote">Mostrando municípios com vagas para o ensino <b>regular</b>. Reivindicações feitas aqui valem só para este tipo · a análise do Tipo Indígena é feita à parte, escolhendo a outra opção acima.</div>
               <div class="note pend" id="cicloBloqueioNote" style="display:none;">🔒 Nenhum ciclo de análise está aberto pela Gerência no momento. Você ainda pode continuar municípios já reivindicados por você, mas não é possível reivindicar nenhum município novo até a Gerente abrir um novo ciclo (RN034).</div>
-              <div class="note">A base foi importada do SILS e dividida automaticamente por município. Reivindique um município para começar a análise — cada município só pode ser reivindicado por um analista por vez, e somente enquanto houver um ciclo de análise aberto pela Gerência.</div>
-              <div class="note">Mesmo depois de fechado, você pode reabrir e editar um município que você mesmo fechou — isso continua liberado enquanto a Gerente não gerar o Consolidado final deste ciclo (RN007/RN039). Depois do Consolidado final, a edição é bloqueada para todos os analistas.</div>
+              <div class="note">A base foi importada do SILS e dividida automaticamente por município. Reivindique um município para começar a análise · cada município só pode ser reivindicado por um analista por vez, e somente enquanto houver um ciclo de análise aberto pela Gerência.</div>
+              <div class="note">Mesmo depois de fechado, você pode reabrir e editar um município que você mesmo fechou · isso continua liberado enquanto a Gerente não gerar o Consolidado final deste ciclo (RN007/RN039). Depois do Consolidado final, a edição é bloqueada para todos os analistas.</div>
               <div class="kpi-row">
                 <div class="kpi"><div class="num">12</div><div class="lbl">municípios no total</div></div>
                 <div class="kpi"><div class="num">3</div><div class="lbl">já fechados</div></div>
@@ -362,11 +362,11 @@
                   <div style="display:flex;align-items:center;gap:10px;"><span class="badge gray">Disponível</span><button class="btn btn-navy" onclick="reivindicar('Manacapuru')">Reivindicar</button></div>
                 </div>
                 <div class="muni-row" data-regular="true" data-indigena="false">
-                  <div><div class="name">Manaus — Coordenadoria 3</div><div class="meta">241 cargas na base importada · sem escolas indígenas</div></div>
-                  <div style="display:flex;align-items:center;gap:10px;"><span class="badge yellow">Em análise (você)</span><button class="btn btn-outline" onclick="enterAnalise('Manaus — Coordenadoria 3','nenhum')">Continuar análise</button></div>
+                  <div><div class="name">Manaus - Coordenadoria 3</div><div class="meta">241 cargas na base importada · sem escolas indígenas</div></div>
+                  <div style="display:flex;align-items:center;gap:10px;"><span class="badge yellow">Em análise (você)</span><button class="btn btn-outline" onclick="enterAnalise('Manaus - Coordenadoria 3','nenhum')">Continuar análise</button></div>
                 </div>
                 <div class="muni-row" data-regular="true" data-indigena="true">
-                  <div><div class="name">São Gabriel da Cachoeira <span class="badge yellow" id="sgBadge" style="margin-left:6px;">escolas regulares</span></div><div class="meta" id="sgMeta">52 cargas em escolas regulares — este município também tem escolas indígenas, tratadas à parte no Tipo Indígena</div></div>
+                  <div><div class="name">São Gabriel da Cachoeira <span class="badge yellow" id="sgBadge" style="margin-left:6px;">escolas regulares</span></div><div class="meta" id="sgMeta">52 cargas em escolas regulares · este município também tem escolas indígenas, tratadas à parte no Tipo Indígena</div></div>
                   <div style="display:flex;align-items:center;gap:10px;"><span class="badge gray">Disponível</span><button class="btn btn-navy" onclick="reivindicar('São Gabriel da Cachoeira')">Reivindicar</button></div>
                 </div>
                 <div class="muni-row" data-regular="true" data-indigena="false">
@@ -378,15 +378,15 @@
                   <div style="display:flex;align-items:center;gap:10px;"><span class="badge gray">Em análise (Carlos)</span></div>
                 </div>
               </div>
-              <div class="note warn" style="margin-top:16px;">Aguardando tratamento: a base ainda não tem uma coluna indicando se a escola é indígena — esse tratamento é feito pela Equipe de Dados antes de chegar ao SACV (a Prodam cuida só da infraestrutura, não do conteúdo da base). É essa coluna que vai definir, de verdade, quais municípios aparecem em cada tipo acima; por ora está sinalizado manualmente neste protótipo.</div>
+              <div class="note warn" style="margin-top:16px;">Aguardando tratamento: a base ainda não tem uma coluna indicando se a escola é indígena · esse tratamento é feito pela Equipe de Dados antes de chegar ao SACV (a Prodam cuida só da infraestrutura, não do conteúdo da base). É essa coluna que vai definir, de verdade, quais municípios aparecem em cada tipo acima; por ora está sinalizado manualmente neste protótipo.</div>
             </div>
           </div>
         </div>
-        <div class="footer"><div class="grad"></div><div class="in"><div class="brandline">SEDUC AM · GELOT</div><div>Manaus – AM</div></div><div class="bottom">SEDUC AM | Protótipo de fluxo — 2026</div></div>
+        <div class="footer"><div class="grad"></div><div class="in"><div class="brandline">SEDUC AM · GELOT</div><div>Manaus – AM</div></div><div class="bottom">SEDUC AM | Protótipo de fluxo · 2026</div></div>
       </div>
     </div>
   </div>
-  <!-- A3 — Análise e filtragem de cargas -->
+  <!-- A3 · Análise e filtragem de cargas -->
   <div class="screen" id="scr-A3">
     <div class="shell">
       <div class="sidebar">
@@ -396,29 +396,29 @@
       </div>
       <div class="main">
         <div class="topnav"><div class="brand"><div class="dot"></div>SEDUC · GELOT</div><div class="help">Ajuda</div></div>
-        <div class="breadcrumb">⌂ Início &nbsp;›&nbsp; Painel do Analista &nbsp;›&nbsp; <b id="a3Crumb">Manaus — Coordenadoria 3</b></div>
+        <div class="breadcrumb">⌂ Início &nbsp;›&nbsp; Painel do Analista &nbsp;›&nbsp; <b id="a3Crumb">Manaus - Coordenadoria 3</b></div>
         <div class="content">
           <div class="card">
-            <div class="title-band">Análise de cargas — <span id="a3TituloMuni">Manaus, Coordenadoria 3</span> <span class="tag">RF004 · RF005</span></div>
+            <div class="title-band">Análise de cargas · <span id="a3TituloMuni">Manaus, Coordenadoria 3</span> <span class="tag">RF004 · RF005</span></div>
             <div class="body">
-              <div class="note" id="a3TipoNote">Este município não possui escolas indígenas identificadas na base — toda a análise é feita em um único tipo (<b>Regular</b>).</div>
+              <div class="note" id="a3TipoNote">Este município não possui escolas indígenas identificadas na base · toda a análise é feita em um único tipo (<b>Regular</b>).</div>
               <div class="steps-tab">
                 <span class="active" id="pill-cargas" onclick="switchTab('cargas')">Cargas (241)</span><span id="pill-resumo" onclick="switchTab('resumo')">Resumo</span>
               </div>
 
               <div id="tab-cargas" class="tab-panel">
-                <div class="note">As regras não são fixas no sistema — é você quem marca quais campos usar como critério. <b>Por padrão, toda carga permanece na lista</b>; as regras abaixo servem para <b>excluir</b> o que não deve entrar. Todos os campos da base importada aparecem aqui, mesmo os que você não costuma usar. <b>Não existe um botão separado de salvar:</b> assim que você marca um campo, digita um valor ou seleciona uma opção, a regra já vale — para este município, imediatamente. Para parar de aplicar uma regra, desmarque o campo correspondente.</div>
+                <div class="note">As regras não são fixas no sistema · é você quem marca quais campos usar como critério. <b>Por padrão, toda carga permanece na lista</b>; as regras abaixo servem para <b>excluir</b> o que não deve entrar. Todos os campos da base importada aparecem aqui, mesmo os que você não costuma usar. <b>Não existe um botão separado de salvar:</b> assim que você marca um campo, digita um valor ou seleciona uma opção, a regra já vale · para este município, imediatamente. Para parar de aplicar uma regra, desmarque o campo correspondente.</div>
                 <div class="note warn">O campo <b>Motivo</b> vem preenchido direto da base quando o próprio registro já sinaliza um problema (ex.: dado incompleto). Nesse caso a carga vira <b>pendência para você justificar</b>, independente das regras marcadas abaixo. Só quando o Motivo vem vazio é que as regras de filtro decidem se a carga vale como vaga.</div>
 
                 <div style="margin-bottom:16px;">
-                  <div class="field-head"><label>Regras em vigor agora — Manaus, Coordenadoria 3</label><span class="badge green" id="ruleSavedBadge">atualizado automaticamente às 15:12</span></div>
+                  <div class="field-head"><label>Regras em vigor agora · Manaus, Coordenadoria 3</label><span class="badge green" id="ruleSavedBadge">atualizado automaticamente às 15:12</span></div>
                   <div style="display:flex;gap:8px;flex-wrap:wrap;" id="savedChips"></div>
                 </div>
 
                 <div class="filtros-toggle" id="filtrosAvancadosToggle" onclick="toggleFiltrosAvancados()" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();toggleFiltrosAvancados();}" role="button" tabindex="0" aria-expanded="false"><span class="filtros-toggle-chevron" id="filtrosAvancadosChevron">▸</span><span class="filtros-toggle-label">Regras em vigor</span><span class="filtros-toggle-hint" id="filtrosAvancadosHint">mostrar filtros</span></div>
                 <div id="filtrosAvancadosBody" style="display:none;">
-                <div class="legend">Município não aparece aqui — você já está analisando só o município que reivindicou (indicado acima, ao lado de "Início"). Tipo também não é um filtro: Regular e Indígena são reivindicados, analisados e fechados separadamente, cada um com seu próprio relatório — veja a nota acima. Quando uma carga já vem com Motivo preenchido pela base, ela vira pendência individual e não depende deste filtro — veja a tabela de cargas mais abaixo.</div>
-                <div class="legend">Cada linha marcada funciona como: <b>excluir carga quando</b> [Campo] [Condição] [um ou mais valores]. O que não for marcado permanece na lista normalmente. O resumo acima ("Regras em vigor agora") mostra as regras com efeito nesta lista de cargas — clique no × de um chip para desvincular rapidamente.</div>
+                <div class="legend">Município não aparece aqui · você já está analisando só o município que reivindicou (indicado acima, ao lado de "Início"). Tipo também não é um filtro: Regular e Indígena são reivindicados, analisados e fechados separadamente, cada um com seu próprio relatório · veja a nota acima. Quando uma carga já vem com Motivo preenchido pela base, ela vira pendência individual e não depende deste filtro · veja a tabela de cargas mais abaixo.</div>
+                <div class="legend">Cada linha marcada funciona como: <b>excluir carga quando</b> [Campo] [Condição] [um ou mais valores]. O que não for marcado permanece na lista normalmente. O resumo acima ("Regras em vigor agora") mostra as regras com efeito nesta lista de cargas · clique no × de um chip para desvincular rapidamente.</div>
                 <div class="rules-wrap">
                   <table class="rules-table">
                     <thead><tr><th style="width:26px;"></th><th style="width:22%;">Campo</th><th style="width:20%;">Condição</th><th>Valor(es)</th><th style="width:110px;">Origem</th></tr></thead>
@@ -469,9 +469,9 @@
                     </tbody>
                   </table>
                 </div>
-                <div class="legend" style="margin-top:-8px;">Coluna <b>Origem</b>: mostra se o campo é <b>de origem do ciclo</b> — a regra padrão que a Gerência carregou ao abrir o ciclo (RN044/RN045), igual ou já divergente do que ela definiu (RN046, não bloqueia) — ou se é <b>sua regra</b>, marcada por você por conta própria, sem vir do padrão.</div>
+                <div class="legend" style="margin-top:-8px;">Coluna <b>Origem</b>: mostra se o campo é <b>de origem do ciclo</b> · a regra padrão que a Gerência carregou ao abrir o ciclo (RN044/RN045), igual ou já divergente do que ela definiu (RN046, não bloqueia) · ou se é <b>sua regra</b>, marcada por você por conta própria, sem vir do padrão.</div>
 
-                </div><div class="note">As regras podem mudar a qualquer momento antes de fechar o município — a coluna <b>Observação</b> abaixo sempre mostra a regra que gerou o status atual de cada carga. É sempre a versão mais recente que vale, aplicada assim que você altera algo.</div>
+                </div><div class="note">As regras podem mudar a qualquer momento antes de fechar o município · a coluna <b>Observação</b> abaixo sempre mostra a regra que gerou o status atual de cada carga. É sempre a versão mais recente que vale, aplicada assim que você altera algo.</div>
                 <div class="field-head">
                   <label>Cargas importadas da base</label>
                   <button class="icon-btn" onclick="toggleColunasCargas()" id="btnToggleColunas">👁 Mostrar mais colunas</button>
@@ -483,7 +483,7 @@
                     <tbody id="cargasTableBody"></tbody>
                   </table>
                 </div>
-                <div class="legend" style="margin-top:-8px;">Experimente: em "Curso/Projeto" ▸ + valor, marque também <b>Técnico</b> e aplique — a linha da E.E. Nova Aliança muda de status e a observação é atualizada na hora.</div>
+                <div class="legend" style="margin-top:-8px;">Experimente: em "Curso/Projeto" ▸ + valor, marque também <b>Técnico</b> e aplique · a linha da E.E. Nova Aliança muda de status e a observação é atualizada na hora.</div>
                 <div class="note warn" id="cargasPendNote" style="margin-top:16px;"></div>
                 <div class="actions-row between" style="margin-top:12px;">
                   <button class="btn btn-outline" onclick="go('A1')">← Voltar ao painel</button>
@@ -492,12 +492,12 @@
               </div>
 
               <div id="tab-resumo" class="tab-panel" style="display:none;">
-                <div class="note warn">Esta é a revisão final antes de fechar o município. Para cada carga, veja <b>todas as regras avaliadas</b> — não só a observação resumida — pra confirmar por que ela ficou com aquela situação.</div>
-                <div class="legend">O formato resumido (por escola/observação/situação, sem o detalhamento de regras) volta a aparecer, de forma mais enxuta, na área da Gerência — isso é para uma etapa futura, não faz parte deste protótipo.</div>
+                <div class="note warn">Esta é a revisão final antes de fechar o município. Para cada carga, veja <b>todas as regras avaliadas</b> · não só a observação resumida · pra confirmar por que ela ficou com aquela situação.</div>
+                <div class="legend">O formato resumido (por escola/observação/situação, sem o detalhamento de regras) volta a aparecer, de forma mais enxuta, na área da Gerência · isso é para uma etapa futura, não faz parte deste protótipo.</div>
                 <div class="steps-tab" id="resumoFiltro">
                   <span class="active" data-filtro="todas" onclick="filtrarResumo('todas')">Todas<span id="cntTodas"></span></span><span data-filtro="justificativas" onclick="filtrarResumo('justificativas')">Aguardando justificativa<span id="cntJustificativas"></span></span><span data-filtro="confirmadas" onclick="filtrarResumo('confirmadas')">Confirmadas<span id="cntConfirmadas"></span></span><span data-filtro="excluidas" onclick="filtrarResumo('excluidas')">Excluídas<span id="cntExcluidas"></span></span>
                 </div>
-                <div class="legend" style="margin-top:-10px;">A maior parte das confirmações vem da regra padrão da Gerente e não costuma precisar da sua atenção — use <b>"Aguardando justificativa"</b> para focar direto nas cargas que dependeram de uma decisão sua.</div>
+                <div class="legend" style="margin-top:-10px;">A maior parte das confirmações vem da regra padrão da Gerente e não costuma precisar da sua atenção · use <b>"Aguardando justificativa"</b> para focar direto nas cargas que dependeram de uma decisão sua.</div>
                 <div id="resumoBody"></div>
                 <div class="note warn" id="closeGateNote" style="margin-top:16px;"></div>
                 <div class="actions-row between">
@@ -509,18 +509,18 @@
             </div>
           </div>
         </div>
-        <div class="footer"><div class="grad"></div><div class="in"><div class="brandline">SEDUC AM · GELOT</div><div>Manaus – AM</div></div><div class="bottom">SEDUC AM | Protótipo de fluxo — 2026</div></div>
+        <div class="footer"><div class="grad"></div><div class="in"><div class="brandline">SEDUC AM · GELOT</div><div>Manaus – AM</div></div><div class="bottom">SEDUC AM | Protótipo de fluxo · 2026</div></div>
       </div>
     </div>
   </div>
-  <!-- A5 — Conclusão -->
+  <!-- A5 · Conclusão -->
   <div class="screen" id="scr-A5">
     <div class="shell" style="align-items:center;justify-content:center;">
       <div style="max-width:480px;text-align:center;padding:40px;">
         <div class="icon-circle" style="width:56px;height:56px;border-radius:50%;background:var(--green);display:flex;align-items:center;justify-content:center;color:#fff;font-size:26px;margin:0 auto 18px;">✓</div>
         <h2 style="color:var(--navy-700);">Município fechado</h2>
         <p id="a5Texto" style="color:var(--muted);font-size:14px;line-height:1.6;margin-bottom:26px;">
-          Manaus — Coordenadoria 3 foi fechado. Aguarde os demais analistas ou reivindique outro município disponível.<br><br>
+          Manaus - Coordenadoria 3 foi fechado. Aguarde os demais analistas ou reivindique outro município disponível.<br><br>
           Você ainda pode voltar e reabrir este município para editar, enquanto a Gerente não gerar o Consolidado final deste ciclo.
         </p>
         <button class="btn btn-navy" onclick="go('A1')">Voltar ao painel</button>
@@ -533,7 +533,7 @@
 <!-- ================= PERFIL GERENTES ================= -->
 <div class="app-wrap" id="perfil-gerente">
 
-  <!-- GB — Base do SILS -->
+  <!-- GB · Base do SILS -->
   <div class="screen" id="scr-GB">
     <div class="shell">
       <div class="sidebar">
@@ -546,25 +546,25 @@
         <div class="breadcrumb">⌂ Início &nbsp;›&nbsp; <b>Base do SILS</b></div>
         <div class="content">
           <div class="card">
-            <div class="title-band">Base do SILS — importação e status <span class="tag">RF001 · RN027</span></div>
+            <div class="title-band">Base do SILS · importação e status <span class="tag">RF001 · RN027</span></div>
             <div class="body">
-              <div class="note">A importação da base do SILS é uma ação <b>exclusiva sua</b> (Gerência) — os Analistas nunca importam, só acessam os registros já trazidos para dentro de um ciclo de análise (RF001/RN027). A base sobe uma vez e vale para todos os ciclos até que você importe uma nova; ela fica <b>fixa durante todo o ciclo aberto</b> (RN034/RN040).</div>
-              <div class="note warn">Se você importar uma nova base enquanto houver ciclo(s) aberto(s), o sistema cancela automaticamente esse(s) ciclo(s) antes de aceitar o novo arquivo — a troca de base em ciclo aberto (reconciliação linha a linha) foi descartada como regra (RN049/RF036).</div>
+              <div class="note">A importação da base do SILS é uma ação <b>exclusiva sua</b> (Gerência) · os Analistas nunca importam, só acessam os registros já trazidos para dentro de um ciclo de análise (RF001/RN027). A base sobe uma vez e vale para todos os ciclos até que você importe uma nova; ela fica <b>fixa durante todo o ciclo aberto</b> (RN034/RN040).</div>
+              <div class="note warn">Se você importar uma nova base enquanto houver ciclo(s) aberto(s), o sistema cancela automaticamente esse(s) ciclo(s) antes de aceitar o novo arquivo · a troca de base em ciclo aberto (reconciliação linha a linha) foi descartada como regra (RN049/RF036).</div>
               <div class="field-head"><label>Base vigente</label></div>
               <div class="base-row" style="margin-bottom:16px;">
-                <div><div class="name" id="gbBaseLabel">—</div><div class="meta">usada por todos os ciclos até a próxima importação</div></div>
+                <div><div class="name" id="gbBaseLabel">-</div><div class="meta">usada por todos os ciclos até a próxima importação</div></div>
                 <button class="btn btn-navy" onclick="openImportarBase()">📥 Importar nova base do SILS</button>
               </div>
               <div class="legend">Depois de importar, use <a href="#" onclick="go('GR');return false;">Regras padrão</a> para definir filtros reutilizáveis com base nesses dados, e <a href="#" onclick="go('G0');return false;">Ciclos de análise</a> para abrir uma nova análise.</div>
             </div>
           </div>
         </div>
-        <div class="footer"><div class="grad"></div><div class="in"><div class="brandline">SEDUC AM · GELOT</div><div>Manaus – AM</div></div><div class="bottom">SEDUC AM | Protótipo de fluxo — 2026</div></div>
+        <div class="footer"><div class="grad"></div><div class="in"><div class="brandline">SEDUC AM · GELOT</div><div>Manaus – AM</div></div><div class="bottom">SEDUC AM | Protótipo de fluxo · 2026</div></div>
       </div>
     </div>
   </div>
 
-  <!-- GR — Regras padrão -->
+  <!-- GR · Regras padrão -->
   <div class="screen" id="scr-GR">
     <div class="shell">
       <div class="sidebar">
@@ -577,9 +577,9 @@
         <div class="breadcrumb">⌂ Início &nbsp;›&nbsp; <b>Regras padrão</b></div>
         <div class="content">
           <div class="card">
-            <div class="title-band">Regras padrão — filtros reutilizáveis entre ciclos <span class="tag">RN044</span></div>
+            <div class="title-band">Regras padrão · filtros reutilizáveis entre ciclos <span class="tag">RN044</span></div>
             <div class="body">
-              <div class="note">Cadastre aqui os filtros que devem valer, por padrão, para os Analistas — usando os <b>mesmos campos do filtro deles</b> (RF013/RN029). Ao abrir um novo ciclo, você escolhe qual regra padrão aplicar (ou nenhuma); ela é pré-carregada no filtro de cada Analista do ciclo, que ainda pode ajustar os valores — mudanças em relação ao padrão ficam sinalizadas para você, sem bloquear nada (RN045/RN046).</div>
+              <div class="note">Cadastre aqui os filtros que devem valer, por padrão, para os Analistas · usando os <b>mesmos campos do filtro deles</b> (RF013/RN029). Ao abrir um novo ciclo, você escolhe qual regra padrão aplicar (ou nenhuma); ela é pré-carregada no filtro de cada Analista do ciclo, que ainda pode ajustar os valores · mudanças em relação ao padrão ficam sinalizadas para você, sem bloquear nada (RN045/RN046).</div>
               <div class="legend" id="grBaseNota"></div>
               <div id="regrasPadraoList"></div>
               <div class="actions-row" style="margin-top:6px;">
@@ -588,12 +588,12 @@
             </div>
           </div>
         </div>
-        <div class="footer"><div class="grad"></div><div class="in"><div class="brandline">SEDUC AM · GELOT</div><div>Manaus – AM</div></div><div class="bottom">SEDUC AM | Protótipo de fluxo — 2026</div></div>
+        <div class="footer"><div class="grad"></div><div class="in"><div class="brandline">SEDUC AM · GELOT</div><div>Manaus – AM</div></div><div class="bottom">SEDUC AM | Protótipo de fluxo · 2026</div></div>
       </div>
     </div>
   </div>
 
-  <!-- G0 — Ciclos de Análise -->
+  <!-- G0 · Ciclos de Análise -->
   <div class="screen" id="scr-G0">
     <div class="shell">
       <div class="sidebar">
@@ -608,7 +608,7 @@
           <div class="card">
             <div class="title-band">Controle de ciclos de análise <span class="tag">RN034 · RF023</span></div>
             <div class="body">
-              <div class="note">Nenhum analista consegue reivindicar ou analisar um município sem que você inicie um ciclo de análise. Cada ciclo pertence a um único tipo (Regular ou Indígena) — só pode haver <b>um ciclo aberto por tipo</b> ao mesmo tempo, mas Regular e Indígena podem estar abertos em paralelo, cada um com seu próprio painel, sempre usando a base vigente (veja <a href="#" onclick="go('GB');return false;">Base do SILS</a>). Um ciclo fecha automaticamente quando você valida o consolidado dele — a partir daí, é preciso iniciar um novo ciclo para aquele tipo.</div>
+              <div class="note">Nenhum analista consegue reivindicar ou analisar um município sem que você inicie um ciclo de análise. Cada ciclo pertence a um único tipo (Regular ou Indígena) · só pode haver <b>um ciclo aberto por tipo</b> ao mesmo tempo, mas Regular e Indígena podem estar abertos em paralelo, cada um com seu próprio painel, sempre usando a base vigente (veja <a href="#" onclick="go('GB');return false;">Base do SILS</a>). Um ciclo fecha automaticamente quando você valida o consolidado dele · a partir daí, é preciso iniciar um novo ciclo para aquele tipo.</div>
               <div class="kpi-row" id="cicloStatusRow"></div>
               <div id="cicloAcaoWrap"></div>
               <div class="field-head" style="margin-top:22px;"><label>Histórico de ciclos</label></div>
@@ -619,11 +619,11 @@
             </div>
           </div>
         </div>
-        <div class="footer"><div class="grad"></div><div class="in"><div class="brandline">SEDUC AM · GELOT</div><div>Manaus – AM</div></div><div class="bottom">SEDUC AM | Protótipo de fluxo — 2026</div></div>
+        <div class="footer"><div class="grad"></div><div class="in"><div class="brandline">SEDUC AM · GELOT</div><div>Manaus – AM</div></div><div class="bottom">SEDUC AM | Protótipo de fluxo · 2026</div></div>
       </div>
     </div>
   </div>
-  <!-- G1 — Painel do Gerente -->
+  <!-- G1 · Painel do Gerente -->
   <div class="screen" id="scr-G1">
     <div class="shell">
       <div class="sidebar">
@@ -636,11 +636,11 @@
         <div class="breadcrumb">⌂ Início &nbsp;›&nbsp; <a href="#" onclick="go('G0');return false;" style="color:var(--muted);">Ciclos de análise</a> &nbsp;›&nbsp; <b id="g1Breadcrumb">Ciclo #4</b></div>
         <div class="content">
           <div class="card">
-            <div class="title-band"><span id="g1Titulo">Painel do ciclo #4 — Tipo Regular</span> <span class="tag">RF017</span></div>
+            <div class="title-band"><span id="g1Titulo">Painel do ciclo #4 · Tipo Regular</span> <span class="tag">RF017</span></div>
             <div class="body">
-              <div class="note" id="g1Nota">Acompanhe o progresso deste ciclo. Você pode revisar os municípios já fechados pelo analista a qualquer momento — não precisa esperar todos concluírem.</div>
+              <div class="note" id="g1Nota">Acompanhe o progresso deste ciclo. Você pode revisar os municípios já fechados pelo analista a qualquer momento · não precisa esperar todos concluírem.</div>
               <div class="kpi-row" id="g1KpiRow"></div>
-              <div class="legend" id="g1DadosNota" style="display:none;">Dados de exemplo — em produção, cada ciclo mostraria sua própria lista de municípios; este wireframe reaproveita a mesma lista ilustrativa para qualquer ciclo selecionado.</div>
+              <div class="legend" id="g1DadosNota" style="display:none;">Dados de exemplo · em produção, cada ciclo mostraria sua própria lista de municípios; este wireframe reaproveita a mesma lista ilustrativa para qualquer ciclo selecionado.</div>
               <div class="note" id="g1BaseNota" style="display:none;"></div>
               <div class="actions-row end">
                 <button class="btn btn-navy" id="g1BtnRevisar" onclick="go('G4')">Revisar municípios analisados →</button>
@@ -648,19 +648,19 @@
               <div id="g1ZonaRisco" style="margin-top:22px;padding-top:16px;border-top:1px dashed var(--gray-200);display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;">
                 <div>
                   <div style="font-size:11px;color:#C0392B;font-weight:700;text-transform:uppercase;letter-spacing:.04em;margin-bottom:4px;">Zona de risco</div>
-                  <div style="font-size:13px;color:var(--muted);max-width:520px;">Cancelar este ciclo descarta todas as análises feitas nele — reivindicações, regras, confirmações, fechamentos e revisões. Não pode ser desfeito.</div>
+                  <div style="font-size:13px;color:var(--muted);max-width:520px;">Cancelar este ciclo descarta todas as análises feitas nele · reivindicações, regras, confirmações, fechamentos e revisões. Não pode ser desfeito.</div>
                 </div>
                 <button class="btn btn-outline" id="g1BtnCancelarCiclo" style="border-color:#C0392B;color:#C0392B;flex-shrink:0;" onclick="openCancelarCiclo()">Cancelar ciclo</button>
               </div>
             </div>
           </div>
         </div>
-        <div class="footer"><div class="grad"></div><div class="in"><div class="brandline">SEDUC AM · GELOT</div><div>Manaus – AM</div></div><div class="bottom">SEDUC AM | Protótipo de fluxo — 2026</div></div>
+        <div class="footer"><div class="grad"></div><div class="in"><div class="brandline">SEDUC AM · GELOT</div><div>Manaus – AM</div></div><div class="bottom">SEDUC AM | Protótipo de fluxo · 2026</div></div>
       </div>
     </div>
   </div>
 
-  <!-- G2 — Revisão de fechamento -->
+  <!-- G2 · Revisão de fechamento -->
   <div class="screen" id="scr-G2">
     <div class="shell">
       <div class="sidebar">
@@ -686,7 +686,7 @@
                 <div id="g2RegraPadraoBox"></div>
                 <div id="g2AlteracoesBox" style="margin-top:14px;"></div>
               </div>
-              <div class="legend">Cargas de exemplo — este wireframe reaproveita a mesma lista ilustrativa para qualquer município selecionado, para permitir testar o fluxo de aprovação/reprovação.</div>
+              <div class="legend">Cargas de exemplo · este wireframe reaproveita a mesma lista ilustrativa para qualquer município selecionado, para permitir testar o fluxo de aprovação/reprovação.</div>
               <div class="field-head">
                 <label>Cargas do município</label>
                 <button class="icon-btn" onclick="toggleG2Colunas()" id="btnG2ToggleColunas">👁 Mostrar mais colunas</button>
@@ -708,12 +708,12 @@
             </div>
           </div>
         </div>
-        <div class="footer"><div class="grad"></div><div class="in"><div class="brandline">SEDUC AM · GELOT</div><div>Manaus – AM</div></div><div class="bottom">SEDUC AM | Protótipo de fluxo — 2026</div></div>
+        <div class="footer"><div class="grad"></div><div class="in"><div class="brandline">SEDUC AM · GELOT</div><div>Manaus – AM</div></div><div class="bottom">SEDUC AM | Protótipo de fluxo · 2026</div></div>
       </div>
     </div>
   </div>
 
-  <!-- G4 — Relatório final -->
+  <!-- G4 · Relatório final -->
   <div class="screen" id="scr-G4">
     <div class="shell">
       <div class="sidebar">
@@ -726,13 +726,13 @@
         <div class="breadcrumb">⌂ Início &nbsp;›&nbsp; <a href="#" onclick="go('G0');return false;" style="color:var(--muted);">Ciclos de análise</a> &nbsp;›&nbsp; <a href="#" onclick="go('G1');return false;" style="color:var(--muted);" id="g4BreadcrumbCiclo">Ciclo #4</a> &nbsp;›&nbsp; <b>Revisão e consolidado</b></div>
         <div class="content">
           <div class="card">
-            <div class="title-band"><span id="g4Titulo">Revisão e consolidado — Ciclo #4 (Tipo Regular)</span> <span class="tag">RF017/RF018/RN007</span></div>
+            <div class="title-band"><span id="g4Titulo">Revisão e consolidado · Ciclo #4 (Tipo Regular)</span> <span class="tag">RF017/RF018/RN007</span></div>
             <div class="body">
               <div class="note" id="g4Nota">Para cada município fechado, baixe o relatório para conferir o que o Analista fez e marque como revisado.</div>
               <div class="kpi-row" id="g4KpiRow"></div>
               <div class="field-head" style="margin-top:22px;"><label>Municípios deste ciclo</label></div>
               <div class="muni-list" id="g4MuniList"></div>
-              <div class="legend" id="g4DadosNota" style="display:none;">Protótipo de baixa fidelidade: nomes, analistas e cargas são fictícios, mas a lista mostra os municípios do ciclo (fechados, em análise e não reivindicados), no mesmo total do KPI "municípios fechados no ciclo". Nota de prototipagem: em regra (RN039/RF029), "Baixar relatório final" só apareceria quando todos os municípios estivessem fechados — por enquanto, para facilitar testar o fluxo, ele fica sempre disponível aqui.</div>
+              <div class="legend" id="g4DadosNota" style="display:none;">Protótipo de baixa fidelidade: nomes, analistas e cargas são fictícios, mas a lista mostra os municípios do ciclo (fechados, em análise e não reivindicados), no mesmo total do KPI "municípios fechados no ciclo". Nota de prototipagem: em regra (RN039/RF029), "Baixar relatório final" só apareceria quando todos os municípios estivessem fechados · por enquanto, para facilitar testar o fluxo, ele fica sempre disponível aqui.</div>
               <div class="actions-row between" style="margin-top:18px;">
                 <button class="btn btn-outline" onclick="go('G1')">← Voltar ao painel do ciclo</button>
                 <div style="display:flex;gap:10px;" id="g4BtnRelatorioFinalWrap">
@@ -742,7 +742,7 @@
             </div>
           </div>
         </div>
-        <div class="footer"><div class="grad"></div><div class="in"><div class="brandline">SEDUC AM · GELOT</div><div>Manaus – AM</div></div><div class="bottom">SEDUC AM | Protótipo de fluxo — 2026</div></div>
+        <div class="footer"><div class="grad"></div><div class="in"><div class="brandline">SEDUC AM · GELOT</div><div>Manaus – AM</div></div><div class="bottom">SEDUC AM | Protótipo de fluxo · 2026</div></div>
       </div>
     </div>
   </div>
@@ -821,7 +821,7 @@ function showScreen(){
   const el = document.getElementById('scr-' + current);
   if (el) el.style.display = 'block';
   const label = (flows[perfil].find(s => s.id === current) || {}).label || current;
-  document.getElementById('flowLabel').textContent = 'Tela atual: ' + current + ' — ' + label;
+  document.getElementById('flowLabel').textContent = 'Tela atual: ' + current + ' · ' + label;
   if (current === 'GB') renderBase();
   if (current === 'GR') renderRegrasPadrao();
   if (current === 'G0') renderCiclos();
@@ -838,11 +838,11 @@ const modals = {
     text: () => {
       const statusAtual = municipioStatusRevisaoAtual();
       const aviso = statusAtual === 'aprovado'
-        ? ' A Gerente já tinha aprovado esse município — como você está editando de novo, essa aprovação será desfeita automaticamente e ela vai ver que o município foi reeditado, precisando revisar novamente.'
+        ? ' A Gerente já tinha aprovado esse município · como você está editando de novo, essa aprovação será desfeita automaticamente e ela vai ver que o município foi reeditado, precisando revisar novamente.'
         : statusAtual === 'reprovado'
-        ? ' Este município tinha sido reprovado pela Gerente — ao fechar de novo, o sinal de reprovação e a justificativa serão limpos e ele volta para a fila de revisão dela como uma nova versão.'
+        ? ' Este município tinha sido reprovado pela Gerente · ao fechar de novo, o sinal de reprovação e a justificativa serão limpos e ele volta para a fila de revisão dela como uma nova versão.'
         : '';
-      return 'Deseja realmente fechar a análise de ' + (municipioAtual || 'Manaus — Coordenadoria 3') + '? A partir de agora ele fica \"aguardando revisão\" da Gerente — mas você ainda pode reabrir e editar enquanto ela não gerar o Consolidado final deste ciclo (RN007/RN039).' + aviso;
+      return 'Deseja realmente fechar a análise de ' + (municipioAtual || 'Manaus - Coordenadoria 3') + '? A partir de agora ele fica \"aguardando revisão\" da Gerente · mas você ainda pode reabrir e editar enquanto ela não gerar o Consolidado final deste ciclo (RN007/RN039).' + aviso;
     },
     confirmLabel:'Confirmar', confirmClass:'btn-red',
     onConfirm: () => { fecharMunicipioAtual(); go('A5'); }
@@ -850,7 +850,7 @@ const modals = {
   validar: {
     type:'green', icon:'✓',
     title:'Tem certeza que deseja fechar este ciclo?',
-    text:'Depois de confirmar, o relatório final consolidado é gerado e fica disponível para extração aqui mesmo, nesta tela, e o ciclo se fecha automaticamente (RN035): os analistas não poderão mais editar nenhuma carga dele. Não será possível voltar a este ciclo depois disso — para uma nova rodada deste tipo, você vai precisar criar (iniciar) uma nova análise em "Ciclos de análise". O arquivo extraído deve ser enviado manualmente (e-mail ou outro meio) à Gerente Superior, que cuida da homologação por fora do SACV (RN028) — esse envio e a homologação em si não acontecem pelo sistema.',
+    text:'Depois de confirmar, o relatório final consolidado é gerado e fica disponível para extração aqui mesmo, nesta tela, e o ciclo se fecha automaticamente (RN035): os analistas não poderão mais editar nenhuma carga dele. Não será possível voltar a este ciclo depois disso · para uma nova rodada deste tipo, você vai precisar criar (iniciar) uma nova análise em "Ciclos de análise". O arquivo extraído deve ser enviado manualmente (e-mail ou outro meio) à Gerente Superior, que cuida da homologação por fora do SACV (RN028) · esse envio e a homologação em si não acontecem pelo sistema.',
     confirmLabel:'Sim, fechar ciclo', confirmClass:'btn-green',
     onConfirm: () => { fecharCicloAtual(); renderPainelG4(); }
   }
@@ -861,11 +861,11 @@ const FIELD_OPTIONS = {
   tipoCurso: ['EJA','Ensino Médio','Técnico','Regular'],
   escola: ['E.E. Central','E.E. Mayara','E.E. São José','E.E. Nova Aliança','E.E. Vitória Régia'],
   coordenadoria: ['Coordenadoria 1','Coordenadoria 2','Coordenadoria 3'],
-  endereco: ['Comunidade Rio Preto','Comunidade Novo Horizonte','Vila Amazonas','Zona Rural — Km 15','Comunidade São Raimundo'],
+  endereco: ['Comunidade Rio Preto','Comunidade Novo Horizonte','Vila Amazonas','Zona Rural · Km 15','Comunidade São Raimundo'],
   disciplina: ['Matemática','Português','Física','Geografia','História','Ciências'],
   sequencialEja: ['Sim','Não'],
   situacao: ['Vaga confirmada','Pendência','Excluída'],
-  matricula: ['123456 — João Silva','234567 — Maria Souza','345678 — Carlos Lima','456789 — Ana Pereira'],
+  matricula: ['123456 · João Silva','234567 · Maria Souza','345678 · Carlos Lima','456789 · Ana Pereira'],
   nomeEnsino: ['Ensino Fundamental','Ensino Médio','EJA','Educação Profissional'],
   areaEixo: ['Exatas','Linguagens','Humanas','Técnico'],
   motivo: ['Registro incompleto','Pendência cadastral','Divergência de carga horária'],
@@ -919,13 +919,13 @@ function removeChip(btn){
   avaliarCargas();
   atualizaOrigemBadges();
 }
-// Linhas que o Analista reincluiu manualmente mesmo com uma regra ativa que as excluiria —
+// Linhas que o Analista reincluiu manualmente mesmo com uma regra ativa que as excluiria ·
 // exceção pontual por carga, a regra continua valendo para as demais (mesmo padrão do
 // protótipo anterior, agora generalizado para qualquer regra/linha).
 let manualOverrides = new Set();
-let reinclusoes = {}; // { [rowId]: { texto, regra } } — excecao manual do Analista sobre uma carga excluida por regra
+let reinclusoes = {}; // { [rowId]: { texto, regra } } · excecao manual do Analista sobre uma carga excluida por regra
 const REGRA_LABELS_EXCLUSAO = { localidade:'Localidade', cargaHoraria:'Horas', tipoCurso:'Curso/Projeto', escola:'Nome Escola' };
-// Uma carga pode se enquadrar em mais de um criterio de exclusao ao mesmo tempo (ex.: Horas E Localidade) — por isso
+// Uma carga pode se enquadrar em mais de um criterio de exclusao ao mesmo tempo (ex.: Horas E Localidade) · por isso
 // as regras que a afetam sao sempre tratadas como uma LISTA, nunca uma unica regra fixa.
 function regraLabelsFromKeys(keys){
   return (keys || []).filter(Boolean).map(k => REGRA_LABELS_EXCLUSAO[k] || k);
@@ -950,8 +950,8 @@ function openReincluir(rowId){
   box.className = 'modal-aviso green';
   box.innerHTML = `
     <div class="icon-circle">⚠</div>
-    <h3>Reincluir carga — ${f.escola}</h3>
-    <p>Esta carga foi excluída pela${plural ? 's regras de' : ' regra de'} <b>${regraLabelTxt}</b>. Reincluir mantém uma exceção manual só para este registro — a${plural ? 's regras continuam' : ' regra continua'} valendo para as demais cargas. Registre por que esta carga deve valer como vaga mesmo assim.</p>
+    <h3>Reincluir carga · ${f.escola}</h3>
+    <p>Esta carga foi excluída pela${plural ? 's regras de' : ' regra de'} <b>${regraLabelTxt}</b>. Reincluir mantém uma exceção manual só para este registro · a${plural ? 's regras continuam' : ' regra continua'} valendo para as demais cargas. Registre por que esta carga deve valer como vaga mesmo assim.</p>
     <div class="field" style="margin-bottom:14px;"><label>Justificativa da exceção</label><textarea id="reincluirTextoInput" placeholder="Descreva o motivo da exceção...">${rAtual && rAtual.texto ? rAtual.texto : ''}</textarea></div>
     <div class="actions">
       <button class="btn btn-outline" onclick="closeModal()">Cancelar</button>
@@ -979,9 +979,9 @@ function desfazerReinclusao(rowId){
 }
 
 // Reavalia TODAS as cargas do município (exceto a pendência da base, tratada à parte por
-// justificativa — RF005/RN030) contra as regras atualmente marcadas na tabela de filtros.
+// justificativa · RF005/RN030) contra as regras atualmente marcadas na tabela de filtros.
 // Roda sempre que uma regra é aplicada, editada ou desvinculada, e logo após o pré-carregamento
-// da regra padrão do ciclo (RN044/RN045) — substitui a lógica antiga, hardcoded por carga.
+// da regra padrão do ciclo (RN044/RN045) · substitui a lógica antiga, hardcoded por carga.
 function avaliarCargas(){
   const limite = document.getElementById('valHoras') && document.getElementById('valHoras').value !== ''
     ? Number(document.getElementById('valHoras').value) : null;
@@ -1004,7 +1004,7 @@ function avaliarCargas(){
     if (manualOverrides.has(rowId)){
       const rec = reinclusoes[rowId];
       row.classList.remove('excluded');
-      if (badge){ badge.className = 'badge yellow'; badge.textContent = 'Vaga confirmada — exceção manual'; }
+      if (badge){ badge.className = 'badge yellow'; badge.textContent = 'Vaga confirmada · exceção manual'; }
       if (vale){ vale.className = 'badge green'; vale.textContent = 'Sim'; }
       if (obs) obs.textContent = 'Exceção manual: mantida como vaga por você, ' + fraseRegrasIgnoradas(rec && rec.regras) + '. Justificativa: ' + (rec && rec.texto && rec.texto.trim() ? rec.texto : '(nenhuma registrada)') + '.';
       if (acao) acao.innerHTML = '<button class="icon-btn" onclick="openReincluir(\'' + rowId + '\')">Ver justificativa</button> <a href="#" onclick="desfazerReinclusao(\'' + rowId + '\');return false;" style="font-size:11.5px;color:var(--muted);margin-left:6px;">↺ desfazer</a>';
@@ -1016,9 +1016,9 @@ function avaliarCargas(){
       row.classList.remove('excluded');
       delete row.dataset.excludedBy;
       if (!j){
-        if (badge){ badge.className = 'badge yellow'; badge.textContent = 'Pendência — precisa justificar'; }
-        if (vale){ vale.className = 'badge gray'; vale.textContent = '—'; }
-        if (obs) obs.textContent = 'Pendência da base: ' + f.motivo + ' — precisa da sua justificativa manual' + (anexoNome ? (' · comprovante anexado: ' + anexoNome) : '');
+        if (badge){ badge.className = 'badge yellow'; badge.textContent = 'Pendência · precisa justificar'; }
+        if (vale){ vale.className = 'badge gray'; vale.textContent = '-'; }
+        if (obs) obs.textContent = 'Pendência da base: ' + f.motivo + ' · precisa da sua justificativa manual' + (anexoNome ? (' · comprovante anexado: ' + anexoNome) : '');
         if (acao) acao.innerHTML = '<button class="icon-btn" onclick="openJustify(\'' + rowId + '\')">Justificar</button> <button class="icon-btn" onclick="openAnexarPend(\'' + rowId + '\')">📎 ' + (anexoNome ? anexoNome : 'Anexar documento') + '</button>';
       } else {
         const valeSim = j.valeVaga === 'sim';
@@ -1038,17 +1038,17 @@ function avaliarCargas(){
     if (motivosExclusao.length){
       row.classList.add('excluded');
       row.dataset.excludedBy = chavesExclusao.join(',');
-      if (badge){ badge.className = 'badge red'; badge.textContent = 'Excluída — regra'; }
+      if (badge){ badge.className = 'badge red'; badge.textContent = 'Excluída · regra'; }
       if (vale){ vale.className = 'badge red'; vale.textContent = 'Não'; }
-      if (obs) obs.textContent = 'Excluída pela regra — critérios enquadrados: ' + motivosExclusao.join('; ') + '.';
+      if (obs) obs.textContent = 'Excluída pela regra · critérios enquadrados: ' + motivosExclusao.join('; ') + '.';
       if (acao) acao.innerHTML = '<button class="icon-btn" onclick="openReincluir(\'' + rowId + '\')">Reincluir</button>';
     } else {
       row.classList.remove('excluded');
       delete row.dataset.excludedBy;
       if (badge){ badge.className = 'badge green'; badge.textContent = 'Vaga confirmada'; }
       if (vale){ vale.className = 'badge green'; vale.textContent = 'Sim'; }
-      if (obs) obs.textContent = 'Confirmada — não se enquadra em nenhuma regra de exclusão vigente';
-      if (acao) acao.textContent = '—';
+      if (obs) obs.textContent = 'Confirmada · não se enquadra em nenhuma regra de exclusão vigente';
+      if (acao) acao.textContent = '-';
     }
   });
   atualizaGateFechamento();
@@ -1061,8 +1061,8 @@ const RULES_META = {
   escola: 'Escola',
 };
 // Chaves com efeito real de exclusão nas cargas de exemplo deste protótipo (as demais 7
-// campos do filtro — Coordenadoria, Endereço, Disciplina, Sequencial EJA, Situação, Data de
-// importação, Matrícula — ficam disponíveis na tabela e são pré-carregadas pela regra padrão,
+// campos do filtro · Coordenadoria, Endereço, Disciplina, Sequencial EJA, Situação, Data de
+// importação, Matrícula · ficam disponíveis na tabela e são pré-carregadas pela regra padrão,
 // mas sem dados sintéticos o suficiente pra simular exclusão ao vivo neste wireframe).
 const CHAVES_REGRA_ATIVA = ['localidade','cargaHoraria','tipoCurso','escola'];
 let activeRules = new Set();
@@ -1094,16 +1094,16 @@ function renderChips(){
 }
 
 const CARGA_FIELDS = {
-  rowCentral:     { dataRef:'24/07/2026', codDdz:'DDZ-03', nomeDdz:'Manaus — Coordenadoria 3', codEscola:'ESC-1091', localidade:'Urbana', endereco:'Av. Getúlio Vargas, 450', comunidade:'—', turno:'Matutino', nomeEnsino:'Ensino Fundamental', tipoCurso:'Regular', areaEixo:'Exatas', disciplinas:'Matemática', fasesTurmas:'8º ano — Turma B', horas:20, motivo:'', codCargaHoraria:'CH-20', pendenciaCarga:'Não', dtIncCarga:'20/07/2026', dtAltCarga:'24/07/2026', cursoTec:'Não', seqMatricula:'—', numProcesso:'2026/00118', escola:'E.E. Central' },
-  rowMayara:      { dataRef:'24/07/2026', codDdz:'DDZ-03', nomeDdz:'Manaus — Coordenadoria 3', codEscola:'ESC-1187', localidade:'Urbana', endereco:'Rua Sete de Setembro, 210', comunidade:'—', turno:'Vespertino', nomeEnsino:'Ensino Fundamental', tipoCurso:'Regular', areaEixo:'Linguagens', disciplinas:'Português', fasesTurmas:'6º ano — Turma A', horas:12, motivo:'', codCargaHoraria:'CH-12', pendenciaCarga:'Não', dtIncCarga:'20/07/2026', dtAltCarga:'24/07/2026', cursoTec:'Não', seqMatricula:'—', numProcesso:'2026/00119', escola:'E.E. Mayara' },
-  rowPend:        { dataRef:'24/07/2026', codDdz:'DDZ-03', nomeDdz:'Manaus — Coordenadoria 3', codEscola:'ESC-1204', localidade:'Urbana', endereco:'Rua Vitória Régia, 88', comunidade:'—', turno:'Vespertino', nomeEnsino:'Ensino Fundamental', tipoCurso:'Regular', areaEixo:'Linguagens', disciplinas:'Português', fasesTurmas:'7º ano — Turma C', horas:14, motivo:'Registro sem informação suficiente para classificar automaticamente', codCargaHoraria:'CH-14', pendenciaCarga:'Sim', dtIncCarga:'20/07/2026', dtAltCarga:'24/07/2026', cursoTec:'Não', seqMatricula:'—', numProcesso:'2026/00120', escola:'E.E. Vitória Régia' },
-  rowSaoJose:     { dataRef:'24/07/2026', codDdz:'DDZ-03', nomeDdz:'Manaus — Coordenadoria 3', codEscola:'ESC-1052', localidade:'Urbana', endereco:'Rua São José, 33', comunidade:'—', turno:'Matutino', nomeEnsino:'Ensino Médio', tipoCurso:'Regular', areaEixo:'Exatas', disciplinas:'Física', fasesTurmas:'1ª série — Turma A', horas:8, motivo:'', codCargaHoraria:'CH-08', pendenciaCarga:'Não', dtIncCarga:'20/07/2026', dtAltCarga:'24/07/2026', cursoTec:'Não', seqMatricula:'—', numProcesso:'2026/00121', escola:'E.E. São José' },
-  rowNovaAlianca: { dataRef:'24/07/2026', codDdz:'DDZ-03', nomeDdz:'Manaus — Coordenadoria 3', codEscola:'ESC-1316', localidade:'Urbana', endereco:'Rua Nova Aliança, 500', comunidade:'—', turno:'Noturno', nomeEnsino:'Educação Profissional', tipoCurso:'Técnico', areaEixo:'Técnico', disciplinas:'Informática', fasesTurmas:'Módulo II — Turma Única', horas:16, motivo:'', codCargaHoraria:'CH-16', pendenciaCarga:'Não', dtIncCarga:'20/07/2026', dtAltCarga:'24/07/2026', cursoTec:'Sim', seqMatricula:'—', numProcesso:'2026/00122', escola:'E.E. Nova Aliança' },
+  rowCentral:     { dataRef:'24/07/2026', codDdz:'DDZ-03', nomeDdz:'Manaus - Coordenadoria 3', codEscola:'ESC-1091', localidade:'Urbana', endereco:'Av. Getúlio Vargas, 450', comunidade:'-', turno:'Matutino', nomeEnsino:'Ensino Fundamental', tipoCurso:'Regular', areaEixo:'Exatas', disciplinas:'Matemática', fasesTurmas:'8º ano · Turma B', horas:20, motivo:'', codCargaHoraria:'CH-20', pendenciaCarga:'Não', dtIncCarga:'20/07/2026', dtAltCarga:'24/07/2026', cursoTec:'Não', seqMatricula:'-', numProcesso:'2026/00118', escola:'E.E. Central' },
+  rowMayara:      { dataRef:'24/07/2026', codDdz:'DDZ-03', nomeDdz:'Manaus - Coordenadoria 3', codEscola:'ESC-1187', localidade:'Urbana', endereco:'Rua Sete de Setembro, 210', comunidade:'-', turno:'Vespertino', nomeEnsino:'Ensino Fundamental', tipoCurso:'Regular', areaEixo:'Linguagens', disciplinas:'Português', fasesTurmas:'6º ano · Turma A', horas:12, motivo:'', codCargaHoraria:'CH-12', pendenciaCarga:'Não', dtIncCarga:'20/07/2026', dtAltCarga:'24/07/2026', cursoTec:'Não', seqMatricula:'-', numProcesso:'2026/00119', escola:'E.E. Mayara' },
+  rowPend:        { dataRef:'24/07/2026', codDdz:'DDZ-03', nomeDdz:'Manaus - Coordenadoria 3', codEscola:'ESC-1204', localidade:'Urbana', endereco:'Rua Vitória Régia, 88', comunidade:'-', turno:'Vespertino', nomeEnsino:'Ensino Fundamental', tipoCurso:'Regular', areaEixo:'Linguagens', disciplinas:'Português', fasesTurmas:'7º ano · Turma C', horas:14, motivo:'Registro sem informação suficiente para classificar automaticamente', codCargaHoraria:'CH-14', pendenciaCarga:'Sim', dtIncCarga:'20/07/2026', dtAltCarga:'24/07/2026', cursoTec:'Não', seqMatricula:'-', numProcesso:'2026/00120', escola:'E.E. Vitória Régia' },
+  rowSaoJose:     { dataRef:'24/07/2026', codDdz:'DDZ-03', nomeDdz:'Manaus - Coordenadoria 3', codEscola:'ESC-1052', localidade:'Urbana', endereco:'Rua São José, 33', comunidade:'-', turno:'Matutino', nomeEnsino:'Ensino Médio', tipoCurso:'Regular', areaEixo:'Exatas', disciplinas:'Física', fasesTurmas:'1ª série · Turma A', horas:8, motivo:'', codCargaHoraria:'CH-08', pendenciaCarga:'Não', dtIncCarga:'20/07/2026', dtAltCarga:'24/07/2026', cursoTec:'Não', seqMatricula:'-', numProcesso:'2026/00121', escola:'E.E. São José' },
+  rowNovaAlianca: { dataRef:'24/07/2026', codDdz:'DDZ-03', nomeDdz:'Manaus - Coordenadoria 3', codEscola:'ESC-1316', localidade:'Urbana', endereco:'Rua Nova Aliança, 500', comunidade:'-', turno:'Noturno', nomeEnsino:'Educação Profissional', tipoCurso:'Técnico', areaEixo:'Técnico', disciplinas:'Informática', fasesTurmas:'Módulo II · Turma Única', horas:16, motivo:'', codCargaHoraria:'CH-16', pendenciaCarga:'Não', dtIncCarga:'20/07/2026', dtAltCarga:'24/07/2026', cursoTec:'Sim', seqMatricula:'-', numProcesso:'2026/00122', escola:'E.E. Nova Aliança' },
 };
 
 // Todas as colunas reais da base do SILS (RF001). 'visible:true' são as que ficam à mostra por
 // padrão na tabela de cargas; as demais ficam ocultas atrás do botão 'Mostrar mais colunas',
-// igual a um filtro de ver/não ver — não mudam nenhuma regra, são só apresentação.
+// igual a um filtro de ver/não ver · não mudam nenhuma regra, são só apresentação.
 const CARGA_COLUMNS = [
   { key:'dataRef',         label:'Data Ref.',            field:'dataRef',         visible:false },
   { key:'codDdz',          label:'Cód. DDZ',             field:'codDdz',          visible:false },
@@ -1130,7 +1130,7 @@ const CARGA_COLUMNS = [
   { key:'numProcesso',     label:'Núm. Processo',        field:'numProcesso',     visible:false },
 ];
 let colunasExtrasVisiveis = new Set();
-let justificativas = {}; // { [rowId]: { valeVaga: 'sim'|'nao' } } — decisão do Analista por carga com Motivo preenchido
+let justificativas = {}; // { [rowId]: { valeVaga: 'sim'|'nao' } } · decisão do Analista por carga com Motivo preenchido
 let anexos = {}; // { [rowId]: nomeDoArquivo }
 
 function colunasVisiveisAtuais(){
@@ -1146,21 +1146,21 @@ function renderCargasTable(){
   const extrasOcultas = CARGA_COLUMNS.length - colunas.length;
   if (btn) btn.textContent = '👁 Mostrar mais colunas' + (extrasOcultas > 0 ? ' (' + extrasOcultas + ')' : ' (todas visíveis)');
   head.innerHTML = colunas.map(c => '<th>' + c.label + '</th>').join('') +
-    '<th>Observação — regra aplicada</th><th>Vale como vaga?</th><th>Situação</th><th>Ação</th>';
+    '<th>Observação · regra aplicada</th><th>Vale como vaga?</th><th>Situação</th><th>Ação</th>';
   body.innerHTML = Object.keys(CARGA_FIELDS).map(rowId => {
     const f = CARGA_FIELDS[rowId];
     const sufixo = rowId.replace('row', '');
     const tds = colunas.map(c => {
       let v = f[c.field];
-      if (v === undefined || v === null || v === '') v = '—';
+      if (v === undefined || v === null || v === '') v = '-';
       else if (c.suffix) v = v + c.suffix;
       return '<td>' + v + '</td>';
     }).join('');
     return '<tr id="' + rowId + '">' + tds +
       '<td id="obs' + sufixo + '"></td>' +
-      '<td><span class="badge gray" id="vale' + sufixo + '">—</span></td>' +
-      '<td><span class="badge gray" id="badge' + sufixo + '">—</span></td>' +
-      '<td id="acao' + sufixo + '">—</td></tr>';
+      '<td><span class="badge gray" id="vale' + sufixo + '">-</span></td>' +
+      '<td><span class="badge gray" id="badge' + sufixo + '">-</span></td>' +
+      '<td id="acao' + sufixo + '">-</td></tr>';
   }).join('');
 }
 
@@ -1214,13 +1214,13 @@ function buildRuleChecklistRows(rowId){
   }
   if (f.motivo && f.motivo.trim() !== ''){
     const justificada = !!justificativas[rowId];
-    rows.push(`<tr><td>Pendência da base: ${f.motivo}</td><td>—</td><td><span class="badge ${justificada ? 'green' : 'yellow'}">${justificada ? 'justificada por você' : 'aguardando sua justificativa'}</span></td></tr>`);
+    rows.push(`<tr><td>Pendência da base: ${f.motivo}</td><td>-</td><td><span class="badge ${justificada ? 'green' : 'yellow'}">${justificada ? 'justificada por você' : 'aguardando sua justificativa'}</span></td></tr>`);
   }
   return rows.join('') || '<tr><td colspan="3">Nenhuma regra ativa avaliada para esta carga.</td></tr>';
 }
 // Categoriza cada carga para o filtro do Resumo: cargas que dependeram de uma decisão manual
-// do Analista (pendência da base, justificada ou ainda aguardando) entram em "justificativas" —
-// mesmo que o resultado final seja "confirmada" ou "excluída" — porque são as que realmente
+// do Analista (pendência da base, justificada ou ainda aguardando) entram em "justificativas" -
+// mesmo que o resultado final seja "confirmada" ou "excluída" · porque são as que realmente
 // merecem revisão; a maioria das confirmações via regra padrão da Gerente fica em "confirmadas"
 // e não precisa de atenção extra.
 function categoriaResumo(situacaoText){
@@ -1262,9 +1262,9 @@ function renderResumo(){
     const obsEl = document.getElementById('obs' + sufixo);
     const valeEl = document.getElementById('vale' + sufixo);
     const badgeEl = document.getElementById('badge' + sufixo);
-    const escola = f.escola || '—';
-    const disciplina = f.disciplinas || '—';
-    const horas = (f.horas !== undefined ? f.horas + 'h' : '—');
+    const escola = f.escola || '-';
+    const disciplina = f.disciplinas || '-';
+    const horas = (f.horas !== undefined ? f.horas + 'h' : '-');
     const obs = obsEl ? obsEl.textContent : '';
     const vale = valeEl ? valeEl.outerHTML : '';
     const situacao = badgeEl ? badgeEl.outerHTML : '';
@@ -1272,7 +1272,7 @@ function renderResumo(){
     const anexoNome = anexos[rowId];
     const justificativaHtml = j ? (
       '<div class="legend" style="margin:0 0 8px 0;background:var(--gray-100);padding:8px 10px;border-radius:6px;">' +
-      '<div><b>Sua justificativa:</b> ' + (j.texto && j.texto.trim() ? j.texto : '<i>(nenhum texto registrado — abra "Ver justificativa" para completar)</i>') + '</div>' +
+      '<div><b>Sua justificativa:</b> ' + (j.texto && j.texto.trim() ? j.texto : '<i>(nenhum texto registrado · abra "Ver justificativa" para completar)</i>') + '</div>' +
       '<div><b>Considerada como vaga:</b> ' + (j.valeVaga === 'sim' ? 'Sim' : 'Não') + (anexoNome ? ' · <b>Comprovante:</b> 📎 ' + anexoNome : '') + '</div>' +
       '</div>'
     ) : '';
@@ -1280,7 +1280,7 @@ function renderResumo(){
     const recRegraLabels = rec ? regraLabelsFromKeys(rec.regras) : [];
     const reinclusaoHtml = rec ? (
       '<div class="legend" style="margin:0 0 8px 0;background:#FEF3D6;padding:8px 10px;border-radius:6px;">' +
-      '<div><b>⚠ Exceção manual — regra' + (recRegraLabels.length > 1 ? 's ignoradas' : ' ignorada') + ':</b> ' + (recRegraLabels.length ? recRegraLabels.join(', ') : '—') + '</div>' +
+      '<div><b>⚠ Exceção manual · regra' + (recRegraLabels.length > 1 ? 's ignoradas' : ' ignorada') + ':</b> ' + (recRegraLabels.length ? recRegraLabels.join(', ') : '-') + '</div>' +
       '<div><b>Justificativa:</b> ' + (rec.texto && rec.texto.trim() ? rec.texto : '<i>(nenhum texto registrado)</i>') + '</div>' +
       '</div>'
     ) : '';
@@ -1313,7 +1313,7 @@ function switchTab(name){
   if (name === 'resumo') renderResumo();
 }
 
-// Desvincula rapidamente uma regra pelo × do chip em "Regras em vigor agora" — equivale a
+// Desvincula rapidamente uma regra pelo × do chip em "Regras em vigor agora" · equivale a
 // desmarcar o campo direto na tabela (mesmo efeito, mesmo caminho ao vivo, só um atalho).
 function desvincularRegra(key){
   activeRules.delete(key);
@@ -1353,8 +1353,8 @@ function openJustify(rowId){
   box.className = 'modal-aviso green';
   box.innerHTML = `
     <div class="icon-circle">✓</div>
-    <h3>Justificar pendência — ${f.escola}</h3>
-    <p>Este registro veio da base com o motivo "<b>${f.motivo}</b>" — sem informação suficiente para decidir sozinho. Registre o motivo e diga se esta carga deve valer como vaga. Se precisar anexar um comprovante, use a ação "📎 Anexar documento" ao lado desta, na tabela de cargas (RN026/RN030, opcional).</p>
+    <h3>Justificar pendência · ${f.escola}</h3>
+    <p>Este registro veio da base com o motivo "<b>${f.motivo}</b>" · sem informação suficiente para decidir sozinho. Registre o motivo e diga se esta carga deve valer como vaga. Se precisar anexar um comprovante, use a ação "📎 Anexar documento" ao lado desta, na tabela de cargas (RN026/RN030, opcional).</p>
     <div class="field" style="margin-bottom:14px;"><label>Justificativa</label><textarea id="justificativaTextoInput" placeholder="Descreva o motivo da sua decisão...">${jAtual && jAtual.texto ? jAtual.texto : ''}</textarea></div>
     <div class="field" style="margin-bottom:14px;">
       <label>Esta pendência vale como carga vaga?</label>
@@ -1380,7 +1380,7 @@ function confirmJustify(){
   closeModal();
 }
 
-// Anexo de comprovante de uma pendência (qualquer carga com Motivo preenchido) — ação
+// Anexo de comprovante de uma pendência (qualquer carga com Motivo preenchido) · ação
 // independente de justificar: o Analista pode anexar um documento de apoio a qualquer
 // momento, tenha ou não decidido ainda se a carga vale como vaga (RN026/RN030, opcional).
 let anexarRowIdAtual = null;
@@ -1391,7 +1391,7 @@ function openAnexarPend(rowId){
   box.className = 'modal-aviso green';
   box.innerHTML = `
     <div class="icon-circle">📎</div>
-    <h3>Anexar documento — ${f.escola}</h3>
+    <h3>Anexar documento · ${f.escola}</h3>
     <p>Anexe um comprovante que apoie sua decisão sobre esta pendência. Isso é opcional e independente de justificar (RN026/RN030).</p>
     <div class="field" style="margin-bottom:14px;">
       <label>Arquivo</label>
@@ -1412,7 +1412,7 @@ function confirmAnexarPend(){
   closeModal();
 }
 
-// Recalcula o gate de "Fechar análise" a partir do estado real da tabela de cargas —
+// Recalcula o gate de "Fechar análise" a partir do estado real da tabela de cargas ·
 // roda de novo toda vez que a aba Resumo é aberta ou que uma pendência é (des)justificada,
 // então também revalida corretamente depois de reabrir um município já fechado (RF031/RN031).
 function atualizaGateFechamento(){
@@ -1435,7 +1435,7 @@ function atualizaGateFechamento(){
     cargasNote.className = pendencias > 0 ? 'note warn' : 'note';
     cargasNote.innerHTML = pendencias > 0
       ? 'Faltam <b>' + pendencias + ' carga' + (pendencias > 1 ? 's' : '') + ' a justificar</b>' + listaEscolas + ' antes de seguir para o Resumo.'
-      : 'Todas as pendências foram justificadas — você já pode seguir para o Resumo e fechar a análise deste município.';
+      : 'Todas as pendências foram justificadas · você já pode seguir para o Resumo e fechar a análise deste município.';
   }
   if (btnIrResumo){
     btnIrResumo.disabled = false;
@@ -1451,7 +1451,7 @@ function atualizaGateFechamento(){
     gate.className = pendencias > 0 ? 'note warn' : 'note';
     gate.innerHTML = pendencias > 0
       ? 'Você só poderá fechar a análise quando <b>todas as regras estiverem aplicadas</b> e <b>todas as pendências da base estiverem justificadas</b>. Faltam: <b>' + pendencias + ' pendência' + (pendencias > 1 ? 's' : '') + '</b>' + listaEscolas + '.'
-      : 'Todas as regras aplicadas e todas as pendências justificadas — você já pode fechar a análise deste município.';
+      : 'Todas as regras aplicadas e todas as pendências justificadas · você já pode fechar a análise deste município.';
     btn.disabled = pendencias > 0;
     btn.classList.toggle('btn-outline', pendencias > 0);
     btn.classList.toggle('btn-navy', pendencias === 0);
@@ -1484,14 +1484,14 @@ function enterAnalise(municipio, tipo){
   const titulo = document.getElementById('a3TituloMuni');
   const note = document.getElementById('a3TipoNote');
   if (crumb) crumb.textContent = municipio;
-  if (titulo) titulo.textContent = municipio.replace(' — ', ', ');
+  if (titulo) titulo.textContent = municipio.replace(' - ', ', ');
   if (note){
     if (tipo === 'regular'){
-      note.innerHTML = 'Você está analisando o <b>Tipo Regular</b> deste município — só entram aqui as escolas <b>não marcadas</b> como indígenas na base (52 de 89 cargas). As escolas indígenas deste mesmo município ficam no Tipo Indígena, reivindicado e fechado separadamente.';
+      note.innerHTML = 'Você está analisando o <b>Tipo Regular</b> deste município · só entram aqui as escolas <b>não marcadas</b> como indígenas na base (52 de 89 cargas). As escolas indígenas deste mesmo município ficam no Tipo Indígena, reivindicado e fechado separadamente.';
     } else if (tipo === 'indigena'){
-      note.innerHTML = 'Você está analisando o <b>Tipo Indígena</b> deste município — só entram aqui as escolas <b>marcadas como indígenas</b> na base (37 de 89 cargas). As escolas regulares deste mesmo município ficam no Tipo Regular, reivindicado e fechado separadamente.';
+      note.innerHTML = 'Você está analisando o <b>Tipo Indígena</b> deste município · só entram aqui as escolas <b>marcadas como indígenas</b> na base (37 de 89 cargas). As escolas regulares deste mesmo município ficam no Tipo Regular, reivindicado e fechado separadamente.';
     } else {
-      note.innerHTML = 'Este município não possui escolas indígenas identificadas na base — toda a análise é feita em um único tipo (<b>Regular</b>).';
+      note.innerHTML = 'Este município não possui escolas indígenas identificadas na base · toda a análise é feita em um único tipo (<b>Regular</b>).';
     }
   }
   manualOverrides = new Set();
@@ -1508,13 +1508,13 @@ function enterAnalise(municipio, tipo){
 }
 
 // Qual regra padrão (se houver) rege o ciclo aberto atualmente para o tipo em foco do
-// Analista — usada para pré-carregar o filtro ao entrar na análise de um município (RN045).
+// Analista · usada para pré-carregar o filtro ao entrar na análise de um município (RN045).
 function regraPadraoIdDoCicloAtual(){
   const ciclo = statusTipo(tipoContext);
   return ciclo ? ciclo.regraPadraoId : null;
 }
 
-// Valores que vieram da regra padrão na última vez que ela foi aplicada — usados para detectar
+// Valores que vieram da regra padrão na última vez que ela foi aplicada · usados para detectar
 // divergência (RN046) em QUALQUER um dos 11 campos do filtro, não só os 4 com efeito de
 // exclusão ao vivo neste protótipo.
 let origemPadraoValores = {};
@@ -1571,10 +1571,10 @@ function aplicarRegraPadraoNoFiltro(regraPadraoId){
 }
 
 // Atualiza a coluna "Origem" de TODOS os campos do filtro: "padrão" (igual ao que a Gerente
-// definiu), "diverge do padrão" (Analista alterou o valor — RN046, não bloqueia), "sua regra"
+// definiu), "diverge do padrão" (Analista alterou o valor · RN046, não bloqueia), "sua regra"
 // (Analista marcou um campo que não veio do padrão) ou "removida do padrão" (Analista
 // desmarcou o campo, ou apagou o valor, de algo que tinha vindo do padrão). Roda a cada
-// mudança no filtro — marcar/desmarcar campo, editar valor, adicionar/remover valor — para
+// mudança no filtro · marcar/desmarcar campo, editar valor, adicionar/remover valor · para
 // nunca ficar desatualizada.
 function atualizaOrigemBadges(){
   CAMPOS_REGRA.forEach(f => {
@@ -1583,18 +1583,18 @@ function atualizaOrigemBadges(){
     if (!chk || !origemTd) return;
     if (!chk.checked){
       origemTd.innerHTML = origemPadraoValores[f.key] !== undefined
-        ? '<span class="badge gray" title="Removida em relação à regra padrão — não bloqueia, é só referência (RN046)">removida do padrão</span>'
+        ? '<span class="badge gray" title="Removida em relação à regra padrão · não bloqueia, é só referência (RN046)">removida do padrão</span>'
         : '';
       return;
     }
     const atual = valorAtualCampo(f);
     if (origemPadraoValores[f.key] !== undefined){
       if (atual === ''){
-        origemTd.innerHTML = '<span class="badge gray" title="Você apagou o valor que veio da regra padrão — não bloqueia, é só referência (RN046)">removida do padrão</span>';
+        origemTd.innerHTML = '<span class="badge gray" title="Você apagou o valor que veio da regra padrão · não bloqueia, é só referência (RN046)">removida do padrão</span>';
       } else if (atual === origemPadraoValores[f.key]){
         origemTd.innerHTML = '<span class="badge" style="background:#E7ECF6;color:var(--navy-700);" title="Regra padrão da Gerência (RN044/RN045)">padrão</span>';
       } else {
-        origemTd.innerHTML = '<span class="badge yellow" title="Você alterou em relação à regra padrão da Gerência — ela continua como referência, não bloqueia (RN046)">diverge do padrão</span>';
+        origemTd.innerHTML = '<span class="badge yellow" title="Você alterou em relação à regra padrão da Gerência · ela continua como referência, não bloqueia (RN046)">diverge do padrão</span>';
       }
     } else {
       origemTd.innerHTML = '<span class="badge green">sua regra</span>';
@@ -1603,9 +1603,9 @@ function atualizaOrigemBadges(){
 }
 
 // Dispara a cada interação do Analista com o filtro (marcar/desmarcar um campo, digitar um
-// número ou data) — recalcula regras ativas, reavalia as cargas (para os 4 campos com efeito
+// número ou data) · recalcula regras ativas, reavalia as cargas (para os 4 campos com efeito
 // ao vivo) e atualiza a coluna Origem para TODOS os campos. Não existe um passo separado de
-// "aplicar e salvar" — o resultado já aparece na hora, para este município.
+// "aplicar e salvar" · o resultado já aparece na hora, para este município.
 function onFiltroCampoChanged(){
   const chkIds = { localidade:'chkLocalidade', cargaHoraria:'chkHoras', tipoCurso:'chkTipoCurso', escola:'chkEscola' };
   activeRules = new Set(CHAVES_REGRA_ATIVA.filter(k => { const el = document.getElementById(chkIds[k]); return el && el.checked; }));
@@ -1630,27 +1630,27 @@ function setTipoContext(tipo){
   const note = document.getElementById('tipoContextNote');
   const cicloDoTipo = statusTipo(tipo);
   if (!cicloDoTipo){
-    note.innerHTML = 'Nenhum ciclo de análise aberto para o <b>' + tipoLabel(tipo) + '</b> no momento — aguarde a Gerência iniciar uma nova análise para este tipo.';
+    note.innerHTML = 'Nenhum ciclo de análise aberto para o <b>' + tipoLabel(tipo) + '</b> no momento · aguarde a Gerência iniciar uma nova análise para este tipo.';
   } else if (tipo === 'regular'){
-    note.innerHTML = 'Mostrando municípios com vagas para o ensino <b>regular</b>, dentro do ciclo #' + cicloDoTipo.id + '. Reivindicações feitas aqui valem só para este tipo — a análise do Tipo Indígena é feita à parte, escolhendo a outra opção acima (quando houver ciclo aberto para ela).';
+    note.innerHTML = 'Mostrando municípios com vagas para o ensino <b>regular</b>, dentro do ciclo #' + cicloDoTipo.id + '. Reivindicações feitas aqui valem só para este tipo · a análise do Tipo Indígena é feita à parte, escolhendo a outra opção acima (quando houver ciclo aberto para ela).';
   } else {
-    note.innerHTML = 'Mostrando só municípios/localidades com escolas marcadas como <b>indígenas</b> na base, dentro do ciclo #' + cicloDoTipo.id + '. Reivindicações feitas aqui valem só para o Tipo Indígena — a análise do Tipo Regular é feita à parte (quando houver ciclo aberto para ela).';
+    note.innerHTML = 'Mostrando só municípios/localidades com escolas marcadas como <b>indígenas</b> na base, dentro do ciclo #' + cicloDoTipo.id + '. Reivindicações feitas aqui valem só para o Tipo Indígena · a análise do Tipo Regular é feita à parte (quando houver ciclo aberto para ela).';
   }
   const sgBadge = document.getElementById('sgBadge');
   const sgMeta = document.getElementById('sgMeta');
   if (sgBadge && sgMeta){
     if (tipo === 'regular'){
       sgBadge.textContent = 'escolas regulares';
-      sgMeta.textContent = '52 cargas em escolas regulares — este município também tem escolas indígenas, tratadas à parte no Tipo Indígena';
+      sgMeta.textContent = '52 cargas em escolas regulares · este município também tem escolas indígenas, tratadas à parte no Tipo Indígena';
     } else {
       sgBadge.textContent = 'escolas indígenas';
-      sgMeta.textContent = '37 cargas em escolas indígenas — este município também tem escolas regulares, tratadas à parte no Tipo Regular';
+      sgMeta.textContent = '37 cargas em escolas indígenas · este município também tem escolas regulares, tratadas à parte no Tipo Regular';
     }
   }
 }
 
 function reivindicar(municipio){
-  if (!statusTipo(tipoContext)) return; // RN034 — sem ciclo aberto para este tipo, nenhuma reivindicação é permitida
+  if (!statusTipo(tipoContext)) return; // RN034 · sem ciclo aberto para este tipo, nenhuma reivindicação é permitida
   const tipoLabel_ = tipoLabel(tipoContext);
   const tipoParaAnalise = municipio === 'São Gabriel da Cachoeira' ? tipoContext : 'nenhum';
   const box = document.getElementById('modalBox');
@@ -1666,7 +1666,7 @@ function reivindicar(municipio){
   document.getElementById('overlay').classList.add('show');
 }
 
-// Demonstração da RN047: dois analistas tentam reivindicar o mesmo município ao mesmo tempo —
+// Demonstração da RN047: dois analistas tentam reivindicar o mesmo município ao mesmo tempo ·
 // quem clicou primeiro vence; o segundo é bloqueado e direcionado a escolher outro disponível.
 function simularConcorrencia(municipio){
   const box = document.getElementById('modalBox');
@@ -1674,7 +1674,7 @@ function simularConcorrencia(municipio){
   box.innerHTML = `
     <div class="icon-circle">⊘</div>
     <h3>Município já reivindicado</h3>
-    <p>Outro analista clicou em <b>${municipio}</b> um instante antes de você — o primeiro clique vence (RN047). Escolha outro município disponível na lista.</p>
+    <p>Outro analista clicou em <b>${municipio}</b> um instante antes de você · o primeiro clique vence (RN047). Escolha outro município disponível na lista.</p>
     <div class="actions"><button class="btn btn-outline" onclick="closeModal()">Entendi</button></div>`;
   document.getElementById('overlay').classList.add('show');
 }
@@ -1682,11 +1682,11 @@ function simularConcorrencia(municipio){
 // ===== Ciclos de análise (RN034/RN035/RN036/RF023/RF024/RF025) =====
 // Cada ciclo pertence a um único tipo (regular/indigena); só um ciclo aberto por tipo de cada vez.
 let baseVersaoAtual = 4;
-let baseAtualLabel = 'Importação #4 — 24/07/2026 (1.787 linhas)';
+let baseAtualLabel = 'Importação #4 · 24/07/2026 (1.787 linhas)';
 
 const MUNICIPIOS_POOL = [
-  'Itacoatiara', 'Manaus — Coordenadoria 1', 'Coari', 'Manaus — Coordenadoria 2',
-  'Manaus — Coordenadoria 3', 'Parintins', 'Manacapuru', 'Tefé',
+  'Itacoatiara', 'Manaus - Coordenadoria 1', 'Coari', 'Manaus - Coordenadoria 2',
+  'Manaus - Coordenadoria 3', 'Parintins', 'Manacapuru', 'Tefé',
   'São Gabriel da Cachoeira', 'Humaitá', 'Manicoré', 'Tabatinga', 'Maués', 'Iranduba',
 ];
 const ANALISTAS_POOL = ['Ana', 'Carlos', 'Beatriz', 'Diego', 'Fernanda', 'Marcos'];
@@ -1694,9 +1694,9 @@ const ANALISTAS_POOL = ['Ana', 'Carlos', 'Beatriz', 'Diego', 'Fernanda', 'Marcos
 // Gera a lista de municípios de um ciclo. Se tudoFechadoERevisado, todos os `total`
 // municípios vêm fechados e aprovados (ciclos históricos já homologados). Caso contrário,
 // os primeiros `nFechados` vêm fechados (aguardando revisão), os `nEmAndamento` seguintes
-// em análise, e o restante ainda não reivindicado — para dar uma visão completa dos `total`
+// em análise, e o restante ainda não reivindicado · para dar uma visão completa dos `total`
 // municípios do ciclo, não só uma amostra.
-// revisaoStatus: null (aguardando revisão) | 'aprovado' | 'reprovado' (RN007) — substitui o
+// revisaoStatus: null (aguardando revisão) | 'aprovado' | 'reprovado' (RN007) · substitui o
 // antigo campo booleano `revisado`, agora com dois desfechos distintos (RF017).
 function sampleMunicipios(tudoFechadoERevisado, total, nFechados, nEmAndamento){
   total = total || 12;
@@ -1746,7 +1746,7 @@ const CAMPOS_REGRA = [
 let regrasPadrao = [
   {
     id: 1,
-    nome: 'Regra padrão GELOT — uso geral',
+    nome: 'Regra padrão GELOT · uso geral',
     campos: {
       localidade:   { condicao: 'Igual a', valores: ['Rural'] },
       cargaHoraria: { condicao: 'Menor que', valor: '10' },
@@ -1758,21 +1758,21 @@ let regrasPadrao = [
 let proximoIdRegraPadrao = 2;
 
 let ciclosHistorico = [
-  {id:2, tipo:'indigena', base:'Importação #3 — 10/07/2026 (1.802 linhas)', abertoPor:'Jane', abertura:'10/07/2026 08:40', fechamento:'22/07/2026 14:00', status:'fechado', regraPadraoId:null, painel:{fechados:5, total:5, aguardandoRevisao:0, pendencias:0}, municipios: sampleMunicipios(true, 5)},
-  {id:3, tipo:'regular',  base:'Importação #3 — 10/07/2026 (1.802 linhas)', abertoPor:'Jane', abertura:'10/07/2026 08:30', fechamento:'23/07/2026 17:10', status:'fechado', regraPadraoId:1, painel:{fechados:12, total:12, aguardandoRevisao:0, pendencias:0}, municipios: sampleMunicipios(true, 12)},
-  {id:4, tipo:'regular',  base:'Importação #4 — 24/07/2026 (1.787 linhas)', abertoPor:'Jane', abertura:'24/07/2026 09:00', fechamento:null, status:'aberto', regraPadraoId:1, painel:{fechados:4, total:12, aguardandoRevisao:2, pendencias:0}, municipios: sampleMunicipios(false, 12, 4, 4)},
+  {id:2, tipo:'indigena', base:'Importação #3 · 10/07/2026 (1.802 linhas)', abertoPor:'Jane', abertura:'10/07/2026 08:40', fechamento:'22/07/2026 14:00', status:'fechado', regraPadraoId:null, painel:{fechados:5, total:5, aguardandoRevisao:0, pendencias:0}, municipios: sampleMunicipios(true, 5)},
+  {id:3, tipo:'regular',  base:'Importação #3 · 10/07/2026 (1.802 linhas)', abertoPor:'Jane', abertura:'10/07/2026 08:30', fechamento:'23/07/2026 17:10', status:'fechado', regraPadraoId:1, painel:{fechados:12, total:12, aguardandoRevisao:0, pendencias:0}, municipios: sampleMunicipios(true, 12)},
+  {id:4, tipo:'regular',  base:'Importação #4 · 24/07/2026 (1.787 linhas)', abertoPor:'Jane', abertura:'24/07/2026 09:00', fechamento:null, status:'aberto', regraPadraoId:1, painel:{fechados:4, total:12, aguardandoRevisao:2, pendencias:0}, municipios: sampleMunicipios(false, 12, 4, 4)},
 ];
 // Cenário de demonstração (RF017/RN007): Itacoatiara já foi reprovada pela Gerente, com
-// justificativa — dá pra testar ao vivo que o Analista vê o motivo e a sinalização no painel
+// justificativa · dá pra testar ao vivo que o Analista vê o motivo e a sinalização no painel
 // dele (A1), e que reenviar (fechar de novo) some com a sinalização e volta pra fila da Gerente.
 const itacoatiaraDemo = ciclosHistorico.find(c => c.id === 4).municipios[0];
 itacoatiaraDemo.revisaoStatus = 'reprovado';
-itacoatiaraDemo.motivoReprovacao = 'A exclusão da E.E. Comunidade Rio Preto parece equivocada — confira se a regra de carga horária foi aplicada certa antes de fechar de novo.';
+itacoatiaraDemo.motivoReprovacao = 'A exclusão da E.E. Comunidade Rio Preto parece equivocada · confira se a regra de carga horária foi aplicada certa antes de fechar de novo.';
 itacoatiaraDemo.reprovadoEm = '25/07/2026';
 let cicloSelecionado = 4;
 
 // ===== Tela da Gerente: Regras padrão (RN044/RN045/RN046) =====
-let regraPadraoEmEdicao = null; // { id, nome, camposUI: { [key]: {ativo,condicao,valores|valor} } } — rascunho enquanto o modal está aberto
+let regraPadraoEmEdicao = null; // { id, nome, camposUI: { [key]: {ativo,condicao,valores|valor} } } · rascunho enquanto o modal está aberto
 let pickerTargetPadrao = null;
 let pickerSelectedPadrao = new Set();
 
@@ -1860,10 +1860,10 @@ function renderRegraPadraoModal(){
   }).join('');
   box.innerHTML = `
     <h3>${r.id ? 'Editar regra padrão' : 'Nova regra padrão'}</h3>
-    <p class="legend" style="margin-top:-4px;">Mesmos campos do filtro do Analista (RF013/RN029). O que for marcado aqui é pré-carregado, como sugestão, no filtro de todo Analista dos ciclos que usarem esta regra (RN045) — eles ainda podem ajustar; mudanças ficam sinalizadas (RN046).</p>
+    <p class="legend" style="margin-top:-4px;">Mesmos campos do filtro do Analista (RF013/RN029). O que for marcado aqui é pré-carregado, como sugestão, no filtro de todo Analista dos ciclos que usarem esta regra (RN045) · eles ainda podem ajustar; mudanças ficam sinalizadas (RN046).</p>
     <div class="field" style="margin-bottom:12px;">
       <label>Nome da regra</label>
-      <input id="rp-nome" value="${r.nome || ''}" oninput="regraPadraoEmEdicao.nome=this.value" placeholder="Ex.: Regra padrão GELOT — uso geral">
+      <input id="rp-nome" value="${r.nome || ''}" oninput="regraPadraoEmEdicao.nome=this.value" placeholder="Ex.: Regra padrão GELOT · uso geral">
     </div>
     <div class="rules-wrap" style="max-height:300px;">
       <table class="rules-table">
@@ -1949,7 +1949,7 @@ function confirmExcluirRegraPadrao(id){
   box.innerHTML = `
     <div class="icon-circle">⊘</div>
     <h3>Excluir "${r.nome}"?</h3>
-    <p>${emUso.length ? 'Esta regra está em uso pelo ciclo aberto #' + emUso.map(c => c.id).join(', #') + ' — os ciclos já abertos continuam com os valores já carregados; só a reutilização futura desta regra deixa de existir.' : 'Esta ação não pode ser desfeita.'}</p>
+    <p>${emUso.length ? 'Esta regra está em uso pelo ciclo aberto #' + emUso.map(c => c.id).join(', #') + ' · os ciclos já abertos continuam com os valores já carregados; só a reutilização futura desta regra deixa de existir.' : 'Esta ação não pode ser desfeita.'}</p>
     <div class="actions">
       <button class="btn btn-outline" onclick="closeModal()">Cancelar</button>
       <button class="btn btn-red" onclick="excluirRegraPadrao(${id})">Excluir</button>
@@ -1979,9 +1979,9 @@ function renderCiclos(){
   statusRow.innerHTML = ['regular','indigena'].map(ed => {
     const c = statusTipo(ed);
     return c ? `
-      <div class="kpi"><div class="num">Ciclo #${c.id}</div><div class="lbl">${tipoLabel(ed)} — aberto</div></div>
+      <div class="kpi"><div class="num">Ciclo #${c.id}</div><div class="lbl">${tipoLabel(ed)} · aberto</div></div>
     ` : `
-      <div class="kpi"><div class="num">—</div><div class="lbl">${tipoLabel(ed)} — nenhum ciclo aberto</div></div>
+      <div class="kpi"><div class="num">-</div><div class="lbl">${tipoLabel(ed)} · nenhum ciclo aberto</div></div>
     `;
   }).join('');
   acaoWrap.innerHTML = `
@@ -1993,7 +1993,7 @@ function renderCiclos(){
   histBody.innerHTML = [...ciclosHistorico].reverse().map(c => {
     const statusBadge = c.status === 'aberto' ? 'green' : c.status === 'cancelado' ? 'red' : 'gray';
     const statusLabel = c.status === 'aberto' ? 'Aberto' : c.status === 'cancelado' ? 'Cancelado' : 'Fechado';
-    const dataFechamento = c.fechamento || (c.status === 'cancelado' ? c.canceladoEm : '—');
+    const dataFechamento = c.fechamento || (c.status === 'cancelado' ? c.canceladoEm : '-');
     const tituloCancelado = c.status === 'cancelado' ? ' title="Motivo do cancelamento: ' + c.motivoCancelamento + '"' : '';
     return `
     <tr>
@@ -2016,7 +2016,7 @@ function openAbrirCiclo(){
     box.innerHTML = `
       <div class="icon-circle">⊘</div>
       <h3>Não é possível iniciar outra análise</h3>
-      <p>Já existe um ciclo aberto para os dois tipos (Regular #${abertoRegular.id} e Indígena #${abertoIndigena.id}). Feche um deles — validando o consolidado no painel dele — antes de iniciar outro.</p>
+      <p>Já existe um ciclo aberto para os dois tipos (Regular #${abertoRegular.id} e Indígena #${abertoIndigena.id}). Feche um deles · validando o consolidado no painel dele · antes de iniciar outro.</p>
       <div class="actions"><button class="btn btn-outline" onclick="closeModal()">Fechar</button></div>`;
     document.getElementById('overlay').classList.add('show');
     return;
@@ -2026,18 +2026,18 @@ function openAbrirCiclo(){
   box.innerHTML = `
     <div class="icon-circle">✓</div>
     <h3>Iniciar nova análise</h3>
-    <p>Escolha o tipo deste novo ciclo. Ele vai usar a base vigente — <b>${baseAtualLabel}</b> — que fica fixa durante todo o ciclo (RN034/RN040); para usar uma base diferente, importe uma nova antes (fora daqui, em "Importar nova base do SILS").</p>
+    <p>Escolha o tipo deste novo ciclo. Ele vai usar a base vigente · <b>${baseAtualLabel}</b> · que fica fixa durante todo o ciclo (RN034/RN040); para usar uma base diferente, importe uma nova antes (fora daqui, em "Importar nova base do SILS").</p>
     <div class="field" style="margin-bottom:6px;">
       <label style="display:block;font-size:12px;color:var(--muted);font-weight:700;margin-bottom:8px;text-transform:uppercase;letter-spacing:.03em;">Tipo deste ciclo</label>
       <div style="display:flex;flex-direction:column;gap:8px;">
-        <label style="display:flex;align-items:center;gap:8px;font-size:13.5px;font-weight:400;text-transform:none;color:${abertoRegular?'var(--muted)':'var(--text)'};"><input type="radio" name="tipoCiclo" value="regular" ${tipoDefault==='regular'?'checked':''} ${abertoRegular?'disabled':''}> Tipo Regular ${abertoRegular ? '— já há o ciclo #'+abertoRegular.id+' aberto' : ''}</label>
-        <label style="display:flex;align-items:center;gap:8px;font-size:13.5px;font-weight:400;text-transform:none;color:${abertoIndigena?'var(--muted)':'var(--text)'};"><input type="radio" name="tipoCiclo" value="indigena" ${tipoDefault==='indigena'?'checked':''} ${abertoIndigena?'disabled':''}> Tipo Indígena ${abertoIndigena ? '— já há o ciclo #'+abertoIndigena.id+' aberto' : ''}</label>
+        <label style="display:flex;align-items:center;gap:8px;font-size:13.5px;font-weight:400;text-transform:none;color:${abertoRegular?'var(--muted)':'var(--text)'};"><input type="radio" name="tipoCiclo" value="regular" ${tipoDefault==='regular'?'checked':''} ${abertoRegular?'disabled':''}> Tipo Regular ${abertoRegular ? '· já há o ciclo #'+abertoRegular.id+' aberto' : ''}</label>
+        <label style="display:flex;align-items:center;gap:8px;font-size:13.5px;font-weight:400;text-transform:none;color:${abertoIndigena?'var(--muted)':'var(--text)'};"><input type="radio" name="tipoCiclo" value="indigena" ${tipoDefault==='indigena'?'checked':''} ${abertoIndigena?'disabled':''}> Tipo Indígena ${abertoIndigena ? '· já há o ciclo #'+abertoIndigena.id+' aberto' : ''}</label>
       </div>
     </div>
     <div class="field" style="margin-bottom:6px;">
       <label style="display:block;font-size:12px;color:var(--muted);font-weight:700;margin-bottom:8px;text-transform:uppercase;letter-spacing:.03em;">Regra padrão a aplicar (RN045)</label>
       <select id="selRegraPadraoCiclo" style="width:100%;border:1.5px solid var(--gray-300);border-radius:8px;padding:11px 13px;font-size:14px;font-family:inherit;">
-        <option value="">Nenhuma — Analistas começam sem filtro pré-carregado</option>
+        <option value="">Nenhuma · Analistas começam sem filtro pré-carregado</option>
         ${regrasPadrao.map(r => `<option value="${r.id}">${r.nome}</option>`).join('')}
       </select>
     </div>
@@ -2048,9 +2048,9 @@ function openAbrirCiclo(){
   document.getElementById('overlay').classList.add('show');
 }
 
-// ===== Importação de base — exclusiva da Gerente (RF001/RN027) =====
+// ===== Importação de base · exclusiva da Gerente (RF001/RN027) =====
 // A base sobe uma vez e vale para todos os ciclos até uma nova importação (RN034/RN040).
-// A troca de base durante um ciclo aberto, com reconciliação linha a linha, foi descartada —
+// A troca de base durante um ciclo aberto, com reconciliação linha a linha, foi descartada ·
 // se houver ciclo(s) aberto(s) no momento da importação, eles são cancelados automaticamente
 // antes da nova base ser aceita (RN049/RF036), reaproveitando o mesmo motivo padrão do
 // cancelamento manual (RN043).
@@ -2062,8 +2062,8 @@ function openImportarBase(){
     box.className = 'modal-aviso red';
     box.innerHTML = `
       <div class="icon-circle">⊘</div>
-      <h3>Importar nova base — atenção</h3>
-      <p>${abertos.length > 1 ? 'Já existem ciclos abertos' : 'Já existe um ciclo aberto'} usando a base vigente: <b>${listaCiclos}</b>. A base fica fixa durante todo o ciclo (RN034/RN040) — para importar uma nova, o sistema vai <b>cancelar automaticamente</b> ${abertos.length > 1 ? 'esses ciclos' : 'esse ciclo'} antes de aceitar o novo arquivo. Todas as análises feitas ${abertos.length > 1 ? 'neles' : 'nele'} — reivindicações, regras, confirmações, fechamentos e revisões — serão descartadas, sem exceção (RN049/RF036).</p>
+      <h3>Importar nova base · atenção</h3>
+      <p>${abertos.length > 1 ? 'Já existem ciclos abertos' : 'Já existe um ciclo aberto'} usando a base vigente: <b>${listaCiclos}</b>. A base fica fixa durante todo o ciclo (RN034/RN040) · para importar uma nova, o sistema vai <b>cancelar automaticamente</b> ${abertos.length > 1 ? 'esses ciclos' : 'esse ciclo'} antes de aceitar o novo arquivo. Todas as análises feitas ${abertos.length > 1 ? 'neles' : 'nele'} · reivindicações, regras, confirmações, fechamentos e revisões · serão descartadas, sem exceção (RN049/RF036).</p>
       <button class="btn btn-outline" style="width:100%;justify-content:center;margin-bottom:6px;" type="button" onclick="confirmarImportarBaseComCancelamento()">📄 Selecionar arquivo do SILS e continuar…</button>
       <p class="legend" style="margin:2px 0 0 0;">🧪 <a href="#" onclick="simularArquivoCorrompido();return false;">simular arquivo corrompido/incompleto (testar RN048)</a></p>
       <div class="actions">
@@ -2074,7 +2074,7 @@ function openImportarBase(){
     box.innerHTML = `
       <div class="icon-circle">✓</div>
       <h3>Importar base do SILS</h3>
-      <p>Envie o arquivo (TXT/Excel) do SILS. Ação exclusiva da Gerência (RF001/RN027) — os Analistas não têm acesso a esta tela. A base importada passa a valer para todos os próximos ciclos, até que uma nova seja importada.</p>
+      <p>Envie o arquivo (TXT/Excel) do SILS. Ação exclusiva da Gerência (RF001/RN027) · os Analistas não têm acesso a esta tela. A base importada passa a valer para todos os próximos ciclos, até que uma nova seja importada.</p>
       <button class="btn btn-outline" style="width:100%;justify-content:center;margin-bottom:6px;" type="button" onclick="confirmarImportarBase()">📄 Selecionar arquivo do SILS…</button>
       <p class="legend" style="margin:2px 0 0 0;">🧪 <a href="#" onclick="simularArquivoCorrompido();return false;">simular arquivo corrompido/incompleto (testar RN048)</a></p>
       <div class="actions">
@@ -2088,7 +2088,7 @@ function openImportarBase(){
 function confirmarImportarBase(){
   baseVersaoAtual += 1;
   const hoje = new Date().toLocaleDateString('pt-BR');
-  baseAtualLabel = 'Importação #' + baseVersaoAtual + ' — ' + hoje + ' (nova planilha)';
+  baseAtualLabel = 'Importação #' + baseVersaoAtual + ' · ' + hoje + ' (nova planilha)';
   renderCiclos();
   renderBase();
   renderRegrasPadrao();
@@ -2103,7 +2103,7 @@ function confirmarImportarBase(){
 }
 
 // Havia ciclo(s) aberto(s): cancela automaticamente (motivo padrão do sistema) antes de
-// efetivar a importação — sem nenhuma comparação/reconciliação com a base anterior (RN049/RF036).
+// efetivar a importação · sem nenhuma comparação/reconciliação com a base anterior (RN049/RF036).
 function confirmarImportarBaseComCancelamento(){
   const abertos = ciclosHistorico.filter(c => c.status === 'aberto');
   const hoje = new Date().toLocaleDateString('pt-BR');
@@ -2114,7 +2114,7 @@ function confirmarImportarBaseComCancelamento(){
     c.motivoCancelamento = 'Cancelamento automático do sistema: nova base importada pela Gerente enquanto o ciclo estava aberto (RN049/RF036)';
   });
   baseVersaoAtual += 1;
-  baseAtualLabel = 'Importação #' + baseVersaoAtual + ' — ' + hoje + ' (nova planilha)';
+  baseAtualLabel = 'Importação #' + baseVersaoAtual + ' · ' + hoje + ' (nova planilha)';
   renderCiclos();
   renderPainelG1();
   renderPainelG4();
@@ -2126,13 +2126,13 @@ function confirmarImportarBaseComCancelamento(){
   const listaCiclos = abertos.map(c => '#' + c.id).join(', ');
   box.innerHTML = `
     <div class="icon-circle">✓</div>
-    <h3>Base importada — ciclo(s) cancelado(s)</h3>
+    <h3>Base importada · ciclo(s) cancelado(s)</h3>
     <p>${abertos.length > 1 ? 'Os ciclos ' + listaCiclos + ' foram cancelados' : 'O ciclo ' + listaCiclos + ' foi cancelado'} automaticamente antes da importação. Nova base disponível: <b>${baseAtualLabel}</b>. O(s) tipo(s) já ${abertos.length > 1 ? 'estão' : 'está'} liberado(s) para uma nova análise.</p>
     <div class="actions"><button class="btn btn-green" onclick="closeModal()">Entendi</button></div>`;
   document.getElementById('overlay').classList.add('show');
 }
 
-// Demonstração da RN048: arquivo rejeitado por completo, com mensagem explicativa — nada é
+// Demonstração da RN048: arquivo rejeitado por completo, com mensagem explicativa · nada é
 // importado nem nenhum ciclo é afetado.
 function simularArquivoCorrompido(){
   const box = document.getElementById('modalBox');
@@ -2140,13 +2140,13 @@ function simularArquivoCorrompido(){
   box.innerHTML = `
     <div class="icon-circle">⊘</div>
     <h3>Importação rejeitada</h3>
-    <p>O arquivo enviado está incompleto ou corrompido — faltam colunas obrigatórias ou o formato não pôde ser lido. A importação foi rejeitada por completo; nada foi alterado (RN048). Corrija o arquivo na origem e tente novamente.</p>
+    <p>O arquivo enviado está incompleto ou corrompido · faltam colunas obrigatórias ou o formato não pôde ser lido. A importação foi rejeitada por completo; nada foi alterado (RN048). Corrija o arquivo na origem e tente novamente.</p>
     <div class="actions"><button class="btn btn-outline" onclick="openImportarBase()">Voltar</button></div>`;
   document.getElementById('overlay').classList.add('show');
 }
 
 // ===== Cancelamento de ciclo (RN043/RF033) =====
-// Só a Gerente cancela, e só um ciclo com status "aberto" — descarta todas as análises feitas
+// Só a Gerente cancela, e só um ciclo com status "aberto" · descarta todas as análises feitas
 // nele (reivindicações, regras, confirmações, fechamentos, revisões), sem exceção. O ciclo fica
 // marcado como "cancelado" no histórico, e o Tipo volta a ficar disponível pra uma nova análise.
 function openCancelarCiclo(){
@@ -2157,7 +2157,7 @@ function openCancelarCiclo(){
   box.innerHTML = `
     <div class="icon-circle">⊘</div>
     <h3>Cancelar este ciclo</h3>
-    <p>Esta ação não pode ser desfeita. Todas as análises feitas neste ciclo — reivindicações, regras aplicadas, confirmações, justificativas, fechamentos e revisões — serão descartadas. O ciclo fica marcado como <b>cancelado</b> no histórico, e o <b>${tipoLabel(c.tipo)}</b> volta a ficar disponível para você abrir uma nova análise.</p>
+    <p>Esta ação não pode ser desfeita. Todas as análises feitas neste ciclo · reivindicações, regras aplicadas, confirmações, justificativas, fechamentos e revisões · serão descartadas. O ciclo fica marcado como <b>cancelado</b> no histórico, e o <b>${tipoLabel(c.tipo)}</b> volta a ficar disponível para você abrir uma nova análise.</p>
     <div class="field" style="margin-bottom:14px;">
       <label>Motivo do cancelamento (obrigatório)</label>
       <textarea id="motivoCancelamento" oninput="atualizaBtnConfirmarCancelamento()" placeholder="Explique por que este ciclo está sendo cancelado..."></textarea>
@@ -2180,7 +2180,7 @@ function atualizaBtnConfirmarCancelamento(){
 function confirmarCancelamentoCiclo(){
   const textarea = document.getElementById('motivoCancelamento');
   const motivo = textarea ? textarea.value.trim() : '';
-  if (!motivo) return; // guarda extra — o botão já vem travado por atualizaBtnConfirmarCancelamento()
+  if (!motivo) return; // guarda extra · o botão já vem travado por atualizaBtnConfirmarCancelamento()
   const c = ciclosHistorico.find(c => c.id === cicloSelecionado);
   if (!c) return;
   const hoje = new Date().toLocaleDateString('pt-BR');
@@ -2203,7 +2203,7 @@ function confirmAbrirCiclo(){
   const hoje = new Date().toLocaleDateString('pt-BR');
   const totalMunicipios = tipo === 'regular' ? 12 : 5;
   // O ciclo nasce com alguns municípios já fechados/em andamento (exemplo), não tudo "não
-  // reivindicado" — assim a Gerência já tem o que revisar assim que abre um ciclo novo, sem
+  // reivindicado" · assim a Gerência já tem o que revisar assim que abre um ciclo novo, sem
   // depender de simular manualmente um Analista fechando algo primeiro. A mistura espelha o
   // mesmo tipo de cenário que o Analista já vê no painel dele (A1): parte fechada aguardando
   // revisão, parte em andamento, o resto disponível para reivindicar.
@@ -2244,7 +2244,7 @@ function renderPainelG1(){
   const btnRevisar = document.getElementById('g1BtnRevisar');
   if (!c || !titulo) return;
   if (breadcrumb) breadcrumb.textContent = 'Ciclo #' + c.id;
-  titulo.textContent = 'Painel do ciclo #' + c.id + ' — ' + tipoLabel(c.tipo);
+  titulo.textContent = 'Painel do ciclo #' + c.id + ' · ' + tipoLabel(c.tipo);
   const pct = Math.round((c.painel.fechados / c.painel.total) * 100);
   const fechadosList = c.municipios.filter(m => m.status === 'fechado');
   const aguardando = fechadosList.filter(m => !m.revisaoStatus).length;
@@ -2258,16 +2258,16 @@ function renderPainelG1(){
     <div class="kpi"><div class="num">${c.painel.pendencias}</div><div class="lbl">pendências abertas</div></div>
   `;
   if (c.status === 'cancelado'){
-    nota.innerHTML = '<b style="color:#C0392B;">Este ciclo foi cancelado</b> em ' + c.canceladoEm + ' por ' + c.canceladoPor + '. Motivo: "' + c.motivoCancelamento + '". Todas as análises feitas nele foram descartadas — o ' + tipoLabel(c.tipo) + ' já está disponível para uma nova análise (RN043).';
+    nota.innerHTML = '<b style="color:#C0392B;">Este ciclo foi cancelado</b> em ' + c.canceladoEm + ' por ' + c.canceladoPor + '. Motivo: "' + c.motivoCancelamento + '". Todas as análises feitas nele foram descartadas · o ' + tipoLabel(c.tipo) + ' já está disponível para uma nova análise (RN043).';
   } else if (c.status === 'fechado'){
     nota.innerHTML = 'Este ciclo já foi fechado em ' + c.fechamento + ' (base: ' + c.base + '). Consulta somente leitura.';
   } else {
-    nota.innerHTML = 'Acompanhe o progresso deste ciclo. Você pode revisar os municípios já fechados pelo analista a qualquer momento — não precisa esperar todos concluírem. Base deste ciclo: ' + c.base + '.';
+    nota.innerHTML = 'Acompanhe o progresso deste ciclo. Você pode revisar os municípios já fechados pelo analista a qualquer momento · não precisa esperar todos concluírem. Base deste ciclo: ' + c.base + '.';
   }
   kpiRow.style.opacity = (c.status === 'cancelado') ? '.45' : '';
   if (btnRevisar) btnRevisar.textContent = (c.status === 'cancelado') ? 'Ver o que foi descartado (ciclo cancelado)' : (c.status === 'fechado') ? 'Ver revisão (ciclo fechado)' : 'Revisar municípios analisados →';
   const zonaRisco = document.getElementById('g1ZonaRisco');
-  // Só ciclos abertos podem ser cancelados — um ciclo fechado ou já cancelado não tem mais
+  // Só ciclos abertos podem ser cancelados · um ciclo fechado ou já cancelado não tem mais
   // análise em andamento pra descartar (RN043/RN049).
   if (zonaRisco) zonaRisco.style.display = (c.status === 'aberto') ? 'flex' : 'none';
   const baseNota = document.getElementById('g1BaseNota');
@@ -2275,7 +2275,7 @@ function renderPainelG1(){
     if (c.status === 'aberto'){
       const regra = regrasPadrao.find(r => r.id === c.regraPadraoId);
       baseNota.style.display = 'block';
-      baseNota.innerHTML = 'Base deste ciclo (fixa até ele fechar ou ser cancelado — RN034/RN040): <b>' + c.base + '</b>. Para trocar de base, importe uma nova em "Ciclos de análise" — isso cancela este ciclo automaticamente (RN049/RF036). Regra padrão aplicada aos Analistas deste ciclo (RN045): <b>' + (regra ? regra.nome : 'nenhuma') + '</b>.';
+      baseNota.innerHTML = 'Base deste ciclo (fixa até ele fechar ou ser cancelado · RN034/RN040): <b>' + c.base + '</b>. Para trocar de base, importe uma nova em "Ciclos de análise" · isso cancela este ciclo automaticamente (RN049/RF036). Regra padrão aplicada aos Analistas deste ciclo (RN045): <b>' + (regra ? regra.nome : 'nenhuma') + '</b>.';
     } else {
       baseNota.style.display = 'none';
     }
@@ -2291,7 +2291,7 @@ function renderPainelG4(){
   const list = document.getElementById('g4MuniList');
   const dadosNota = document.getElementById('g4DadosNota');
   if (!c || !titulo) return;
-  titulo.textContent = 'Revisão e consolidado — Ciclo #' + c.id + ' (' + tipoLabel(c.tipo) + ')';
+  titulo.textContent = 'Revisão e consolidado · Ciclo #' + c.id + ' (' + tipoLabel(c.tipo) + ')';
   if (breadcrumbCiclo) breadcrumbCiclo.textContent = 'Ciclo #' + c.id;
   const fechados = c.municipios.filter(m => m.status === 'fechado');
   const aprovados = fechados.filter(m => m.revisaoStatus === 'aprovado');
@@ -2309,7 +2309,7 @@ function renderPainelG4(){
   list.innerHTML = c.municipios.map(m => {
     if (m.status === 'nao_reivindicado'){
       return `<div class="muni-row" style="opacity:.7;">
-        <div><div class="name">${m.nome}</div><div class="meta">nenhum analista reivindicou ainda — cobrar a equipe</div></div>
+        <div><div class="name">${m.nome}</div><div class="meta">nenhum analista reivindicou ainda · cobrar a equipe</div></div>
         <span class="badge red">Não reivindicado</span>
       </div>`;
     }
@@ -2322,7 +2322,7 @@ function renderPainelG4(){
     const statusBadge = m.revisaoStatus === 'aprovado'
       ? '<span class="badge green">Aprovado</span>'
       : m.revisaoStatus === 'reprovado'
-      ? '<span class="badge red">Reprovado — aguardando analista</span>'
+      ? '<span class="badge red">Reprovado · aguardando analista</span>'
       : '<span class="badge yellow">Aguardando revisão</span>';
     const motivoLinha = m.revisaoStatus === 'reprovado'
       ? ' · <b style="color:#C0392B;">reprovado em ' + (m.reprovadoEm || '') + ': "' + m.motivoReprovacao + '"</b>'
@@ -2340,12 +2340,12 @@ function renderPainelG4(){
   const reeditados = fechados.filter(m => m.reeditado);
   const pronto = fechados.length > 0 && fechados.every(m => m.revisaoStatus === 'aprovado');
   if (c.status === 'cancelado'){
-    nota.innerHTML = '<b style="color:#C0392B;">Este ciclo foi cancelado</b> em ' + c.canceladoEm + ' por ' + c.canceladoPor + '. Motivo: "' + c.motivoCancelamento + '". Os municípios abaixo refletem o estado no momento do cancelamento — nada aqui conta para revisão nem consolidado (RN043).';
+    nota.innerHTML = '<b style="color:#C0392B;">Este ciclo foi cancelado</b> em ' + c.canceladoEm + ' por ' + c.canceladoPor + '. Motivo: "' + c.motivoCancelamento + '". Os municípios abaixo refletem o estado no momento do cancelamento · nada aqui conta para revisão nem consolidado (RN043).';
   } else if (c.status === 'fechado'){
-    nota.innerHTML = 'Este ciclo já foi fechado em ' + c.fechamento + ' — consolidado final gerado. Extraia o relatório final abaixo; o envio à Gerente Superior e a homologação em si acontecem manualmente, fora do SACV (RN028). Consulta somente leitura.';
+    nota.innerHTML = 'Este ciclo já foi fechado em ' + c.fechamento + ' · consolidado final gerado. Extraia o relatório final abaixo; o envio à Gerente Superior e a homologação em si acontecem manualmente, fora do SACV (RN028). Consulta somente leitura.';
   } else {
-    nota.innerHTML = 'Baixar relatório por município fica sempre disponível, a qualquer momento — inclusive depois de já revisado. Clique em "Revisar" para aprovar ou reprovar (com justificativa) cada município fechado. Municípios ainda não reivindicados aparecem aqui para você cobrar a equipe. <b>Em regra (RN039), o "Consolidado final" só libera quando TODOS os municípios do ciclo estiverem fechados e aprovados</b> — neste protótipo, para permitir testar o fluxo, ele libera assim que os municípios já fechados forem aprovados, mesmo com municípios ainda em análise ou não reivindicados.'
-      + (reeditados.length ? ' <span style="color:#C0392B;"><b>Atenção:</b> ' + reeditados.length + ' município' + (reeditados.length>1?'s':'') + ' marcado' + (reeditados.length>1?'s':'') + ' como "↺ Reeditado" foi(ram) alterado(s) pelo analista depois da sua aprovação anterior — a marcação foi desfeita automaticamente, revise de novo.</span>' : '');
+    nota.innerHTML = 'Baixar relatório por município fica sempre disponível, a qualquer momento · inclusive depois de já revisado. Clique em "Revisar" para aprovar ou reprovar (com justificativa) cada município fechado. Municípios ainda não reivindicados aparecem aqui para você cobrar a equipe. <b>Em regra (RN039), o "Consolidado final" só libera quando TODOS os municípios do ciclo estiverem fechados e aprovados</b> · neste protótipo, para permitir testar o fluxo, ele libera assim que os municípios já fechados forem aprovados, mesmo com municípios ainda em análise ou não reivindicados.'
+      + (reeditados.length ? ' <span style="color:#C0392B;"><b>Atenção:</b> ' + reeditados.length + ' município' + (reeditados.length>1?'s':'') + ' marcado' + (reeditados.length>1?'s':'') + ' como "↺ Reeditado" foi(ram) alterado(s) pelo analista depois da sua aprovação anterior · a marcação foi desfeita automaticamente, revise de novo.</span>' : '');
   }
   const relWrap = document.getElementById('g4BtnRelatorioFinalWrap');
   if (relWrap){
@@ -2379,9 +2379,9 @@ function municipioStatusRevisaoAtual(){
 // registro correspondente de ciclosHistorico (RF028/RF031).
 // - Se a Gerente já tinha APROVADO esse município, desfaz a aprovação automaticamente e
 //   sinaliza a data da reedição, para ela ver no painel de revisão (G4) que precisa revisar
-//   de novo — isso é uma surpresa pra ela, então fica marcado como "↺ Reeditado".
+//   de novo · isso é uma surpresa pra ela, então fica marcado como "↺ Reeditado".
 // - Se a Gerente tinha REPROVADO esse município (o caso esperado deste fluxo), limpa o status
-//   de reprovação e a justificativa — o analista está respondendo à reprovação, não é uma
+//   de reprovação e a justificativa · o analista está respondendo à reprovação, não é uma
 //   surpresa, então NÃO marca como "reeditado".
 function fecharMunicipioAtual(){
   const c = ciclosHistorico.find(c => c.id === cicloSelecionado);
@@ -2409,7 +2409,7 @@ function fecharMunicipioAtual(){
   const a5Texto = document.getElementById('a5Texto');
   if (a5Texto){
     a5Texto.innerHTML = statusAnterior === 'aprovado'
-      ? municipioAtual + ' foi fechado de novo. Como a Gerente já tinha aprovado a versão anterior, essa aprovação foi desfeita automaticamente — ela vai ver que este município foi reeditado em ' + m.reeditadoEm + ' e vai precisar revisar de novo.<br><br>Você ainda pode voltar e reabrir este município para editar, enquanto a Gerente não gerar o Consolidado final deste ciclo.'
+      ? municipioAtual + ' foi fechado de novo. Como a Gerente já tinha aprovado a versão anterior, essa aprovação foi desfeita automaticamente · ela vai ver que este município foi reeditado em ' + m.reeditadoEm + ' e vai precisar revisar de novo.<br><br>Você ainda pode voltar e reabrir este município para editar, enquanto a Gerente não gerar o Consolidado final deste ciclo.'
       : statusAnterior === 'reprovado'
       ? municipioAtual + ' foi fechado de novo, com os ajustes pedidos pela Gerente. O sinal de reprovação foi limpo e o município volta para a fila de revisão dela.<br><br>Você ainda pode voltar e reabrir este município para editar, enquanto a Gerente não gerar o Consolidado final deste ciclo.'
       : municipioAtual + ' foi fechado. Aguarde a revisão da Gerente ou reivindique outro município disponível.<br><br>Você ainda pode voltar e reabrir este município para editar, enquanto a Gerente não gerar o Consolidado final deste ciclo.';
@@ -2418,9 +2418,9 @@ function fecharMunicipioAtual(){
   renderPainelG1();
 }
 
-// --- G2: Revisão de fechamento (Aprovar/Reprovar por município — RF017/RN007) ---
+// --- G2: Revisão de fechamento (Aprovar/Reprovar por município · RF017/RN007) ---
 let g2MunicipioAtual = null;
-let g2Decisoes = {}; // { [idx]: { tipo:'edicao'|'reinclusao', valeVaga, texto, regra } } — decisao do Gerente que se sobrepoe ao Analista (RN046/RN007)
+let g2Decisoes = {}; // { [idx]: { tipo:'edicao'|'reinclusao', valeVaga, texto, regra } } · decisao do Gerente que se sobrepoe ao Analista (RN046/RN007)
 
 function abrirRevisaoMunicipio(nome){
   g2MunicipioAtual = nome;
@@ -2440,15 +2440,15 @@ function renderG2(){
   const m = c.municipios.find(m => m.nome === g2MunicipioAtual);
   if (!m) return;
   if (breadcrumb) breadcrumb.textContent = g2MunicipioAtual;
-  if (titulo) titulo.innerHTML = 'Revisão de fechamento — ' + g2MunicipioAtual + ' <span class="tag">RN007</span>';
-  if (nota) nota.innerHTML = 'Fechado por <b>' + m.analista + '</b> · ' + m.cargas + ' cargas. Confira as cargas abaixo e decida: aprove se está tudo certo, ou reprove explicando o que precisa ser ajustado — o analista vai ver o motivo no painel dele.';
+  if (titulo) titulo.innerHTML = 'Revisão de fechamento · ' + g2MunicipioAtual + ' <span class="tag">RN007</span>';
+  if (nota) nota.innerHTML = 'Fechado por <b>' + m.analista + '</b> · ' + m.cargas + ' cargas. Confira as cargas abaixo e decida: aprove se está tudo certo, ou reprove explicando o que precisa ser ajustado · o analista vai ver o motivo no painel dele.';
   if (historicoNota){
     if (m.revisaoStatus === 'reprovado'){
       historicoNota.style.display = 'block';
       historicoNota.innerHTML = '<b>Este município já foi reprovado</b> em ' + (m.reprovadoEm || '') + ', com o motivo: "' + m.motivoReprovacao + '". Ainda está aguardando o analista reenviar.';
     } else if (m.reeditado){
       historicoNota.style.display = 'block';
-      historicoNota.innerHTML = '<b>Reeditado pelo analista</b> em ' + m.reeditadoEm + ', depois da sua aprovação anterior — revise de novo.';
+      historicoNota.innerHTML = '<b>Reeditado pelo analista</b> em ' + m.reeditadoEm + ', depois da sua aprovação anterior · revise de novo.';
     } else {
       historicoNota.style.display = 'none';
       historicoNota.innerHTML = '';
@@ -2462,7 +2462,7 @@ function renderG2(){
   [0,1,2].forEach(renderG2CargaRow);
 }
 
-// ===== G2: regras aplicadas (padrão + alterações do analista) e justificativas por carga — nível informativo (RN007) =====
+// ===== G2: regras aplicadas (padrão + alterações do analista) e justificativas por carga · nível informativo (RN007) =====
 function toggleG2Regras(){
   const body = document.getElementById('g2RegrasBody');
   const toggle = document.getElementById('g2RegrasToggle');
@@ -2492,14 +2492,14 @@ function renderG2Regras(){
       (linhas ? '<table class="rules-table"><thead><tr><th>Campo</th><th>Condição</th><th>Valor</th></tr></thead><tbody>' + linhas + '</tbody></table>'
               : '<div class="note">Esta regra padrão não tem critérios ativos configurados.</div>');
   } else {
-    box.innerHTML = '<div class="note">Nenhuma regra padrão foi definida para este ciclo — o analista usou os filtros que considerou necessários, sem um ponto de partida pré-carregado.</div>';
+    box.innerHTML = '<div class="note">Nenhuma regra padrão foi definida para este ciclo · o analista usou os filtros que considerou necessários, sem um ponto de partida pré-carregado.</div>';
   }
   altBox.innerHTML = '<div class="legend" style="margin-bottom:8px;"><b>Alterações feitas pelo Analista (exemplo):</b></div>' +
     '<div class="note" style="margin-bottom:6px;"><span class="badge yellow" style="margin-right:6px;">Exceção manual</span> Carga de <b>E.E. Central Itacoatiara</b> reincluída manualmente, passando por cima das regras de Horas e Localidade.</div>' +
     '<div class="note warn"><span class="badge gray" style="margin-right:6px;">Regra ajustada</span> Critério de Localidade foi restringido pelo analista para excluir comunidades fora do perímetro urbano.</div>';
 }
 const G2_CARGAS_EXEMPLO = [
-  { escola:'E.E. Ribeirinha', regras:[], tipoOriginal:'confirmada', justificativa:'Carga confirmada conforme a regra padrão do ciclo — nenhuma exceção foi necessária.',
+  { escola:'E.E. Ribeirinha', regras:[], tipoOriginal:'confirmada', justificativa:'Carga confirmada conforme a regra padrão do ciclo · nenhuma exceção foi necessária.',
     campos:{ escola:'E.E. Ribeirinha', disciplinas:'Geografia', localidade:'Rural', horas:22, tipoCurso:'Regular', nomeDdz:'Coordenadoria 3', nomeEnsino:'Ensino Médio', areaEixo:'Ciências Humanas' } },
   { escola:'E.E. Central Itacoatiara', regras:['Horas','Localidade'], tipoOriginal:'excecao-analista', justificativa:'A escola comprovou, por ofício, que a carga é regular apesar da carga horária reduzida e da localidade divergente. Reincluída como exceção manual.',
     campos:{ escola:'E.E. Central Itacoatiara', disciplinas:'História', localidade:'Urbana', horas:8, tipoCurso:'Regular', nomeDdz:'Coordenadoria 3', nomeEnsino:'Ensino Médio', areaEixo:'Ciências Humanas' } },
@@ -2507,7 +2507,7 @@ const G2_CARGAS_EXEMPLO = [
     campos:{ escola:'E.E. Comunidade Rio Preto', disciplinas:'Ciências', localidade:'Rural', horas:14, tipoCurso:'EJA', nomeDdz:'Coordenadoria 3', nomeEnsino:'Ensino Fundamental', areaEixo:'Ciências da Natureza' } }
 ];
 let g2ColunasExtrasVisiveis = new Set();
-const G2_COLUNAS_PADRAO = new Set(['nomeEscola','disciplinas']); // hoje fica como está: Escola + Disciplina — o resto é opcional, igual à Análise de Cargas
+const G2_COLUNAS_PADRAO = new Set(['nomeEscola','disciplinas']); // hoje fica como está: Escola + Disciplina · o resto é opcional, igual à Análise de Cargas
 function g2ColunasVisiveisAtuais(){
   return CARGA_COLUMNS.filter(c => G2_COLUNAS_PADRAO.has(c.key) || g2ColunasExtrasVisiveis.has(c.key));
 }
@@ -2519,12 +2519,12 @@ function g2FraseRegras(labels){
 function g2ObsOriginal(i){
   const c = G2_CARGAS_EXEMPLO[i];
   if (c.tipoOriginal === 'excluida'){
-    return 'Excluída pela regra — critérios enquadrados: ' + (c.regras && c.regras.length ? c.regras.join(', ') : '—') + '.';
+    return 'Excluída pela regra · critérios enquadrados: ' + (c.regras && c.regras.length ? c.regras.join(', ') : '-') + '.';
   }
   if (c.tipoOriginal === 'excecao-analista'){
     return 'Exceção manual do Analista: mantida como vaga, ' + g2FraseRegras(c.regras) + '. Justificativa: ' + (c.justificativa && c.justificativa.trim() ? c.justificativa : '(nenhuma registrada)') + '.';
   }
-  return 'Confirmada — não se enquadra em nenhuma regra de exclusão vigente.';
+  return 'Confirmada · não se enquadra em nenhuma regra de exclusão vigente.';
 }
 function g2ObsAtual(i){
   const d = g2Decisoes[i];
@@ -2545,11 +2545,11 @@ function renderG2CargasTable(){
   const extrasOcultas = CARGA_COLUMNS.length - colunas.length;
   if (btn) btn.textContent = '👁 Mostrar mais colunas' + (extrasOcultas > 0 ? ' (' + extrasOcultas + ')' : ' (todas visíveis)');
   head.innerHTML = colunas.map(c => '<th>' + c.label + '</th>').join('') +
-    '<th>Observação — regra aplicada</th><th>Situação</th><th>Ação</th>';
+    '<th>Observação · regra aplicada</th><th>Situação</th><th>Ação</th>';
   body.innerHTML = G2_CARGAS_EXEMPLO.map((c, i) => {
     const tds = colunas.map(col => {
       let v = c.campos ? c.campos[col.field] : undefined;
-      if (v === undefined || v === null || v === '') v = '—';
+      if (v === undefined || v === null || v === '') v = '-';
       else if (col.suffix) v = v + col.suffix;
       return '<td>' + v + '</td>';
     }).join('');
@@ -2584,7 +2584,7 @@ function toggleG2ColunaExtra(key, checked){
 // ===== G2: Gerente pode se sobrepor à análise do Analista (editar situação ou reincluir), sempre com justificativa =====
 const G2_SITUACAO_ORIGINAL = {
   0: '<span class="badge green">Vaga confirmada</span>',
-  1: '<span class="badge yellow">Vaga confirmada — exceção manual</span>',
+  1: '<span class="badge yellow">Vaga confirmada · exceção manual</span>',
   2: '<span class="badge red">Excluída</span>'
 };
 function g2AcaoOriginalHtml(i){
@@ -2601,13 +2601,13 @@ function renderG2CargaRow(i){
   if (obsTd) obsTd.textContent = g2ObsAtual(i);
   if (d && d.tipo === 'reinclusao'){
     row.classList.remove('excluded');
-    situacaoTd.innerHTML = '<span class="badge yellow">Vaga confirmada — exceção do Gerente</span>';
+    situacaoTd.innerHTML = '<span class="badge yellow">Vaga confirmada · exceção do Gerente</span>';
     acaoTd.innerHTML = '<button class="icon-btn" onclick="abrirReincluirGerente(' + i + ')">Ver decisão do Gerente</button> <a href="#" onclick="desfazerDecisaoGerente(' + i + ');return false;" style="font-size:11.5px;color:var(--muted);margin-left:6px;">↺ desfazer</a> <button class="icon-btn" onclick="verJustificativaG2(' + i + ')">Ver justificativa</button>';
   } else if (d && d.tipo === 'edicao'){
     row.classList.toggle('excluded', d.valeVaga === false);
     situacaoTd.innerHTML = d.valeVaga
-      ? '<span class="badge blue">Vaga confirmada — decisão do Gerente</span>'
-      : '<span class="badge red">Excluída — decisão do Gerente</span>';
+      ? '<span class="badge blue">Vaga confirmada · decisão do Gerente</span>'
+      : '<span class="badge red">Excluída · decisão do Gerente</span>';
     acaoTd.innerHTML = '<button class="icon-btn" onclick="abrirEdicaoGerente(' + i + ')">Editar</button> <a href="#" onclick="desfazerDecisaoGerente(' + i + ');return false;" style="font-size:11.5px;color:var(--muted);margin-left:6px;">↺ desfazer</a> <button class="icon-btn" onclick="verJustificativaG2(' + i + ')">Ver justificativa</button>';
   } else {
     row.classList.toggle('excluded', i === 2);
@@ -2628,8 +2628,8 @@ function abrirEdicaoGerente(i){
   box.className = 'modal-aviso';
   box.innerHTML = `
     <div class="icon-circle">⚖</div>
-    <h3>Editar decisão — ${c.escola}</h3>
-    <p>Como Gerente, você pode se sobrepor à análise feita pelo Analista para esta carga. A consideração original dele continua disponível em "Ver justificativa". Registre sua própria decisão e a justificativa — a situação vai passar a mostrar que foi confirmada por você.</p>
+    <h3>Editar decisão · ${c.escola}</h3>
+    <p>Como Gerente, você pode se sobrepor à análise feita pelo Analista para esta carga. A consideração original dele continua disponível em "Ver justificativa". Registre sua própria decisão e a justificativa · a situação vai passar a mostrar que foi confirmada por você.</p>
     <div class="field" style="margin-bottom:14px;"><label>Justificativa da sua decisão</label><textarea id="g2EdicaoTextoInput" placeholder="Descreva o motivo da sua decisão...">${dAtual && dAtual.tipo==='edicao' && dAtual.texto ? dAtual.texto : ''}</textarea></div>
     <div class="field" style="margin-bottom:14px;">
       <label>Esta carga vale como vaga?</label>
@@ -2666,8 +2666,8 @@ function abrirReincluirGerente(i){
   box.className = 'modal-aviso green';
   box.innerHTML = `
     <div class="icon-circle">⚠</div>
-    <h3>Reincluir carga (Gerente) — ${c.escola}</h3>
-    <p>Esta carga foi excluída pela${plural ? 's regras de' : ' regra de'} <b>${regraLabelTxt}</b>. Como Gerente, você pode reincluí-la mesmo assim, se sobrepondo à análise do Analista — a${plural ? 's regras continuam' : ' regra continua'} valendo para as demais cargas. Registre a justificativa da sua decisão.</p>
+    <h3>Reincluir carga (Gerente) · ${c.escola}</h3>
+    <p>Esta carga foi excluída pela${plural ? 's regras de' : ' regra de'} <b>${regraLabelTxt}</b>. Como Gerente, você pode reincluí-la mesmo assim, se sobrepondo à análise do Analista · a${plural ? 's regras continuam' : ' regra continua'} valendo para as demais cargas. Registre a justificativa da sua decisão.</p>
     <div class="field" style="margin-bottom:14px;"><label>Justificativa da exceção</label><textarea id="g2ReincluirTextoInput" placeholder="Descreva o motivo da exceção...">${dAtual && dAtual.tipo==='reinclusao' && dAtual.texto ? dAtual.texto : ''}</textarea></div>
     <div class="actions">
       <button class="btn btn-outline" onclick="closeModal()">Cancelar</button>
@@ -2691,7 +2691,7 @@ function verJustificativaG2(i){
   box.className = 'modal-aviso';
   const temRegras = c.regras && c.regras.length;
   box.innerHTML = '<div class="icon-circle">📄</div>' +
-    '<h3>Justificativa — ' + c.escola + '</h3>' +
+    '<h3>Justificativa · ' + c.escola + '</h3>' +
     (temRegras ? '<p><b>' + (c.regras.length > 1 ? 'Regras aplicadas nesta carga:' : 'Regra aplicada nesta carga:') + '</b> ' + c.regras.join(', ') + '</p>' : '') +
     '<p>' + (c.justificativa ? c.justificativa : '<i>O analista não registrou justificativa para esta carga.</i>') + '</p>' +
     '<div class="actions"><button class="btn btn-navy" onclick="closeModal()">Fechar</button></div>';
@@ -2719,7 +2719,7 @@ function openReprovarMunicipio(){
   box.className = 'modal-aviso red';
   box.innerHTML = `
     <div class="icon-circle">⊘</div>
-    <h3>Reprovar análise — ${g2MunicipioAtual}</h3>
+    <h3>Reprovar análise · ${g2MunicipioAtual}</h3>
     <p>Explique o que precisa ser corrigido. O Analista vai ver este motivo e o município volta pra fila dele, sinalizado para revisão (RF017/RN007).</p>
     <div class="field" style="margin-bottom:14px;">
       <label>Motivo da reprovação (obrigatório)</label>
@@ -2745,7 +2745,7 @@ function atualizaBtnConfirmarReprovacao(){
 function confirmarReprovacaoMunicipio(){
   const textarea = document.getElementById('motivoReprovacaoInput');
   const motivo = textarea ? textarea.value.trim() : '';
-  if (!motivo) return; // guarda extra — o botão já vem travado por atualizaBtnConfirmarReprovacao()
+  if (!motivo) return; // guarda extra · o botão já vem travado por atualizaBtnConfirmarReprovacao()
   const c = ciclosHistorico.find(c => c.id === cicloSelecionado);
   if (!c || !g2MunicipioAtual) return;
   const m = c.municipios.find(m => m.nome === g2MunicipioAtual);
@@ -2795,7 +2795,7 @@ function atualizaBloqueioA1(){
 }
 
 // Reflete no painel do Analista (A1) o resultado da revisão da Gerente para municípios já
-// fechados por ele — em especial a sinalização de reprovação com a justificativa (RF017/RN007).
+// fechados por ele · em especial a sinalização de reprovação com a justificativa (RF017/RN007).
 // Neste protótipo, ilustra o cenário só para Itacoatiara (ciclo #4), que é o único município
 // fechado com dados de revisão associados na demonstração.
 function atualizaStatusMunicipiosA1(){
