@@ -99,11 +99,12 @@
   .card .title-band.band-light{
     background:var(--gray-100);color:var(--text);border:1px solid var(--gray-200);box-shadow:none;
   }
-  .band-left{display:flex;align-items:center;gap:8px;}
+  .card .title-band.band-light{flex-wrap:wrap;row-gap:10px;}
+  .band-left{display:flex;align-items:center;gap:8px;flex-shrink:0;}
   .band-dot{width:8px;height:8px;border-radius:50%;background:var(--green);flex-shrink:0;display:inline-block;}
-  .band-left b{font-size:15px;font-weight:700;color:var(--text);}
-  .band-sub{font-size:13px;font-weight:400;color:var(--muted);}
-  .steps-tab.compact{margin-bottom:0;}
+  .band-left b{font-size:15px;font-weight:700;color:var(--text);white-space:nowrap;}
+  .band-sub{font-size:13px;font-weight:400;color:var(--muted);white-space:nowrap;}
+  .steps-tab.compact{margin-bottom:0;flex-shrink:0;}
   .card .body{padding:24px;}
 
   /* footer */
