@@ -96,6 +96,14 @@
   .card .title-band .tag{
     background:rgba(255,255,255,.15);font-size:11px;font-weight:600;padding:3px 9px;border-radius:20px;
   }
+  .card .title-band.band-light{
+    background:var(--gray-100);color:var(--text);border:1px solid var(--gray-200);box-shadow:none;
+  }
+  .band-left{display:flex;align-items:center;gap:8px;}
+  .band-dot{width:8px;height:8px;border-radius:50%;background:var(--green);flex-shrink:0;display:inline-block;}
+  .band-left b{font-size:15px;font-weight:700;color:var(--text);}
+  .band-sub{font-size:13px;font-weight:400;color:var(--muted);}
+  .steps-tab.compact{margin-bottom:0;}
   .card .body{padding:24px;}
 
   /* footer */
@@ -399,13 +407,9 @@
         <div class="breadcrumb">⌂ Início &nbsp;›&nbsp; Painel do Analista &nbsp;›&nbsp; <b id="a3Crumb">Manaus - Coordenadoria 3</b></div>
         <div class="content">
           <div class="card">
-            <div class="title-band">Análise de cargas · <span id="a3TituloMuni">Manaus, Coordenadoria 3</span> <span class="tag">RF004 · RF005</span></div>
+            <div class="title-band band-light"><span class="band-left"><span class="band-dot"></span><b>Análise de cargas</b><span class="band-sub" id="a3TituloMuni">Manaus, Coordenadoria 3</span></span><div class="steps-tab compact"><span class="active" id="pill-cargas" onclick="switchTab('cargas')">Cargas (241)</span><span id="pill-resumo" onclick="switchTab('resumo')">Resumo</span></div></div>
             <div class="body">
               <div class="note" id="a3TipoNote">Este município não possui escolas indígenas identificadas na base · toda a análise é feita em um único tipo (<b>Regular</b>).</div>
-              <div class="steps-tab">
-                <span class="active" id="pill-cargas" onclick="switchTab('cargas')">Cargas (241)</span><span id="pill-resumo" onclick="switchTab('resumo')">Resumo</span>
-              </div>
-
               <div id="tab-cargas" class="tab-panel">
                 <div class="note">As regras não são fixas no sistema · é você quem marca quais campos usar como critério. <b>Por padrão, toda carga permanece na lista</b>; as regras abaixo servem para <b>excluir</b> o que não deve entrar. Todos os campos da base importada aparecem aqui, mesmo os que você não costuma usar. <b>Não existe um botão separado de salvar:</b> assim que você marca um campo, digita um valor ou seleciona uma opção, a regra já vale · para este município, imediatamente. Para parar de aplicar uma regra, desmarque o campo correspondente.</div>
                 <div class="note warn">O campo <b>Motivo</b> vem preenchido direto da base quando o próprio registro já sinaliza um problema (ex.: dado incompleto). Nesse caso a carga vira <b>pendência para você justificar</b>, independente das regras marcadas abaixo. Só quando o Motivo vem vazio é que as regras de filtro decidem se a carga vale como vaga.</div>
