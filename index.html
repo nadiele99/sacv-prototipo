@@ -419,16 +419,16 @@
             <div class="body">
               <div class="note" id="a3TipoNote">Este município não possui escolas indígenas identificadas na base · toda a análise é feita em um único tipo (<b>Regular</b>).</div>
               <div id="tab-cargas" class="tab-panel">
-                <div class="note" id="notaRegrasInterna">Estas regras estão definidas internamente na aplicação (nível de código) para este município · não podem ser editadas ou excluídas por aqui. Elas continuam sendo aplicadas automaticamente na análise das cargas abaixo. Ainda não foi decidido se essa configuração ficará restrita à equipe técnica ou se será liberada para edição.</div>
-                <div class="note" id="notaRegrasEditavel" style="display:none;">As regras não são fixas no sistema · é você quem marca quais campos usar como critério. <b>Por padrão, toda carga permanece na lista</b>; as regras abaixo servem para <b>excluir</b> o que não deve entrar. Todos os campos da base importada aparecem aqui, mesmo os que você não costuma usar. <b>Não existe um botão separado de salvar:</b> assim que você marca um campo, digita um valor ou seleciona uma opção, a regra já vale · para este município, imediatamente. Para parar de aplicar uma regra, desmarque o campo correspondente.</div>
+                <div class="note" id="notaRegrasInterna" style="display:none;">Estas regras estão definidas internamente na aplicação (nível de código) para este município · não podem ser editadas ou excluídas por aqui. Elas continuam sendo aplicadas automaticamente na análise das cargas abaixo. Ainda não foi decidido se essa configuração ficará restrita à equipe técnica ou se será liberada para edição.</div>
+                <div class="note" id="notaRegrasEditavel">As regras não são fixas no sistema · é você quem marca quais campos usar como critério. <b>Por padrão, toda carga permanece na lista</b>; as regras abaixo servem para <b>excluir</b> o que não deve entrar. Todos os campos da base importada aparecem aqui, mesmo os que você não costuma usar. <b>Não existe um botão separado de salvar:</b> assim que você marca um campo, digita um valor ou seleciona uma opção, a regra já vale · para este município, imediatamente. Para parar de aplicar uma regra, desmarque o campo correspondente.</div>
                 <div class="note warn">O campo <b>Motivo</b> vem preenchido direto da base quando o próprio registro já sinaliza um problema (ex.: dado incompleto). Nesse caso a carga vira <b>pendência para você justificar</b>, independente das regras marcadas abaixo. Só quando o Motivo vem vazio é que as regras de filtro decidem se a carga vale como vaga.</div>
 
                 <div style="margin-bottom:16px;">
-                  <div class="field-head"><label>Regras em vigor agora · Manaus, Coordenadoria 3</label><span style="display:flex;align-items:center;gap:8px;"><span class="badge green" id="ruleSavedBadge">atualizado automaticamente às 15:12</span><button class="regra-mode-toggle" id="btnToggleModoRegra" onclick="toggleModoRegraInterna()" title="Uso interno: alternar modo de exibição das regras">⚙</button></span></div>
+                  <div class="field-head"><label>Regras em vigor agora · Manaus, Coordenadoria 3</label><span style="display:flex;align-items:center;gap:8px;"><span class="badge green" id="ruleSavedBadge">atualizado automaticamente às 15:12</span></span></div>
                   <div style="display:flex;gap:8px;flex-wrap:wrap;" id="savedChips"></div>
                 </div>
 
-                <div id="regraInternaBlock">
+                <div id="regraInternaBlock" style="display:none;">
                   <div class="filtros-toggle open" id="regraInternaToggle" onclick="toggleRegraInterna()" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();toggleRegraInterna();}" role="button" tabindex="0" aria-expanded="true"><span class="filtros-toggle-chevron" id="regraInternaChevron">▸</span><span class="filtros-toggle-label">Regras aplicadas (fixas no sistema)</span><span class="filtros-toggle-hint" id="regraInternaHint">ocultar detalhes</span></div>
                   <div id="regraInternaBody">
                     <table class="rules-table">
@@ -443,7 +443,7 @@
                   </div>
                 </div>
 
-                <div id="regraEditavelBlock" style="display:none;">
+                <div id="regraEditavelBlock">
                 <div class="filtros-toggle" id="filtrosAvancadosToggle" onclick="toggleFiltrosAvancados()" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();toggleFiltrosAvancados();}" role="button" tabindex="0" aria-expanded="false"><span class="filtros-toggle-chevron" id="filtrosAvancadosChevron">▸</span><span class="filtros-toggle-label">Regras em vigor</span><span class="filtros-toggle-hint" id="filtrosAvancadosHint">mostrar filtros</span></div>
                 <div id="filtrosAvancadosBody" style="display:none;">
                 <div class="legend">Município não aparece aqui · você já está analisando só o município que reivindicou (indicado acima, ao lado de "Início"). Tipo também não é um filtro: Regular e Indígena são reivindicados, analisados e fechados separadamente, cada um com seu próprio relatório · veja a nota acima. Quando uma carga já vem com Motivo preenchido pela base, ela vira pendência individual e não depende deste filtro · veja a tabela de cargas mais abaixo.</div>
@@ -609,12 +609,11 @@
           <div class="card">
             <div class="title-band">Regras padrão · filtros reutilizáveis entre ciclos <span class="tag">RN044</span></div>
             <div class="body">
-              <div class="note" id="notaRegrasPadraoInterna">Estas regras padrão estão definidas internamente na aplicação (nível de código) · não podem ser criadas, editadas ou excluídas por aqui. Elas continuam sendo pré-carregadas normalmente no filtro dos Analistas ao abrir um ciclo. Ainda não foi decidido se essa configuração ficará restrita à equipe técnica ou se será liberada para edição.</div>
-              <div class="note" id="notaRegrasPadraoEditavel" style="display:none;">Cadastre aqui os filtros que devem valer, por padrão, para os Analistas · usando os <b>mesmos campos do filtro deles</b> (RF013/RN029). Ao abrir um novo ciclo, você escolhe qual regra padrão aplicar (ou nenhuma); ela é pré-carregada no filtro de cada Analista do ciclo, que ainda pode ajustar os valores · mudanças em relação ao padrão ficam sinalizadas para você, sem bloquear nada (RN045/RN046).</div>
+              <div class="note" id="notaRegrasPadraoInterna" style="display:none;">Estas regras padrão estão definidas internamente na aplicação (nível de código) · não podem ser criadas, editadas ou excluídas por aqui. Na V2, elas são aplicadas automaticamente na análise de cada ciclo, sem passar pelo filtro de um Analista.</div>
+              <div class="note" id="notaRegrasPadraoEditavel">Cadastre aqui os filtros que devem valer, por padrão, para os Analistas · usando os <b>mesmos campos do filtro deles</b> (RF013/RN029). Ao abrir um novo ciclo, você escolhe qual regra padrão aplicar (ou nenhuma); ela é pré-carregada no filtro de cada Analista do ciclo, que ainda pode ajustar os valores · mudanças em relação ao padrão ficam sinalizadas para você, sem bloquear nada (RN045/RN046).</div>
               <div class="legend" id="grBaseNota"></div>
-              <div style="text-align:right;margin:-4px 0 10px;"><button class="regra-mode-toggle" id="btnToggleModoRegraGR" onclick="toggleModoRegraInternaGR()" title="Uso interno: alternar modo de exibição das regras padrão">⚙</button></div>
-              <div id="regrasPadraoList"></div>
-              <div class="actions-row" id="acoesRegraPadraoEditavel" style="margin-top:6px;display:none;">
+                            <div id="regrasPadraoList"></div>
+              <div class="actions-row" id="acoesRegraPadraoEditavel" style="margin-top:6px;">
                 <button class="btn btn-navy" onclick="openNovaRegraPadrao()">+ Nova regra padrão</button>
               </div>
             </div>
@@ -1119,12 +1118,8 @@ const RULES_META = {
 // mas sem dados sintéticos o suficiente pra simular exclusão ao vivo neste wireframe).
 const CHAVES_REGRA_ATIVA = ['localidade','cargaHoraria','tipoCurso','escola'];
 let activeRules = new Set();
-let modoRegraInterna = true; // true = regras fixas no sistema (demo) · false = modo editável (uso interno)
 
 function chipHtml(key, label){
-  if (modoRegraInterna){
-    return `<span class="rule-chip">${label}</span>`;
-  }
   return `<span class="rule-chip">${label} <button onclick="desvincularRegra('${key}')" title="remover regra">×</button></span>`;
 }
 function renderChips(){
@@ -1538,19 +1533,6 @@ function toggleRegraInterna(){
   if (hint) hint.textContent = abrindo ? 'ocultar detalhes' : 'mostrar detalhes';
 }
 
-function toggleModoRegraInterna(){
-  modoRegraInterna = !modoRegraInterna;
-  const blocoInterno = document.getElementById('regraInternaBlock');
-  const blocoEditavel = document.getElementById('regraEditavelBlock');
-  const notaInterna = document.getElementById('notaRegrasInterna');
-  const notaEditavel = document.getElementById('notaRegrasEditavel');
-  if (blocoInterno) blocoInterno.style.display = modoRegraInterna ? '' : 'none';
-  if (blocoEditavel) blocoEditavel.style.display = modoRegraInterna ? 'none' : '';
-  if (notaInterna) notaInterna.style.display = modoRegraInterna ? '' : 'none';
-  if (notaEditavel) notaEditavel.style.display = modoRegraInterna ? 'none' : '';
-  renderChips();
-}
-
 // Ação só de teste do protótipo: simula reabrir uma pendência já justificada, pra provar
 // ao vivo que o gate de fechamento volta a travar quando algo muda depois de reaberto.
 function desfazerJustificativaPend(rowId){
@@ -1823,7 +1805,6 @@ const CAMPOS_REGRA = [
   { key:'pendenciaCarga', label:'Pendência Carga',        type:'chip',   condicoes:['Igual a'],                chk:'chkPendenciaCarga', cond:'condPendenciaCarga', val:'val-pendenciaCarga', row:'ruleRowPendenciaCarga', origem:'origemPendenciaCarga' },
 ];
 
-let modoRegraInternaGR = true; // true = regras padrao fixas no sistema (demo) · false = modo editável (uso interno)
 let regrasPadrao = [
   {
     id: 1,
@@ -1866,6 +1847,12 @@ function novoCamposUIVazio(){
 }
 
 function renderRegrasPadrao(){
+  const notaInterna = document.getElementById('notaRegrasPadraoInterna');
+  const notaEditavel = document.getElementById('notaRegrasPadraoEditavel');
+  const acoes = document.getElementById('acoesRegraPadraoEditavel');
+  if (notaInterna) notaInterna.style.display = modoV2 ? '' : 'none';
+  if (notaEditavel) notaEditavel.style.display = modoV2 ? 'none' : '';
+  if (acoes) acoes.style.display = modoV2 ? 'none' : '';
   const list = document.getElementById('regrasPadraoList');
   if (!list) return;
   const baseNota = document.getElementById('grBaseNota');
@@ -1885,7 +1872,7 @@ function renderRegrasPadrao(){
       <div class="rule-card">
         <div class="rule-card-head">
           <div><b>${r.nome}</b><div class="meta">${Object.keys(r.campos).length} campo(s) configurado(s)${emUso.length ? ' · em uso no ciclo ' + emUso.join(', ') : ''}</div></div>
-          ${modoRegraInternaGR
+          ${modoV2
             ? '<span class="badge" style="background:#E7ECF6;color:var(--navy-700);" title="Definida internamente, nível de código">fixa no sistema</span>'
             : `<div style="display:flex;gap:8px;flex-wrap:wrap;">
             <button class="btn btn-outline" onclick="editarRegraPadrao(${r.id})">Editar</button>
@@ -1895,17 +1882,6 @@ function renderRegrasPadrao(){
         ${linhas ? `<table class="rules-table"><thead><tr><th>Campo</th><th>Condição</th><th>Valor(es)</th></tr></thead><tbody>${linhas}</tbody></table>` : '<div class="legend" style="margin:0;">Nenhum campo configurado.</div>'}
       </div>`;
   }).join('');
-}
-
-function toggleModoRegraInternaGR(){
-  modoRegraInternaGR = !modoRegraInternaGR;
-  const notaInterna = document.getElementById('notaRegrasPadraoInterna');
-  const notaEditavel = document.getElementById('notaRegrasPadraoEditavel');
-  const acoes = document.getElementById('acoesRegraPadraoEditavel');
-  if (notaInterna) notaInterna.style.display = modoRegraInternaGR ? '' : 'none';
-  if (notaEditavel) notaEditavel.style.display = modoRegraInternaGR ? 'none' : '';
-  if (acoes) acoes.style.display = modoRegraInternaGR ? 'none' : '';
-  renderRegrasPadrao();
 }
 
 function openNovaRegraPadrao(){
@@ -2658,21 +2634,35 @@ function aplicarFiltroG2(){
   });
 }
 const G2_RULE_FIELD = { 'Horas':'horas', 'Localidade':'localidade', 'Curso/Projeto':'tipoCurso', 'Nome Escola':'escola' };
+const G2_CONDICAO_SIMBOLO = { 'Igual a':'=', 'Diferente de':'≠', 'Menor que':'<', 'Maior que':'>' };
 function g2RegrasAplicadasHtml(i){
   const c = G2_CARGAS_EXEMPLO[i];
-  const rows = [];
-  (c.regras || []).forEach(label => {
+  const ciclo = ciclosHistorico.find(cy => cy.id === cicloSelecionado);
+  const regra = ciclo ? regrasPadrao.find(r => r.id === ciclo.regraPadraoId) : null;
+  const chavesAtivas = regra ? CHAVES_REGRA_ATIVA.filter(key => regra.campos[key]) : CHAVES_REGRA_ATIVA;
+  const rows = chavesAtivas.map(key => {
+    const f = CAMPOS_REGRA.find(f => f.key === key);
+    const label = f ? f.label : key;
     const field = G2_RULE_FIELD[label];
     let val = (field && c.campos) ? c.campos[field] : undefined;
     if (val === undefined || val === null || val === '') val = '-';
     else if (label === 'Horas') val = val + 'h';
-    rows.push('<tr><td>' + label + '</td><td>' + val + '</td><td><span class="badge red">enquadrada na regra</span></td></tr>');
+    const excluiu = (c.regras || []).includes(label);
+    let criterio = label;
+    const campo = regra && regra.campos[key];
+    if (campo){
+      const condSimb = G2_CONDICAO_SIMBOLO[campo.condicao] || campo.condicao;
+      const valorTxt = (f && f.type === 'chip') ? (campo.valores || []).join(', ') : (campo.valor + (key === 'cargaHoraria' ? 'h' : ''));
+      criterio = label + ' ' + condSimb + ' ' + valorTxt;
+    }
+    return checklistRow(criterio, label + ' desta carga: ' + val, excluiu);
   });
   if (c.campos && c.campos.motivo){
     const d = decisaoAutomaticaPorMotivo(c.campos.motivo);
-    rows.push('<tr><td>Motivo (pendência da base)</td><td>' + c.campos.motivo + '</td><td><span class="badge ' + (d.vale ? 'blue' : 'red') + '">' + (d.vale ? 'automatizado · vale vaga' : 'automatizado · não vale vaga') + '</span></td></tr>');
+    const badge = d.vale ? '<span class="badge blue">motivo automatizado · vale vaga</span>' : '<span class="badge red">motivo automatizado · não vale vaga</span>';
+    rows.push('<tr><td>Motivo</td><td>Motivo desta carga: ' + c.campos.motivo + '</td><td>' + badge + '</td></tr>');
   }
-  if (!rows.length) return '<div class="legend" style="margin-top:6px;">Nenhuma regra de exclusão enquadrou esta carga.</div>';
+  if (!rows.length) return '<div class="legend" style="margin-top:6px;">Nenhuma regra ativa avaliada para esta carga.</div>';
   return '<table class="rules-table" style="margin-top:6px;font-size:11.5px;"><thead><tr><th>Regra avaliada</th><th>Valor desta carga</th><th>Resultado</th></tr></thead><tbody>' + rows.join('') + '</tbody></table>';
 }
 function g2ObsOriginal(i){
