@@ -316,6 +316,10 @@
     <button id="segAnalista" class="active" onclick="setPerfil('analista')">Análise</button>
     <button id="segGerente" onclick="setPerfil('gerente')">Gerentes</button>
   </div>
+  <div class="seg" id="segVersao" title="Alternar entre o modelo atual (V1) e o modelo com análise automatizada (V2)">
+    <button id="segV1" class="active" onclick="setVersao('v1')">V1</button>
+    <button id="segV2" onclick="setVersao('v2')">V2</button>
+  </div>
   <span class="hint">clique nos botões da tela para avançar, ou pule direto pela barra lateral</span>
   <button id="btnToggleNotas" class="notas-toggle-btn" onclick="toggleNotasRegras()">🙈 Ocultar dicas de regras</button>
 </div>
@@ -719,6 +723,9 @@
                 <label>Cargas do município</label>
                 <button class="icon-btn" onclick="toggleG2Colunas()" id="btnG2ToggleColunas">👁 Mostrar mais colunas</button>
               </div>
+              <div class="steps-tab" id="g2Filtro" style="display:none;">
+                <span class="active" data-filtro="todas" onclick="filtrarG2('todas')">Todas<span id="g2CntTodas"></span></span><span data-filtro="justificativas" onclick="filtrarG2('justificativas')">Por justificativa<span id="g2CntJustificativas"></span></span><span data-filtro="confirmadas" onclick="filtrarG2('confirmadas')">Confirmadas<span id="g2CntConfirmadas"></span></span><span data-filtro="excluidas" onclick="filtrarG2('excluidas')">Excluídas<span id="g2CntExcluidas"></span></span>
+              </div>
               <div class="picker-list" id="g2ColunasPicker" style="display:none;border:1px solid var(--gray-300);border-radius:8px;padding:12px 14px;margin-bottom:14px;max-height:220px;overflow-y:auto;"></div>
               <div style="overflow-x:auto;">
                 <table id="g2CargasTable">
@@ -826,6 +833,24 @@ function setPerfil(p){
   showScreen();
   renderSteps();
   if (p === 'analista' && typeof setTipoContext === 'function') setTipoContext('regular');
+}
+
+let modoV2 = false; // false = V1 (modelo atual, com Analista) · true = V2 (análise automatizada, sem Analista)
+function setVersao(v){
+  modoV2 = (v === 'v2');
+  const btnV1 = document.getElementById('segV1');
+  const btnV2 = document.getElementById('segV2');
+  if (btnV1) btnV1.classList.toggle('active', !modoV2);
+  if (btnV2) btnV2.classList.toggle('active', modoV2);
+  const btnAnalista = document.getElementById('segAnalista');
+  if (btnAnalista){
+    btnAnalista.disabled = modoV2;
+    btnAnalista.style.opacity = modoV2 ? '.4' : '';
+    btnAnalista.style.cursor = modoV2 ? 'not-allowed' : '';
+    btnAnalista.title = modoV2 ? 'Indisponível na V2 · a análise é automática, sem Analista' : '';
+  }
+  if (modoV2 && perfil === 'analista') setPerfil('gerente');
+  else showScreen();
 }
 
 let notasVisiveis = true;
@@ -1158,6 +1183,7 @@ const CARGA_COLUMNS = [
   { key:'cursoTec',        label:'Curso Téc.',           field:'cursoTec',        visible:false },
   { key:'seqMatricula',    label:'Seq. Matrícula',       field:'seqMatricula',    visible:true  },
   { key:'numProcesso',     label:'Núm. Processo',        field:'numProcesso',     visible:false },
+  { key:'motivo',          label:'Motivo',               field:'motivo',          visible:true  },
 ];
 let colunasExtrasVisiveis = new Set();
 let justificativas = {}; // { [rowId]: { valeVaga: 'sim'|'nao' } } · decisão do Analista por carga com Motivo preenchido
@@ -2375,13 +2401,13 @@ function renderPainelG4(){
   `;
   const travado = c.status === 'fechado' || c.status === 'cancelado';
   list.innerHTML = c.municipios.map(m => {
-    if (m.status === 'nao_reivindicado'){
+    if (!modoV2 && m.status === 'nao_reivindicado'){
       return `<div class="muni-row" style="opacity:.7;">
         <div><div class="name">${m.nome}</div><div class="meta">nenhum analista reivindicou ainda · cobrar a equipe</div></div>
         <span class="badge red">Não reivindicado</span>
       </div>`;
     }
-    if (m.status === 'em_analise'){
+    if (!modoV2 && m.status === 'em_analise'){
       return `<div class="muni-row" style="opacity:.6;">
         <div><div class="name">${m.nome}</div><div class="meta">reivindicado por ${m.analista} · ainda em análise</div></div>
         <span class="badge gray">Em andamento</span>
@@ -2395,8 +2421,10 @@ function renderPainelG4(){
     const motivoLinha = m.revisaoStatus === 'reprovado'
       ? ' · <b style="color:#C0392B;">reprovado em ' + (m.reprovadoEm || '') + ': "' + m.motivoReprovacao + '"</b>'
       : '';
+    const cargasV2 = m.cargas > 0 ? m.cargas : 60;
+    const analistaLinha = (modoV2 && m.status !== 'fechado') ? 'Sistema · análise automática' : ('fechado por ' + m.analista);
     return `<div class="muni-row" ${m.reeditado ? 'style="background:#FFF7EB;"' : ''}>
-      <div><div class="name">${m.nome}</div><div class="meta">fechado por ${m.analista} · ${m.cargas} cargas${m.reeditado ? ' · <b style="color:#C0392B;">reeditado pelo analista em ' + m.reeditadoEm + ', depois da sua revisão anterior</b>' : ''}${motivoLinha}</div></div>
+      <div><div class="name">${m.nome}</div><div class="meta">${analistaLinha} · ${cargasV2} cargas${m.reeditado ? ' · <b style="color:#C0392B;">reeditado pelo analista em ' + m.reeditadoEm + ', depois da sua revisão anterior</b>' : ''}${motivoLinha}</div></div>
       <div style="display:flex;align-items:center;gap:10px;">
         ${m.reeditado ? '<span class="badge" style="background:#FCE4D6;color:#C0392B;">↺ Reeditado</span>' : ''}
         ${statusBadge}
@@ -2509,7 +2537,9 @@ function renderG2(){
   if (!m) return;
   if (breadcrumb) breadcrumb.textContent = g2MunicipioAtual;
   if (titulo) titulo.innerHTML = 'Revisão de fechamento · ' + g2MunicipioAtual + ' <span class="tag">RN007</span>';
-  if (nota) nota.innerHTML = 'Fechado por <b>' + m.analista + '</b> · ' + m.cargas + ' cargas. Confira as cargas abaixo e decida: aprove se está tudo certo, ou reprove explicando o que precisa ser ajustado · o analista vai ver o motivo no painel dele.';
+  if (nota) nota.innerHTML = modoV2
+    ? 'Análise automática pelo sistema · ' + (m.cargas > 0 ? m.cargas : 60) + ' cargas (exemplo). Confira as cargas abaixo e decida: aprove se está tudo certo, ou reprove explicando o que precisa ser ajustado.'
+    : 'Fechado por <b>' + m.analista + '</b> · ' + m.cargas + ' cargas. Confira as cargas abaixo e decida: aprove se está tudo certo, ou reprove explicando o que precisa ser ajustado · o analista vai ver o motivo no painel dele.';
   if (historicoNota){
     if (m.revisaoStatus === 'reprovado'){
       historicoNota.style.display = 'block';
@@ -2528,6 +2558,10 @@ function renderG2(){
   renderG2Regras();
   renderG2CargasTable();
   [0,1,2].forEach(renderG2CargaRow);
+  const filtroBarEl = document.getElementById('g2Filtro');
+  if (filtroBarEl) filtroBarEl.style.display = modoV2 ? '' : 'none';
+  if (!modoV2) g2FiltroAtivo = 'todas';
+  aplicarFiltroG2();
 }
 
 // ===== G2: regras aplicadas (padrão + alterações do analista) e justificativas por carga · nível informativo (RN007) =====
@@ -2562,20 +2596,24 @@ function renderG2Regras(){
   } else {
     box.innerHTML = '<div class="note">Nenhuma regra padrão foi definida para este ciclo · o analista usou os filtros que considerou necessários, sem um ponto de partida pré-carregado.</div>';
   }
-  altBox.innerHTML = '<div class="legend" style="margin-bottom:8px;"><b>Alterações feitas pelo Analista (exemplo):</b></div>' +
-    '<div class="note" style="margin-bottom:6px;"><span class="badge yellow" style="margin-right:6px;">Exceção manual</span> Carga de <b>E.E. Central Itacoatiara</b> reincluída manualmente, passando por cima das regras de Horas e Localidade.</div>' +
-    '<div class="note warn"><span class="badge gray" style="margin-right:6px;">Regra ajustada</span> Critério de Localidade foi restringido pelo analista para excluir comunidades fora do perímetro urbano.</div>';
+  altBox.innerHTML = modoV2
+    ? '<div class="legend" style="margin-bottom:8px;"><b>Decisões automatizadas pelo sistema (exemplo):</b></div>' +
+      '<div class="note" style="margin-bottom:6px;"><span class="badge blue" style="margin-right:6px;">Motivo automatizado</span> Carga de <b>E.E. Central Itacoatiara</b> mantida como vaga automaticamente pelo sistema, com base no Motivo cadastrado, passando por cima das regras de Horas e Localidade.</div>' +
+      '<div class="note warn"><span class="badge gray" style="margin-right:6px;">Regra ajustada</span> Critério de Localidade segue restringido pela regra padrão do ciclo, para excluir comunidades fora do perímetro urbano.</div>'
+    : '<div class="legend" style="margin-bottom:8px;"><b>Alterações feitas pelo Analista (exemplo):</b></div>' +
+      '<div class="note" style="margin-bottom:6px;"><span class="badge yellow" style="margin-right:6px;">Exceção manual</span> Carga de <b>E.E. Central Itacoatiara</b> reincluída manualmente, passando por cima das regras de Horas e Localidade.</div>' +
+      '<div class="note warn"><span class="badge gray" style="margin-right:6px;">Regra ajustada</span> Critério de Localidade foi restringido pelo analista para excluir comunidades fora do perímetro urbano.</div>';
 }
 const G2_CARGAS_EXEMPLO = [
   { escola:'E.E. Ribeirinha', regras:[], tipoOriginal:'confirmada', justificativa:'Carga confirmada conforme a regra padrão do ciclo · nenhuma exceção foi necessária.',
     campos:{ escola:'E.E. Ribeirinha', disciplinas:'Geografia', localidade:'Rural', horas:22, tipoCurso:'Regular', nomeDdz:'Coordenadoria 3', nomeEnsino:'Ensino Médio', areaEixo:'Ciências Humanas' } },
   { escola:'E.E. Central Itacoatiara', regras:['Horas','Localidade'], tipoOriginal:'excecao-analista', justificativa:'A escola comprovou, por ofício, que a carga é regular apesar da carga horária reduzida e da localidade divergente. Reincluída como exceção manual.',
-    campos:{ escola:'E.E. Central Itacoatiara', disciplinas:'História', localidade:'Urbana', horas:8, tipoCurso:'Regular', nomeDdz:'Coordenadoria 3', nomeEnsino:'Ensino Médio', areaEixo:'Ciências Humanas' } },
+    campos:{ escola:'E.E. Central Itacoatiara', disciplinas:'História', localidade:'Urbana', horas:8, tipoCurso:'Regular', nomeDdz:'Coordenadoria 3', nomeEnsino:'Ensino Médio', areaEixo:'Ciências Humanas', motivo:'Carga com pendência de conferência de carga horária, já regularizada na base de origem' } },
   { escola:'E.E. Comunidade Rio Preto', regras:['Localidade','Curso/Projeto'], tipoOriginal:'excluida', justificativa:'',
     campos:{ escola:'E.E. Comunidade Rio Preto', disciplinas:'Ciências', localidade:'Rural', horas:14, tipoCurso:'EJA', nomeDdz:'Coordenadoria 3', nomeEnsino:'Ensino Fundamental', areaEixo:'Ciências da Natureza' } }
 ];
 let g2ColunasExtrasVisiveis = new Set();
-const G2_COLUNAS_PADRAO = new Set(['nomeEscola','disciplinas']); // hoje fica como está: Escola + Disciplina · o resto é opcional, igual à Análise de Cargas
+const G2_COLUNAS_PADRAO = new Set(['nomeEscola','disciplinas','motivo']); // hoje fica como está: Escola + Disciplina + Motivo · o resto é opcional, igual à Análise de Cargas
 function g2ColunasVisiveisAtuais(){
   return CARGA_COLUMNS.filter(c => G2_COLUNAS_PADRAO.has(c.key) || g2ColunasExtrasVisiveis.has(c.key));
 }
@@ -2584,12 +2622,50 @@ function g2FraseRegras(labels){
   if (labels.length === 1) return 'passando por cima da regra de ' + labels[0];
   return 'passando por cima das regras de ' + labels.join(', ');
 }
+function decisaoAutomaticaPorMotivo(motivo){
+  const texto = (motivo || '').toLowerCase();
+  const impeditivos = ['sem informação', 'insuficiente', 'incompleto', 'divergente não resolvid', 'erro', 'não localizad'];
+  const vale = motivo && motivo.trim() !== '' ? !impeditivos.some(p => texto.includes(p)) : true;
+  return { vale, criterio: vale ? 'motivo classificado como regularizável · sem impedimento cadastral' : 'motivo classificado como impeditivo · pendência não regularizada' };
+}
+let g2FiltroAtivo = 'todas';
+function categoriaG2(i){
+  const c = G2_CARGAS_EXEMPLO[i];
+  if (c.tipoOriginal === 'excluida') return 'excluidas';
+  if (c.tipoOriginal === 'excecao-analista') return 'justificativas';
+  return 'confirmadas';
+}
+function filtrarG2(tipo){
+  g2FiltroAtivo = tipo;
+  aplicarFiltroG2();
+}
+function aplicarFiltroG2(){
+  const filtroBar = document.getElementById('g2Filtro');
+  if (filtroBar) filtroBar.querySelectorAll('span[data-filtro]').forEach(s => s.classList.toggle('active', s.dataset.filtro === g2FiltroAtivo));
+  const contagem = { todas: G2_CARGAS_EXEMPLO.length, justificativas: 0, confirmadas: 0, excluidas: 0 };
+  G2_CARGAS_EXEMPLO.forEach((c, i) => {
+    const cat = categoriaG2(i);
+    contagem[cat]++;
+    const row = document.getElementById('g2Row' + i);
+    if (row) row.style.display = (g2FiltroAtivo === 'todas' || cat === g2FiltroAtivo) ? '' : 'none';
+  });
+  const cntIds = { todas: 'g2CntTodas', justificativas: 'g2CntJustificativas', confirmadas: 'g2CntConfirmadas', excluidas: 'g2CntExcluidas' };
+  Object.keys(cntIds).forEach(k => {
+    const el = document.getElementById(cntIds[k]);
+    if (el) el.textContent = ' (' + contagem[k] + ')';
+  });
+}
 function g2ObsOriginal(i){
   const c = G2_CARGAS_EXEMPLO[i];
   if (c.tipoOriginal === 'excluida'){
     return 'Excluída pela regra · critérios enquadrados: ' + (c.regras && c.regras.length ? c.regras.join(', ') : '-') + '.';
   }
   if (c.tipoOriginal === 'excecao-analista'){
+    if (modoV2){
+      const motivo = c.campos && c.campos.motivo ? c.campos.motivo : '(motivo não informado)';
+      const d = decisaoAutomaticaPorMotivo(motivo);
+      return 'Decidido automaticamente pelo sistema · Motivo: "' + motivo + '" (' + d.criterio + ') · mantida como vaga, ' + g2FraseRegras(c.regras) + '.';
+    }
     return 'Exceção manual do Analista: mantida como vaga, ' + g2FraseRegras(c.regras) + '. Justificativa: ' + (c.justificativa && c.justificativa.trim() ? c.justificativa : '(nenhuma registrada)') + '.';
   }
   return 'Confirmada · não se enquadra em nenhuma regra de exclusão vigente.';
@@ -2655,6 +2731,10 @@ const G2_SITUACAO_ORIGINAL = {
   1: '<span class="badge yellow">Vaga confirmada · exceção manual</span>',
   2: '<span class="badge red">Excluída</span>'
 };
+function g2SituacaoOriginalHtml(i){
+  if (i === 1 && modoV2) return '<span class="badge blue">Vaga confirmada · motivo automatizado</span>';
+  return G2_SITUACAO_ORIGINAL[i];
+}
 function g2AcaoOriginalHtml(i){
   if (i === 2) return '<button class="icon-btn" onclick="abrirReincluirGerente(2)">Reincluir</button> <button class="icon-btn" onclick="verJustificativaG2(2)">Ver justificativa</button>';
   return '<button class="icon-btn" onclick="abrirEdicaoGerente(' + i + ')">Editar</button> <button class="icon-btn" onclick="verJustificativaG2(' + i + ')">Ver justificativa</button>';
@@ -2679,7 +2759,7 @@ function renderG2CargaRow(i){
     acaoTd.innerHTML = '<button class="icon-btn" onclick="abrirEdicaoGerente(' + i + ')">Editar</button> <a href="#" onclick="desfazerDecisaoGerente(' + i + ');return false;" style="font-size:11.5px;color:var(--muted);margin-left:6px;">↺ desfazer</a> <button class="icon-btn" onclick="verJustificativaG2(' + i + ')">Ver justificativa</button>';
   } else {
     row.classList.toggle('excluded', i === 2);
-    situacaoTd.innerHTML = G2_SITUACAO_ORIGINAL[i];
+    situacaoTd.innerHTML = g2SituacaoOriginalHtml(i);
     acaoTd.innerHTML = g2AcaoOriginalHtml(i);
   }
 }
