@@ -2347,7 +2347,7 @@ function renderPainelG1(){
   kpiRow.innerHTML = `
     <div class="kpi"><div class="num">${c.painel.fechados} / ${c.painel.total}</div><div class="lbl">municípios fechados</div><div class="progress"><div style="width:${pct}%;"></div></div></div>
     <div class="kpi"><div class="num">${aguardando}</div><div class="lbl">aguardando sua revisão (exemplo)</div></div>
-    <div class="kpi"><div class="num">${reprovados}</div><div class="lbl">reprovados, aguardando o analista (exemplo)</div></div>
+    <div class="kpi"><div class="num">${reprovados}</div><div class="lbl">${modoV2 ? 'reprovados, aguardando ajuste de regra (exemplo)' : 'reprovados, aguardando o analista (exemplo)'}</div></div>
     <div class="kpi"><div class="num">${naoReivindicados}</div><div class="lbl">ainda não reivindicados (exemplo)</div></div>
     <div class="kpi"><div class="num">${c.painel.pendencias}</div><div class="lbl">pendências abertas</div></div>
   `;
@@ -2356,7 +2356,9 @@ function renderPainelG1(){
   } else if (c.status === 'fechado'){
     nota.innerHTML = 'Este ciclo já foi fechado em ' + c.fechamento + ' (base: ' + c.base + '). Consulta somente leitura.';
   } else {
-    nota.innerHTML = 'Acompanhe o progresso deste ciclo. Você pode revisar os municípios já fechados pelo analista a qualquer momento · não precisa esperar todos concluírem. Base deste ciclo: ' + c.base + '.';
+    nota.innerHTML = (modoV2
+      ? 'Acompanhe o progresso deste ciclo. Você pode revisar os municípios já analisados automaticamente pelo sistema a qualquer momento · não precisa esperar todos concluírem.'
+      : 'Acompanhe o progresso deste ciclo. Você pode revisar os municípios já fechados pelo analista a qualquer momento · não precisa esperar todos concluírem.') + ' Base deste ciclo: ' + c.base + '.';
   }
   kpiRow.style.opacity = (c.status === 'cancelado') ? '.45' : '';
   if (btnRevisar) btnRevisar.textContent = (c.status === 'cancelado') ? 'Ver o que foi descartado (ciclo cancelado)' : (c.status === 'fechado') ? 'Ver revisão (ciclo fechado)' : 'Revisar municípios analisados →';
@@ -2396,7 +2398,7 @@ function renderPainelG4(){
     <div class="kpi"><div class="num">${totalCargas}</div><div class="lbl">cargas confirmadas (exemplo)</div></div>
     <div class="kpi"><div class="num">${c.painel.fechados} / ${c.painel.total}</div><div class="lbl">municípios fechados no ciclo</div></div>
     <div class="kpi"><div class="num">${aprovados.length} / ${fechados.length}</div><div class="lbl">aprovados por você (exemplo)</div></div>
-    <div class="kpi"><div class="num">${reprovados.length}</div><div class="lbl">reprovados, aguardando o analista (exemplo)</div></div>
+    <div class="kpi"><div class="num">${reprovados.length}</div><div class="lbl">${modoV2 ? 'reprovados, aguardando ajuste de regra (exemplo)' : 'reprovados, aguardando o analista (exemplo)'}</div></div>
     <div class="kpi"><div class="num">${naoReivindicados.length}</div><div class="lbl">ainda não reivindicados (exemplo)</div></div>
   `;
   const travado = c.status === 'fechado' || c.status === 'cancelado';
@@ -2416,7 +2418,7 @@ function renderPainelG4(){
     const statusBadge = m.revisaoStatus === 'aprovado'
       ? '<span class="badge green">Aprovado</span>'
       : m.revisaoStatus === 'reprovado'
-      ? '<span class="badge red">Reprovado · aguardando analista</span>'
+      ? '<span class="badge red">' + (modoV2 ? 'Reprovado · aguardando ajuste de regra' : 'Reprovado · aguardando analista') + '</span>'
       : '<span class="badge yellow">Aguardando revisão</span>';
     const motivoLinha = m.revisaoStatus === 'reprovado'
       ? ' · <b style="color:#C0392B;">reprovado em ' + (m.reprovadoEm || '') + ': "' + m.motivoReprovacao + '"</b>'
@@ -2424,7 +2426,7 @@ function renderPainelG4(){
     const cargasV2 = m.cargas > 0 ? m.cargas : 60;
     const analistaLinha = (modoV2 && m.status !== 'fechado') ? 'Sistema · análise automática' : ('fechado por ' + m.analista);
     return `<div class="muni-row" ${m.reeditado ? 'style="background:#FFF7EB;"' : ''}>
-      <div><div class="name">${m.nome}</div><div class="meta">${analistaLinha} · ${cargasV2} cargas${m.reeditado ? ' · <b style="color:#C0392B;">reeditado pelo analista em ' + m.reeditadoEm + ', depois da sua revisão anterior</b>' : ''}${motivoLinha}</div></div>
+      <div><div class="name">${m.nome}</div><div class="meta">${analistaLinha} · ${cargasV2} cargas${(m.reeditado && !modoV2) ? ' · <b style="color:#C0392B;">reeditado pelo analista em ' + m.reeditadoEm + ', depois da sua revisão anterior</b>' : ''}${motivoLinha}</div></div>
       <div style="display:flex;align-items:center;gap:10px;">
         ${m.reeditado ? '<span class="badge" style="background:#FCE4D6;color:#C0392B;">↺ Reeditado</span>' : ''}
         ${statusBadge}
@@ -2441,7 +2443,7 @@ function renderPainelG4(){
     nota.innerHTML = 'Este ciclo já foi fechado em ' + c.fechamento + ' · consolidado final gerado. Extraia o relatório final abaixo; o envio à Gerente Superior e a homologação em si acontecem manualmente, fora do SACV (RN028). Consulta somente leitura.';
   } else {
     nota.innerHTML = 'Baixar relatório por município fica sempre disponível, a qualquer momento · inclusive depois de já revisado. Clique em "Revisar" para aprovar ou reprovar (com justificativa) cada município fechado. Municípios ainda não reivindicados aparecem aqui para você cobrar a equipe. <b>Em regra (RN039), o "Consolidado final" só libera quando TODOS os municípios do ciclo estiverem fechados e aprovados</b> · neste protótipo, para permitir testar o fluxo, ele libera assim que os municípios já fechados forem aprovados, mesmo com municípios ainda em análise ou não reivindicados.'
-      + (reeditados.length ? ' <span style="color:#C0392B;"><b>Atenção:</b> ' + reeditados.length + ' município' + (reeditados.length>1?'s':'') + ' marcado' + (reeditados.length>1?'s':'') + ' como "↺ Reeditado" foi(ram) alterado(s) pelo analista depois da sua aprovação anterior · a marcação foi desfeita automaticamente, revise de novo.</span>' : '');
+      + ((reeditados.length && !modoV2) ? ' <span style="color:#C0392B;"><b>Atenção:</b> ' + reeditados.length + ' município' + (reeditados.length>1?'s':'') + ' marcado' + (reeditados.length>1?'s':'') + ' como "↺ Reeditado" foi(ram) alterado(s) pelo analista depois da sua aprovação anterior · a marcação foi desfeita automaticamente, revise de novo.</span>' : '');
   }
   const relWrap = document.getElementById('g4BtnRelatorioFinalWrap');
   if (relWrap){
@@ -2543,8 +2545,8 @@ function renderG2(){
   if (historicoNota){
     if (m.revisaoStatus === 'reprovado'){
       historicoNota.style.display = 'block';
-      historicoNota.innerHTML = '<b>Este município já foi reprovado</b> em ' + (m.reprovadoEm || '') + ', com o motivo: "' + m.motivoReprovacao + '". Ainda está aguardando o analista reenviar.';
-    } else if (m.reeditado){
+      historicoNota.innerHTML = '<b>Este município já foi reprovado</b> em ' + (m.reprovadoEm || '') + ', com o motivo: "' + m.motivoReprovacao + '". ' + (modoV2 ? 'Aguardando ajuste de regra · a análise volta a rodar automaticamente depois disso.' : 'Ainda está aguardando o analista reenviar.');
+    } else if (m.reeditado && !modoV2){
       historicoNota.style.display = 'block';
       historicoNota.innerHTML = '<b>Reeditado pelo analista</b> em ' + m.reeditadoEm + ', depois da sua aprovação anterior · revise de novo.';
     } else {
@@ -2655,6 +2657,24 @@ function aplicarFiltroG2(){
     if (el) el.textContent = ' (' + contagem[k] + ')';
   });
 }
+const G2_RULE_FIELD = { 'Horas':'horas', 'Localidade':'localidade', 'Curso/Projeto':'tipoCurso', 'Nome Escola':'escola' };
+function g2RegrasAplicadasHtml(i){
+  const c = G2_CARGAS_EXEMPLO[i];
+  const rows = [];
+  (c.regras || []).forEach(label => {
+    const field = G2_RULE_FIELD[label];
+    let val = (field && c.campos) ? c.campos[field] : undefined;
+    if (val === undefined || val === null || val === '') val = '-';
+    else if (label === 'Horas') val = val + 'h';
+    rows.push('<tr><td>' + label + '</td><td>' + val + '</td><td><span class="badge red">enquadrada na regra</span></td></tr>');
+  });
+  if (c.campos && c.campos.motivo){
+    const d = decisaoAutomaticaPorMotivo(c.campos.motivo);
+    rows.push('<tr><td>Motivo (pendência da base)</td><td>' + c.campos.motivo + '</td><td><span class="badge ' + (d.vale ? 'blue' : 'red') + '">' + (d.vale ? 'automatizado · vale vaga' : 'automatizado · não vale vaga') + '</span></td></tr>');
+  }
+  if (!rows.length) return '<div class="legend" style="margin-top:6px;">Nenhuma regra de exclusão enquadrou esta carga.</div>';
+  return '<table class="rules-table" style="margin-top:6px;font-size:11.5px;"><thead><tr><th>Regra avaliada</th><th>Valor desta carga</th><th>Resultado</th></tr></thead><tbody>' + rows.join('') + '</tbody></table>';
+}
 function g2ObsOriginal(i){
   const c = G2_CARGAS_EXEMPLO[i];
   if (c.tipoOriginal === 'excluida'){
@@ -2746,7 +2766,7 @@ function renderG2CargaRow(i){
   const obsTd = document.getElementById('g2Obs' + i);
   const row = document.getElementById('g2Row' + i);
   if (!situacaoTd || !acaoTd || !row) return;
-  if (obsTd) obsTd.textContent = g2ObsAtual(i);
+  if (obsTd) obsTd.innerHTML = g2ObsAtual(i) + (modoV2 ? g2RegrasAplicadasHtml(i) : '');
   if (d && d.tipo === 'reinclusao'){
     row.classList.remove('excluded');
     situacaoTd.innerHTML = '<span class="badge yellow">Vaga confirmada · exceção do Gerente</span>';
@@ -2868,14 +2888,14 @@ function openReprovarMunicipio(){
   box.innerHTML = `
     <div class="icon-circle">⊘</div>
     <h3>Reprovar análise · ${g2MunicipioAtual}</h3>
-    <p>Explique o que precisa ser corrigido. O Analista vai ver este motivo e o município volta pra fila dele, sinalizado para revisão (RF017/RN007).</p>
+    <p>${modoV2 ? 'Explique o que precisa ser corrigido. O município fica reprovado, sinalizado para ajuste de regra (RF017/RN007) · a análise volta a rodar automaticamente depois do ajuste.' : 'Explique o que precisa ser corrigido. O Analista vai ver este motivo e o município volta pra fila dele, sinalizado para revisão (RF017/RN007).'}</p>
     <div class="field" style="margin-bottom:14px;">
       <label>Motivo da reprovação (obrigatório)</label>
       <textarea id="motivoReprovacaoInput" oninput="atualizaBtnConfirmarReprovacao()" placeholder="Explique o que precisa ser ajustado..."></textarea>
     </div>
     <div class="actions">
       <button class="btn btn-outline" onclick="closeModal()">Voltar</button>
-      <button class="btn btn-red" id="btnConfirmarReprovacao" disabled style="opacity:.5;cursor:not-allowed;" onclick="confirmarReprovacaoMunicipio()">Reprovar e notificar Analista</button>
+      <button class="btn btn-red" id="btnConfirmarReprovacao" disabled style="opacity:.5;cursor:not-allowed;" onclick="confirmarReprovacaoMunicipio()">${modoV2 ? 'Reprovar' : 'Reprovar e notificar Analista'}</button>
     </div>`;
   document.getElementById('overlay').classList.add('show');
 }
