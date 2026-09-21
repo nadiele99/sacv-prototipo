@@ -605,10 +605,12 @@
           <div class="card">
             <div class="title-band">Regras padrão · filtros reutilizáveis entre ciclos <span class="tag">RN044</span></div>
             <div class="body">
-              <div class="note">Cadastre aqui os filtros que devem valer, por padrão, para os Analistas · usando os <b>mesmos campos do filtro deles</b> (RF013/RN029). Ao abrir um novo ciclo, você escolhe qual regra padrão aplicar (ou nenhuma); ela é pré-carregada no filtro de cada Analista do ciclo, que ainda pode ajustar os valores · mudanças em relação ao padrão ficam sinalizadas para você, sem bloquear nada (RN045/RN046).</div>
+              <div class="note" id="notaRegrasPadraoInterna">Estas regras padrão estão definidas internamente na aplicação (nível de código) · não podem ser criadas, editadas ou excluídas por aqui. Elas continuam sendo pré-carregadas normalmente no filtro dos Analistas ao abrir um ciclo. Ainda não foi decidido se essa configuração ficará restrita à equipe técnica ou se será liberada para edição.</div>
+              <div class="note" id="notaRegrasPadraoEditavel" style="display:none;">Cadastre aqui os filtros que devem valer, por padrão, para os Analistas · usando os <b>mesmos campos do filtro deles</b> (RF013/RN029). Ao abrir um novo ciclo, você escolhe qual regra padrão aplicar (ou nenhuma); ela é pré-carregada no filtro de cada Analista do ciclo, que ainda pode ajustar os valores · mudanças em relação ao padrão ficam sinalizadas para você, sem bloquear nada (RN045/RN046).</div>
               <div class="legend" id="grBaseNota"></div>
+              <div style="text-align:right;margin:-4px 0 10px;"><button class="regra-mode-toggle" id="btnToggleModoRegraGR" onclick="toggleModoRegraInternaGR()" title="Uso interno: alternar modo de exibição das regras padrão">⚙</button></div>
               <div id="regrasPadraoList"></div>
-              <div class="actions-row" style="margin-top:6px;">
+              <div class="actions-row" id="acoesRegraPadraoEditavel" style="margin-top:6px;display:none;">
                 <button class="btn btn-navy" onclick="openNovaRegraPadrao()">+ Nova regra padrão</button>
               </div>
             </div>
@@ -1795,6 +1797,7 @@ const CAMPOS_REGRA = [
   { key:'pendenciaCarga', label:'Pendência Carga',        type:'chip',   condicoes:['Igual a'],                chk:'chkPendenciaCarga', cond:'condPendenciaCarga', val:'val-pendenciaCarga', row:'ruleRowPendenciaCarga', origem:'origemPendenciaCarga' },
 ];
 
+let modoRegraInternaGR = true; // true = regras padrao fixas no sistema (demo) · false = modo editável (uso interno)
 let regrasPadrao = [
   {
     id: 1,
@@ -1856,14 +1859,27 @@ function renderRegrasPadrao(){
       <div class="rule-card">
         <div class="rule-card-head">
           <div><b>${r.nome}</b><div class="meta">${Object.keys(r.campos).length} campo(s) configurado(s)${emUso.length ? ' · em uso no ciclo ' + emUso.join(', ') : ''}</div></div>
-          <div style="display:flex;gap:8px;flex-wrap:wrap;">
+          ${modoRegraInternaGR
+            ? '<span class="badge" style="background:#E7ECF6;color:var(--navy-700);" title="Definida internamente, nível de código">fixa no sistema</span>'
+            : `<div style="display:flex;gap:8px;flex-wrap:wrap;">
             <button class="btn btn-outline" onclick="editarRegraPadrao(${r.id})">Editar</button>
             <button class="btn btn-outline" style="border-color:#C0392B;color:#C0392B;" onclick="confirmExcluirRegraPadrao(${r.id})">Excluir</button>
-          </div>
+          </div>`}
         </div>
         ${linhas ? `<table class="rules-table"><thead><tr><th>Campo</th><th>Condição</th><th>Valor(es)</th></tr></thead><tbody>${linhas}</tbody></table>` : '<div class="legend" style="margin:0;">Nenhum campo configurado.</div>'}
       </div>`;
   }).join('');
+}
+
+function toggleModoRegraInternaGR(){
+  modoRegraInternaGR = !modoRegraInternaGR;
+  const notaInterna = document.getElementById('notaRegrasPadraoInterna');
+  const notaEditavel = document.getElementById('notaRegrasPadraoEditavel');
+  const acoes = document.getElementById('acoesRegraPadraoEditavel');
+  if (notaInterna) notaInterna.style.display = modoRegraInternaGR ? '' : 'none';
+  if (notaEditavel) notaEditavel.style.display = modoRegraInternaGR ? 'none' : '';
+  if (acoes) acoes.style.display = modoRegraInternaGR ? 'none' : '';
+  renderRegrasPadrao();
 }
 
 function openNovaRegraPadrao(){
