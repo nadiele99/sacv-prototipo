@@ -178,6 +178,8 @@
 
   .rule-chip{background:var(--gray-100);border:1px solid var(--gray-300);border-radius:20px;padding:5px 12px;font-size:12px;display:inline-flex;align-items:center;gap:8px;color:var(--text);}
   .rule-chip button{border:none;background:transparent;color:var(--muted);cursor:pointer;font-weight:700;font-size:13px;line-height:1;padding:0;}
+  .regra-mode-toggle{background:none;border:none;cursor:pointer;font-size:13px;opacity:.2;padding:2px 6px;border-radius:4px;color:var(--muted);line-height:1;}
+  .regra-mode-toggle:hover{opacity:1;background:var(--gray-100);}
   .rules-wrap{max-height:340px;overflow-y:auto;border:1px solid var(--gray-200);border-radius:8px;margin-bottom:14px;}
   .rules-table{width:100%;}
   .rules-table th{position:sticky;top:0;background:#fff;}
@@ -413,14 +415,31 @@
             <div class="body">
               <div class="note" id="a3TipoNote">Este município não possui escolas indígenas identificadas na base · toda a análise é feita em um único tipo (<b>Regular</b>).</div>
               <div id="tab-cargas" class="tab-panel">
-                <div class="note">As regras não são fixas no sistema · é você quem marca quais campos usar como critério. <b>Por padrão, toda carga permanece na lista</b>; as regras abaixo servem para <b>excluir</b> o que não deve entrar. Todos os campos da base importada aparecem aqui, mesmo os que você não costuma usar. <b>Não existe um botão separado de salvar:</b> assim que você marca um campo, digita um valor ou seleciona uma opção, a regra já vale · para este município, imediatamente. Para parar de aplicar uma regra, desmarque o campo correspondente.</div>
+                <div class="note" id="notaRegrasInterna">Estas regras estão definidas internamente na aplicação (nível de código) para este município · não podem ser editadas ou excluídas por aqui. Elas continuam sendo aplicadas automaticamente na análise das cargas abaixo. Ainda não foi decidido se essa configuração ficará restrita à equipe técnica ou se será liberada para edição.</div>
+                <div class="note" id="notaRegrasEditavel" style="display:none;">As regras não são fixas no sistema · é você quem marca quais campos usar como critério. <b>Por padrão, toda carga permanece na lista</b>; as regras abaixo servem para <b>excluir</b> o que não deve entrar. Todos os campos da base importada aparecem aqui, mesmo os que você não costuma usar. <b>Não existe um botão separado de salvar:</b> assim que você marca um campo, digita um valor ou seleciona uma opção, a regra já vale · para este município, imediatamente. Para parar de aplicar uma regra, desmarque o campo correspondente.</div>
                 <div class="note warn">O campo <b>Motivo</b> vem preenchido direto da base quando o próprio registro já sinaliza um problema (ex.: dado incompleto). Nesse caso a carga vira <b>pendência para você justificar</b>, independente das regras marcadas abaixo. Só quando o Motivo vem vazio é que as regras de filtro decidem se a carga vale como vaga.</div>
 
                 <div style="margin-bottom:16px;">
-                  <div class="field-head"><label>Regras em vigor agora · Manaus, Coordenadoria 3</label><span class="badge green" id="ruleSavedBadge">atualizado automaticamente às 15:12</span></div>
+                  <div class="field-head"><label>Regras em vigor agora · Manaus, Coordenadoria 3</label><span style="display:flex;align-items:center;gap:8px;"><span class="badge green" id="ruleSavedBadge">atualizado automaticamente às 15:12</span><button class="regra-mode-toggle" id="btnToggleModoRegra" onclick="toggleModoRegraInterna()" title="Uso interno: alternar modo de exibição das regras">⚙</button></span></div>
                   <div style="display:flex;gap:8px;flex-wrap:wrap;" id="savedChips"></div>
                 </div>
 
+                <div id="regraInternaBlock">
+                  <div class="filtros-toggle open" id="regraInternaToggle" onclick="toggleRegraInterna()" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();toggleRegraInterna();}" role="button" tabindex="0" aria-expanded="true"><span class="filtros-toggle-chevron" id="regraInternaChevron">▸</span><span class="filtros-toggle-label">Regras aplicadas (fixas no sistema)</span><span class="filtros-toggle-hint" id="regraInternaHint">ocultar detalhes</span></div>
+                  <div id="regraInternaBody">
+                    <table class="rules-table">
+                      <thead><tr><th style="width:26%;">Campo</th><th style="width:20%;">Condição</th><th>Valor(es)</th><th style="width:130px;">Origem</th></tr></thead>
+                      <tbody>
+                        <tr><td>Localidade</td><td>Igual a</td><td>Rural</td><td><span class="badge" style="background:#E7ECF6;color:var(--navy-700);" title="Definida internamente, nível de código">fixa no sistema</span></td></tr>
+                        <tr><td>Horas</td><td>Menor que</td><td>10</td><td><span class="badge" style="background:#E7ECF6;color:var(--navy-700);" title="Definida internamente, nível de código">fixa no sistema</span></td></tr>
+                        <tr><td>Curso/Projeto</td><td>Igual a</td><td>EJA, Ensino Médio</td><td><span class="badge" style="background:#E7ECF6;color:var(--navy-700);" title="Definida internamente, nível de código">fixa no sistema</span></td></tr>
+                        <tr><td>Nome Escola</td><td>Igual a</td><td>E.E. Mayara</td><td><span class="badge" style="background:#E7ECF6;color:var(--navy-700);" title="Definida internamente, nível de código">fixa no sistema</span></td></tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+
+                <div id="regraEditavelBlock" style="display:none;">
                 <div class="filtros-toggle" id="filtrosAvancadosToggle" onclick="toggleFiltrosAvancados()" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();toggleFiltrosAvancados();}" role="button" tabindex="0" aria-expanded="false"><span class="filtros-toggle-chevron" id="filtrosAvancadosChevron">▸</span><span class="filtros-toggle-label">Regras em vigor</span><span class="filtros-toggle-hint" id="filtrosAvancadosHint">mostrar filtros</span></div>
                 <div id="filtrosAvancadosBody" style="display:none;">
                 <div class="legend">Município não aparece aqui · você já está analisando só o município que reivindicou (indicado acima, ao lado de "Início"). Tipo também não é um filtro: Regular e Indígena são reivindicados, analisados e fechados separadamente, cada um com seu próprio relatório · veja a nota acima. Quando uma carga já vem com Motivo preenchido pela base, ela vira pendência individual e não depende deste filtro · veja a tabela de cargas mais abaixo.</div>
@@ -477,6 +496,7 @@
                 </div>
                 <div class="legend" style="margin-top:-8px;">Coluna <b>Origem</b>: mostra se o campo é <b>de origem do ciclo</b> · a regra padrão que a Gerência carregou ao abrir o ciclo (RN044/RN045), igual ou já divergente do que ela definiu (RN046, não bloqueia) · ou se é <b>sua regra</b>, marcada por você por conta própria, sem vir do padrão.</div>
 
+                </div>
                 </div><div class="note">As regras podem mudar a qualquer momento antes de fechar o município · a coluna <b>Observação</b> abaixo sempre mostra a regra que gerou o status atual de cada carga. É sempre a versão mais recente que vale, aplicada assim que você altera algo.</div>
                 <div class="field-head">
                   <label>Cargas importadas da base</label>
@@ -1072,8 +1092,12 @@ const RULES_META = {
 // mas sem dados sintéticos o suficiente pra simular exclusão ao vivo neste wireframe).
 const CHAVES_REGRA_ATIVA = ['localidade','cargaHoraria','tipoCurso','escola'];
 let activeRules = new Set();
+let modoRegraInterna = true; // true = regras fixas no sistema (demo) · false = modo editável (uso interno)
 
 function chipHtml(key, label){
+  if (modoRegraInterna){
+    return `<span class="rule-chip">${label}</span>`;
+  }
   return `<span class="rule-chip">${label} <button onclick="desvincularRegra('${key}')" title="remover regra">×</button></span>`;
 }
 function renderChips(){
@@ -1473,6 +1497,30 @@ function toggleFiltrosAvancados(){
   body.style.display = abrindo ? '' : 'none';
   if (toggle){ toggle.classList.toggle('open', abrindo); toggle.setAttribute('aria-expanded', abrindo ? 'true' : 'false'); }
   if (hint) hint.textContent = abrindo ? 'ocultar filtros' : 'mostrar filtros';
+}
+
+function toggleRegraInterna(){
+  const body = document.getElementById('regraInternaBody');
+  const toggle = document.getElementById('regraInternaToggle');
+  const hint = document.getElementById('regraInternaHint');
+  if (!body) return;
+  const abrindo = body.style.display === 'none';
+  body.style.display = abrindo ? '' : 'none';
+  if (toggle){ toggle.classList.toggle('open', abrindo); toggle.setAttribute('aria-expanded', abrindo ? 'true' : 'false'); }
+  if (hint) hint.textContent = abrindo ? 'ocultar detalhes' : 'mostrar detalhes';
+}
+
+function toggleModoRegraInterna(){
+  modoRegraInterna = !modoRegraInterna;
+  const blocoInterno = document.getElementById('regraInternaBlock');
+  const blocoEditavel = document.getElementById('regraEditavelBlock');
+  const notaInterna = document.getElementById('notaRegrasInterna');
+  const notaEditavel = document.getElementById('notaRegrasEditavel');
+  if (blocoInterno) blocoInterno.style.display = modoRegraInterna ? '' : 'none';
+  if (blocoEditavel) blocoEditavel.style.display = modoRegraInterna ? 'none' : '';
+  if (notaInterna) notaInterna.style.display = modoRegraInterna ? '' : 'none';
+  if (notaEditavel) notaEditavel.style.display = modoRegraInterna ? 'none' : '';
+  renderChips();
 }
 
 // Ação só de teste do protótipo: simula reabrir uma pendência já justificada, pra provar
