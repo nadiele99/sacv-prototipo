@@ -180,6 +180,12 @@
   .rule-chip button{border:none;background:transparent;color:var(--muted);cursor:pointer;font-weight:700;font-size:13px;line-height:1;padding:0;}
   .regra-mode-toggle{background:none;border:none;cursor:pointer;font-size:13px;opacity:.2;padding:2px 6px;border-radius:4px;color:var(--muted);line-height:1;}
   .regra-mode-toggle:hover{opacity:1;background:var(--gray-100);}
+
+  .g2-regras-aplicadas{margin-top:8px;padding:8px 10px;background:var(--gray-100);border-radius:8px;display:flex;flex-direction:column;gap:5px;}
+  .g2-regras-titulo{font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.03em;color:var(--muted);margin-bottom:2px;}
+  .g2-regra-linha{display:flex;align-items:center;gap:10px;flex-wrap:wrap;font-size:11.5px;}
+  .g2-regra-criterio{font-weight:600;color:var(--text);min-width:150px;}
+  .g2-regra-valor{color:var(--muted);flex:1;min-width:160px;}
   .rules-wrap{max-height:340px;overflow-y:auto;border:1px solid var(--gray-200);border-radius:8px;margin-bottom:14px;}
   .rules-table{width:100%;}
   .rules-table th{position:sticky;top:0;background:#fff;}
@@ -585,6 +591,18 @@
                 <div><div class="name" id="gbBaseLabel">-</div><div class="meta">usada por todos os ciclos até a próxima importação</div></div>
                 <button class="btn btn-navy" onclick="openImportarBase()">📥 Importar nova base do SILS</button>
               </div>
+              <div class="field-head">
+                <label>Pré-visualização da base importada</label>
+                <button class="icon-btn" onclick="toggleGbColunas()" id="btnGbToggleColunas">👁 Mostrar mais colunas</button>
+              </div>
+              <div class="picker-list" id="gbColunasPicker" style="display:none;border:1px solid var(--gray-300);border-radius:8px;padding:12px 14px;margin-bottom:14px;max-height:220px;overflow-y:auto;"></div>
+              <div style="overflow-x:auto;">
+                <table id="gbPreviewTable" style="border:1px solid var(--gray-200);border-radius:10px;overflow:hidden;">
+                  <thead><tr id="gbPreviewTableHead"></tr></thead>
+                  <tbody id="gbPreviewTableBody"></tbody>
+                </table>
+              </div>
+              <div class="legend" style="margin-top:8px;">Pré-visualização de exemplo · mostra uma amostra das linhas para conferência do formato/colunas · o volume real desta base é de <b id="gbPreviewCount"></b> linhas.</div>
               <div class="legend">Depois de importar, use <a href="#" onclick="go('GR');return false;">Regras padrão</a> para definir filtros reutilizáveis com base nesses dados, e <a href="#" onclick="go('G0');return false;">Ciclos de análise</a> para abrir uma nova análise.</div>
             </div>
           </div>
@@ -2036,9 +2054,66 @@ function tipoLabel(tipo){ return tipo === 'regular' ? 'Tipo Regular' : 'Tipo Ind
 function statusTipo(tipo){ return ciclosHistorico.find(c => c.status === 'aberto' && c.tipo === tipo); }
 function tiposAbertos(){ return ['regular','indigena'].filter(ed => statusTipo(ed)); }
 
+const BASE_PREVIEW_ROWS = [
+  { dataRef:'24/07/2026', codDdz:'03', nomeDdz:'Manaus - Coordenadoria 3', codEscola:'13045821', escola:'E.E. Mayara', localidade:'Rural', endereco:'Rua das Acácias, 120', comunidade:'-', turno:'Matutino', nomeEnsino:'Ensino Médio', tipoCurso:'EJA', areaEixo:'Ciências Humanas', disciplinas:'Geografia', fasesTurmas:'3ª série A', horas:8, codCargaHoraria:'CH-4821', dtIncCarga:'02/07/2026', dtAltCarga:'18/07/2026', cursoTec:'-', seqMatricula:'MAT-58211', numProcesso:'2026/00458', motivo:'' },
+  { dataRef:'24/07/2026', codDdz:'03', nomeDdz:'Manaus - Coordenadoria 3', codEscola:'13045822', escola:'E.E. Central Itacoatiara', localidade:'Urbana', endereco:'Av. Amazonas, 890', comunidade:'-', turno:'Vespertino', nomeEnsino:'Ensino Médio', tipoCurso:'Regular', areaEixo:'Ciências Humanas', disciplinas:'História', fasesTurmas:'2ª série B', horas:8, codCargaHoraria:'CH-4822', dtIncCarga:'02/07/2026', dtAltCarga:'', cursoTec:'-', seqMatricula:'MAT-58212', numProcesso:'2026/00459', motivo:'Carga com pendência de conferência de carga horária, já regularizada na base de origem' },
+  { dataRef:'24/07/2026', codDdz:'01', nomeDdz:'Itacoatiara', codEscola:'13011034', escola:'E.E. Comunidade Rio Preto', localidade:'Rural', endereco:'Comunidade Rio Preto, s/n', comunidade:'Rio Preto', turno:'Matutino', nomeEnsino:'Ensino Fundamental', tipoCurso:'EJA', areaEixo:'Ciências da Natureza', disciplinas:'Ciências', fasesTurmas:'8º ano', horas:14, codCargaHoraria:'CH-1034', dtIncCarga:'01/07/2026', dtAltCarga:'', cursoTec:'-', seqMatricula:'MAT-11034', numProcesso:'2026/00120', motivo:'' },
+  { dataRef:'24/07/2026', codDdz:'02', nomeDdz:'Coari', codEscola:'13022017', escola:'E.E. Ribeirinha', localidade:'Rural', endereco:'Estrada do Lago, km 4', comunidade:'-', turno:'Noturno', nomeEnsino:'Ensino Médio', tipoCurso:'Regular', areaEixo:'Ciências Humanas', disciplinas:'Geografia', fasesTurmas:'1ª série A', horas:22, codCargaHoraria:'CH-2017', dtIncCarga:'01/07/2026', dtAltCarga:'', cursoTec:'-', seqMatricula:'MAT-22017', numProcesso:'2026/00201', motivo:'' },
+  { dataRef:'24/07/2026', codDdz:'06', nomeDdz:'Parintins', codEscola:'13061102', escola:'E.E. Vitória Régia', localidade:'Urbana', endereco:'Rua Floriano Peixoto, 45', comunidade:'-', turno:'Matutino', nomeEnsino:'Ensino Fundamental', tipoCurso:'Regular', areaEixo:'Linguagens', disciplinas:'Português', fasesTurmas:'6º ano', horas:14, codCargaHoraria:'CH-6110', dtIncCarga:'03/07/2026', dtAltCarga:'', cursoTec:'-', seqMatricula:'MAT-61102', numProcesso:'2026/00312', motivo:'Registro sem informação suficiente para classificar automaticamente' },
+  { dataRef:'24/07/2026', codDdz:'03', nomeDdz:'Manaus - Coordenadoria 3', codEscola:'13045830', escola:'E.E. São José', localidade:'Urbana', endereco:'Rua Saldanha Marinho, 210', comunidade:'-', turno:'Vespertino', nomeEnsino:'Ensino Médio', tipoCurso:'Regular', areaEixo:'Matemática', disciplinas:'Matemática', fasesTurmas:'3ª série C', horas:20, codCargaHoraria:'CH-4830', dtIncCarga:'02/07/2026', dtAltCarga:'', cursoTec:'-', seqMatricula:'MAT-58301', numProcesso:'2026/00460', motivo:'' },
+  { dataRef:'24/07/2026', codDdz:'09', nomeDdz:'Manacapuru', codEscola:'13091209', escola:'E.E. Nova Aliança', localidade:'Rural', endereco:'Comunidade Nova Aliança, s/n', comunidade:'Nova Aliança', turno:'Matutino', nomeEnsino:'Ensino Fundamental', tipoCurso:'EJA', areaEixo:'Ciências Humanas', disciplinas:'História', fasesTurmas:'9º ano', horas:10, codCargaHoraria:'CH-9120', dtIncCarga:'03/07/2026', dtAltCarga:'', cursoTec:'-', seqMatricula:'MAT-91209', numProcesso:'2026/00330', motivo:'' },
+  { dataRef:'24/07/2026', codDdz:'05', nomeDdz:'São Gabriel da Cachoeira', codEscola:'13051408', escola:'E.E. Indígena Tuyuka', localidade:'Rural', endereco:'Comunidade Tuyuka, s/n', comunidade:'Tuyuka', turno:'Matutino', nomeEnsino:'Ensino Fundamental', tipoCurso:'Indígena', areaEixo:'Linguagens', disciplinas:'Língua Materna', fasesTurmas:'5º ano', horas:16, codCargaHoraria:'CH-5140', dtIncCarga:'01/07/2026', dtAltCarga:'', cursoTec:'-', seqMatricula:'MAT-51408', numProcesso:'2026/00089', motivo:'' },
+];
+let gbColunasExtrasVisiveis = new Set();
+function gbColunasVisiveisAtuais(){
+  return CARGA_COLUMNS.filter(c => c.visible || gbColunasExtrasVisiveis.has(c.key));
+}
+function renderGbPreviewTable(){
+  const head = document.getElementById('gbPreviewTableHead');
+  const body = document.getElementById('gbPreviewTableBody');
+  const btn = document.getElementById('btnGbToggleColunas');
+  if (!head || !body) return;
+  const colunas = gbColunasVisiveisAtuais();
+  const extrasOcultas = CARGA_COLUMNS.length - colunas.length;
+  if (btn) btn.textContent = '👁 Mostrar mais colunas' + (extrasOcultas > 0 ? ' (' + extrasOcultas + ')' : ' (todas visíveis)');
+  head.innerHTML = colunas.map(c => '<th>' + c.label + '</th>').join('');
+  body.innerHTML = BASE_PREVIEW_ROWS.map(row => {
+    const tds = colunas.map(col => {
+      let v = row[col.field];
+      if (v === undefined || v === null || v === '') v = '-';
+      else if (col.suffix) v = v + col.suffix;
+      return '<td>' + v + '</td>';
+    }).join('');
+    return '<tr>' + tds + '</tr>';
+  }).join('');
+}
+function toggleGbColunas(){
+  const picker = document.getElementById('gbColunasPicker');
+  if (!picker) return;
+  const abrindo = picker.style.display === 'none';
+  if (abrindo){
+    const ocultas = CARGA_COLUMNS.filter(c => !c.visible);
+    picker.innerHTML = ocultas.map(c =>
+      '<label class="picker-opt"><input type="checkbox" ' + (gbColunasExtrasVisiveis.has(c.key) ? 'checked' : '') + ' onchange="toggleGbColunaExtra(\'' + c.key + '\', this.checked)"> ' + c.label + '</label>'
+    ).join('');
+    picker.style.display = 'flex';
+    picker.style.flexDirection = 'column';
+    picker.style.gap = '8px';
+  } else {
+    picker.style.display = 'none';
+  }
+}
+function toggleGbColunaExtra(key, checked){
+  if (checked) gbColunasExtrasVisiveis.add(key); else gbColunasExtrasVisiveis.delete(key);
+  renderGbPreviewTable();
+}
 function renderBase(){
   const label = document.getElementById('gbBaseLabel');
   if (label) label.textContent = baseAtualLabel;
+  const match = baseAtualLabel.match(/([\d.,]+)\s*linhas/);
+  const countEl = document.getElementById('gbPreviewCount');
+  if (countEl) countEl.textContent = match ? match[1] : BASE_PREVIEW_ROWS.length;
+  renderGbPreviewTable();
 }
 
 function renderCiclos(){
@@ -2655,15 +2730,18 @@ function g2RegrasAplicadasHtml(i){
       const valorTxt = (f && f.type === 'chip') ? (campo.valores || []).join(', ') : (campo.valor + (key === 'cargaHoraria' ? 'h' : ''));
       criterio = label + ' ' + condSimb + ' ' + valorTxt;
     }
-    return checklistRow(criterio, label + ' desta carga: ' + val, excluiu);
+    return g2ChecklistLinha(criterio, label + ' desta carga: ' + val, excluiu ? '<span class="badge red">excluiu esta carga</span>' : '<span class="badge gray">não se aplica</span>');
   });
   if (c.campos && c.campos.motivo){
     const d = decisaoAutomaticaPorMotivo(c.campos.motivo);
     const badge = d.vale ? '<span class="badge blue">motivo automatizado · vale vaga</span>' : '<span class="badge red">motivo automatizado · não vale vaga</span>';
-    rows.push('<tr><td>Motivo</td><td>Motivo desta carga: ' + c.campos.motivo + '</td><td>' + badge + '</td></tr>');
+    rows.push(g2ChecklistLinha('Motivo', 'Motivo desta carga: ' + c.campos.motivo, badge));
   }
   if (!rows.length) return '<div class="legend" style="margin-top:6px;">Nenhuma regra ativa avaliada para esta carga.</div>';
-  return '<table class="rules-table" style="margin-top:6px;font-size:11.5px;"><thead><tr><th>Regra avaliada</th><th>Valor desta carga</th><th>Resultado</th></tr></thead><tbody>' + rows.join('') + '</tbody></table>';
+  return '<div class="g2-regras-aplicadas"><div class="g2-regras-titulo">Regras avaliadas nesta carga</div>' + rows.join('') + '</div>';
+}
+function g2ChecklistLinha(criterio, valor, badgeHtml){
+  return '<div class="g2-regra-linha"><span class="g2-regra-criterio">' + criterio + '</span><span class="g2-regra-valor">' + valor + '</span>' + badgeHtml + '</div>';
 }
 function g2ObsOriginal(i){
   const c = G2_CARGAS_EXEMPLO[i];
