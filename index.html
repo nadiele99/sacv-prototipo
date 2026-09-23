@@ -164,6 +164,11 @@
   .badge.red{background:#FBE4E2;color:var(--red-dark);}
   .badge.blue{background:#E4ECF7;color:var(--navy-700);}
   .icon-btn{border:1.5px solid var(--gray-300);background:#fff;border-radius:6px;padding:5px 9px;font-size:12px;cursor:pointer;font-weight:700;color:var(--navy-700);}
+  .lucide-ic{width:14px;height:14px;stroke-width:2.3;vertical-align:-2.5px;flex-shrink:0;}
+  .icon-circle .lucide-ic{width:20px;height:20px;stroke-width:2.2;vertical-align:middle;}
+  .filtros-toggle-chevron-icon{transition:transform .15s;vertical-align:-2px;}
+  [aria-expanded="true"] .filtros-toggle-chevron-icon{transform:rotate(90deg);}
+
   .note{background:#F4F7FC;border-left:3px solid var(--navy-600);padding:10px 14px;border-radius:6px;font-size:12.5px;color:#3a4459;margin-bottom:16px;}
   .note.warn{background:#FEF3E1;border-left-color:var(--yellow);color:#7a5b00;}
   body.notas-ocultas .note{display:none;}
@@ -327,7 +332,7 @@
     <button id="segV2" onclick="setVersao('v2')">V2</button>
   </div>
   <span class="hint">clique nos botões da tela para avançar, ou pule direto pela barra lateral</span>
-  <button id="btnToggleNotas" class="notas-toggle-btn" onclick="toggleNotasRegras()">🙈 Ocultar dicas de regras</button>
+  <button id="btnToggleNotas" class="notas-toggle-btn" onclick="toggleNotasRegras()"><i data-lucide="eye-off" class="lucide-ic"></i> Ocultar dicas de regras</button>
 </div>
 
 <!-- ================= PERFIL ANALISTA ================= -->
@@ -359,7 +364,7 @@
       </div>
       <div class="main">
         <div class="topnav"><div class="brand"><div class="dot"></div>SEDUC · GELOT</div><div class="help">Ajuda</div></div>
-        <div class="breadcrumb">⌂ Início &nbsp;›&nbsp; <b>Painel de Análise</b></div>
+        <div class="breadcrumb"><i data-lucide="house" class="lucide-ic"></i> Início &nbsp;›&nbsp; <b>Painel de Análise</b></div>
         <div class="content">
           <div class="card">
             <div class="title-band">Municípios · Importação 24/07/2026 <span class="tag">RF001 · RF015</span></div>
@@ -370,7 +375,7 @@
                 <span data-tipo="indigena" onclick="setTipoContext('indigena')">Tipo Indígena</span>
               </div>
               <div class="note" id="tipoContextNote">Mostrando municípios com vagas para o ensino <b>regular</b>. Reivindicações feitas aqui valem só para este tipo · a análise do Tipo Indígena é feita à parte, escolhendo a outra opção acima.</div>
-              <div class="note pend" id="cicloBloqueioNote" style="display:none;">🔒 Nenhum ciclo de análise está aberto pela Gerência no momento. Você ainda pode continuar municípios já reivindicados por você, mas não é possível reivindicar nenhum município novo até a Gerente abrir um novo ciclo (RN034).</div>
+              <div class="note pend" id="cicloBloqueioNote" style="display:none;"><i data-lucide="lock" class="lucide-ic"></i> Nenhum ciclo de análise está aberto pela Gerência no momento. Você ainda pode continuar municípios já reivindicados por você, mas não é possível reivindicar nenhum município novo até a Gerente abrir um novo ciclo (RN034).</div>
               <div class="note">A base foi importada do SILS e dividida automaticamente por município. Reivindique um município para começar a análise · cada município só pode ser reivindicado por um analista por vez, e somente enquanto houver um ciclo de análise aberto pela Gerência.</div>
               <div class="note">Mesmo depois de fechado, você pode reabrir e editar um município que você mesmo fechou · isso continua liberado enquanto a Gerente não gerar o Consolidado final deste ciclo (RN007/RN039). Depois do Consolidado final, a edição é bloqueada para todos os analistas.</div>
               <div class="kpi-row">
@@ -380,7 +385,7 @@
               </div>
               <div class="muni-list">
                 <div class="muni-row" data-regular="true" data-indigena="false">
-                  <div><div class="name">Manacapuru</div><div class="meta">128 cargas na base importada · sem escolas indígenas · <a href="#" onclick="simularConcorrencia('Manacapuru');return false;" style="color:var(--muted);">🧪 testar concorrência (RN047)</a></div></div>
+                  <div><div class="name">Manacapuru</div><div class="meta">128 cargas na base importada · sem escolas indígenas · <a href="#" onclick="simularConcorrencia('Manacapuru');return false;" style="color:var(--muted);"><i data-lucide="flask-conical" class="lucide-ic"></i> testar concorrência (RN047)</a></div></div>
                   <div style="display:flex;align-items:center;gap:10px;"><span class="badge gray">Disponível</span><button class="btn btn-navy" onclick="reivindicar('Manacapuru')">Reivindicar</button></div>
                 </div>
                 <div class="muni-row" data-regular="true" data-indigena="false">
@@ -418,7 +423,7 @@
       </div>
       <div class="main">
         <div class="topnav"><div class="brand"><div class="dot"></div>SEDUC · GELOT</div><div class="help">Ajuda</div></div>
-        <div class="breadcrumb">⌂ Início &nbsp;›&nbsp; Painel de Análise &nbsp;›&nbsp; <b id="a3Crumb">Manaus - Coordenadoria 3</b></div>
+        <div class="breadcrumb"><i data-lucide="house" class="lucide-ic"></i> Início &nbsp;›&nbsp; Painel de Análise &nbsp;›&nbsp; <b id="a3Crumb">Manaus - Coordenadoria 3</b></div>
         <div class="content">
           <div class="card">
             <div class="title-band band-light"><span class="band-left"><span class="band-dot"></span><b>Análise de cargas</b><span class="band-sub" id="a3TituloMuni">Manaus, Coordenadoria 3</span></span><div class="steps-tab compact"><span class="active" id="pill-cargas" onclick="switchTab('cargas')">Cargas (241)</span><span id="pill-resumo" onclick="switchTab('resumo')">Resumo</span></div></div>
@@ -435,7 +440,7 @@
                 </div>
 
                 <div id="regraInternaBlock" style="display:none;">
-                  <div class="filtros-toggle open" id="regraInternaToggle" onclick="toggleRegraInterna()" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();toggleRegraInterna();}" role="button" tabindex="0" aria-expanded="true"><span class="filtros-toggle-chevron" id="regraInternaChevron">▸</span><span class="filtros-toggle-label">Regras aplicadas (fixas no sistema)</span><span class="filtros-toggle-hint" id="regraInternaHint">ocultar detalhes</span></div>
+                  <div class="filtros-toggle open" id="regraInternaToggle" onclick="toggleRegraInterna()" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();toggleRegraInterna();}" role="button" tabindex="0" aria-expanded="true"><span class="filtros-toggle-chevron" id="regraInternaChevron"><i data-lucide="chevron-right" class="lucide-ic filtros-toggle-chevron-icon"></i></span><span class="filtros-toggle-label">Regras aplicadas (fixas no sistema)</span><span class="filtros-toggle-hint" id="regraInternaHint">ocultar detalhes</span></div>
                   <div id="regraInternaBody">
                     <table class="rules-table">
                       <thead><tr><th style="width:26%;">Campo</th><th style="width:20%;">Condição</th><th>Valor(es)</th><th style="width:130px;">Origem</th></tr></thead>
@@ -450,7 +455,7 @@
                 </div>
 
                 <div id="regraEditavelBlock">
-                <div class="filtros-toggle" id="filtrosAvancadosToggle" onclick="toggleFiltrosAvancados()" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();toggleFiltrosAvancados();}" role="button" tabindex="0" aria-expanded="false"><span class="filtros-toggle-chevron" id="filtrosAvancadosChevron">▸</span><span class="filtros-toggle-label">Regras em vigor</span><span class="filtros-toggle-hint" id="filtrosAvancadosHint">mostrar filtros</span></div>
+                <div class="filtros-toggle" id="filtrosAvancadosToggle" onclick="toggleFiltrosAvancados()" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();toggleFiltrosAvancados();}" role="button" tabindex="0" aria-expanded="false"><span class="filtros-toggle-chevron" id="filtrosAvancadosChevron"><i data-lucide="chevron-right" class="lucide-ic filtros-toggle-chevron-icon"></i></span><span class="filtros-toggle-label">Regras em vigor</span><span class="filtros-toggle-hint" id="filtrosAvancadosHint">mostrar filtros</span></div>
                 <div id="filtrosAvancadosBody" style="display:none;">
                 <div class="legend">Município não aparece aqui · você já está analisando só o município que reivindicou (indicado acima, ao lado de "Início"). Tipo também não é um filtro: Regular e Indígena são reivindicados, analisados e fechados separadamente, cada um com seu próprio relatório · veja a nota acima. Quando uma carga já vem com Motivo preenchido pela base, ela vira pendência individual e não depende deste filtro · veja a tabela de cargas mais abaixo.</div>
                 <div class="legend">Cada linha marcada funciona como: <b>excluir carga quando</b> [Campo] [Condição] [um ou mais valores]. O que não for marcado permanece na lista normalmente. O resumo acima ("Regras em vigor agora") mostra as regras com efeito nesta lista de cargas · clique no × de um chip para desvincular rapidamente.</div>
@@ -510,7 +515,7 @@
                 </div><div class="note">As regras podem mudar a qualquer momento antes de fechar o município · a coluna <b>Observação</b> abaixo sempre mostra a regra que gerou o status atual de cada carga. É sempre a versão mais recente que vale, aplicada assim que você altera algo.</div>
                 <div class="field-head">
                   <label>Cargas importadas da base</label>
-                  <button class="icon-btn" onclick="toggleColunasCargas()" id="btnToggleColunas">👁 Mostrar mais colunas</button>
+                  <button class="icon-btn" onclick="toggleColunasCargas()" id="btnToggleColunas"><i data-lucide="eye" class="lucide-ic"></i> Mostrar mais colunas</button>
                 </div>
                 <div class="picker-list" id="colunasCargasPicker" style="display:none;border:1px solid var(--gray-300);border-radius:8px;padding:12px 14px;margin-bottom:14px;max-height:220px;overflow-y:auto;"></div>
                 <div style="overflow-x:auto;">
@@ -553,7 +558,7 @@
   <div class="screen" id="scr-A5">
     <div class="shell" style="align-items:center;justify-content:center;">
       <div style="max-width:480px;text-align:center;padding:40px;">
-        <div class="icon-circle" style="width:56px;height:56px;border-radius:50%;background:var(--green);display:flex;align-items:center;justify-content:center;color:#fff;font-size:26px;margin:0 auto 18px;">✓</div>
+        <div class="icon-circle" style="width:56px;height:56px;border-radius:50%;background:var(--green);display:flex;align-items:center;justify-content:center;color:#fff;font-size:26px;margin:0 auto 18px;"><i data-lucide="check" style="width:28px;height:28px;stroke-width:2.5;display:block;"></i></div>
         <h2 style="color:var(--navy-700);">Município fechado</h2>
         <p id="a5Texto" style="color:var(--muted);font-size:14px;line-height:1.6;margin-bottom:26px;">
           Manaus - Coordenadoria 3 foi fechado. Aguarde os demais analistas ou reivindique outro município disponível.<br><br>
@@ -579,7 +584,7 @@
       </div>
       <div class="main">
         <div class="topnav"><div class="brand"><div class="dot"></div>SEDUC · GELOT</div><div class="help">Ajuda</div></div>
-        <div class="breadcrumb">⌂ Início &nbsp;›&nbsp; <b>Base do SILS</b></div>
+        <div class="breadcrumb"><i data-lucide="house" class="lucide-ic"></i> Início &nbsp;›&nbsp; <b>Base do SILS</b></div>
         <div class="content">
           <div class="card">
             <div class="title-band">Base do SILS · importação e status <span class="tag">RF001 · RN027</span></div>
@@ -589,13 +594,13 @@
               <div class="field-head"><label>Base vigente</label></div>
               <div class="base-row" style="margin-bottom:16px;">
                 <div><div class="name" id="gbBaseLabel">-</div><div class="meta">usada por todos os ciclos até a próxima importação</div></div>
-                <button class="btn btn-navy" onclick="openImportarBase()">📥 Importar nova base do SILS</button>
+                <button class="btn btn-navy" onclick="openImportarBase()"><i data-lucide="file-up" class="lucide-ic"></i> Importar nova base do SILS</button>
               </div>
               <div class="field-head">
                 <label>Pré-visualização da base importada</label>
                 <span style="display:flex;align-items:center;gap:8px;">
-                  <input type="text" id="gbBuscaInput" placeholder="🔎 Buscar na base..." oninput="filtrarGbPreview(this.value)" style="padding:7px 10px;font-size:12.5px;border:1px solid var(--gray-300);border-radius:6px;width:220px;">
-                  <button class="icon-btn" onclick="toggleGbColunas()" id="btnGbToggleColunas">👁 Mostrar mais colunas</button>
+                  <input type="text" id="gbBuscaInput" placeholder="Buscar na base..." oninput="filtrarGbPreview(this.value)" style="padding:7px 10px;font-size:12.5px;border:1px solid var(--gray-300);border-radius:6px;width:220px;">
+                  <button class="icon-btn" onclick="toggleGbColunas()" id="btnGbToggleColunas"><i data-lucide="eye" class="lucide-ic"></i> Mostrar mais colunas</button>
                 </span>
               </div>
               <div class="picker-list" id="gbColunasPicker" style="display:none;border:1px solid var(--gray-300);border-radius:8px;padding:12px 14px;margin-bottom:14px;max-height:220px;overflow-y:auto;"></div>
@@ -625,7 +630,7 @@
       </div>
       <div class="main">
         <div class="topnav"><div class="brand"><div class="dot"></div>SEDUC · GELOT</div><div class="help">Ajuda</div></div>
-        <div class="breadcrumb">⌂ Início &nbsp;›&nbsp; <b>Regras padrão</b></div>
+        <div class="breadcrumb"><i data-lucide="house" class="lucide-ic"></i> Início &nbsp;›&nbsp; <b>Regras padrão</b></div>
         <div class="content">
           <div class="card">
             <div class="title-band">Regras padrão · filtros reutilizáveis entre ciclos <span class="tag">RN044</span></div>
@@ -655,7 +660,7 @@
       </div>
       <div class="main">
         <div class="topnav"><div class="brand"><div class="dot"></div>SEDUC · GELOT</div><div class="help">Ajuda</div></div>
-        <div class="breadcrumb">⌂ Início &nbsp;›&nbsp; <b>Ciclos de análise</b></div>
+        <div class="breadcrumb"><i data-lucide="house" class="lucide-ic"></i> Início &nbsp;›&nbsp; <b>Ciclos de análise</b></div>
         <div class="content">
           <div class="card">
             <div class="title-band">Controle de ciclos de análise <span class="tag">RN034 · RF023</span></div>
@@ -685,7 +690,7 @@
       </div>
       <div class="main">
         <div class="topnav"><div class="brand"><div class="dot"></div>SEDUC · GELOT</div><div class="help">Ajuda</div></div>
-        <div class="breadcrumb">⌂ Início &nbsp;›&nbsp; <a href="#" onclick="go('G0');return false;" style="color:var(--muted);">Ciclos de análise</a> &nbsp;›&nbsp; <b id="g1Breadcrumb">Ciclo #4</b></div>
+        <div class="breadcrumb"><i data-lucide="house" class="lucide-ic"></i> Início &nbsp;›&nbsp; <a href="#" onclick="go('G0');return false;" style="color:var(--muted);">Ciclos de análise</a> &nbsp;›&nbsp; <b id="g1Breadcrumb">Ciclo #4</b></div>
         <div class="content">
           <div class="card">
             <div class="title-band"><span id="g1Titulo">Painel do ciclo #4 · Tipo Regular</span> <span class="tag">RF017</span></div>
@@ -722,7 +727,7 @@
       </div>
       <div class="main">
         <div class="topnav"><div class="brand"><div class="dot"></div>SEDUC · GELOT</div><div class="help">Ajuda</div></div>
-        <div class="breadcrumb">⌂ Início &nbsp;›&nbsp; <a href="#" onclick="go('G0');return false;" style="color:var(--muted);">Ciclos de análise</a> &nbsp;›&nbsp; <a href="#" onclick="go('G4');return false;" style="color:var(--muted);">Revisão do ciclo</a> &nbsp;›&nbsp; <b id="g2Breadcrumb">Município</b></div>
+        <div class="breadcrumb"><i data-lucide="house" class="lucide-ic"></i> Início &nbsp;›&nbsp; <a href="#" onclick="go('G0');return false;" style="color:var(--muted);">Ciclos de análise</a> &nbsp;›&nbsp; <a href="#" onclick="go('G4');return false;" style="color:var(--muted);">Revisão do ciclo</a> &nbsp;›&nbsp; <b id="g2Breadcrumb">Município</b></div>
         <div class="content">
           <div class="card">
             <div class="title-band"><span id="g2Titulo">Revisão de fechamento</span> <span class="tag">RN007</span></div>
@@ -730,7 +735,7 @@
               <div class="note" id="g2Nota"></div>
               <div class="note warn" id="g2HistoricoNota" style="display:none;"></div>
               <div class="filtros-toggle" id="g2RegrasToggle" onclick="toggleG2Regras()" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();toggleG2Regras();}" role="button" tabindex="0" aria-expanded="false">
-                <span class="filtros-toggle-chevron">▸</span>
+                <span class="filtros-toggle-chevron"><i data-lucide="chevron-right" class="lucide-ic filtros-toggle-chevron-icon"></i></span>
                 <span class="filtros-toggle-label">Regras aplicadas nesta análise</span>
                 <span class="filtros-toggle-hint" id="g2RegrasHint">mostrar regras e justificativas</span>
               </div>
@@ -741,7 +746,7 @@
               <div class="legend">Cargas de exemplo · este wireframe reaproveita a mesma lista ilustrativa para qualquer município selecionado, para permitir testar o fluxo de aprovação/reprovação.</div>
               <div class="field-head">
                 <label>Cargas do município</label>
-                <button class="icon-btn" onclick="toggleG2Colunas()" id="btnG2ToggleColunas">👁 Mostrar mais colunas</button>
+                <button class="icon-btn" onclick="toggleG2Colunas()" id="btnG2ToggleColunas"><i data-lucide="eye" class="lucide-ic"></i> Mostrar mais colunas</button>
               </div>
               <div class="steps-tab" id="g2Filtro" style="display:none;">
                 <span class="active" data-filtro="todas" onclick="filtrarG2('todas')">Todas<span id="g2CntTodas"></span></span><span data-filtro="justificativas" onclick="filtrarG2('justificativas')">Por justificativa<span id="g2CntJustificativas"></span></span><span data-filtro="confirmadas" onclick="filtrarG2('confirmadas')">Confirmadas<span id="g2CntConfirmadas"></span></span><span data-filtro="excluidas" onclick="filtrarG2('excluidas')">Excluídas<span id="g2CntExcluidas"></span></span>
@@ -756,8 +761,8 @@
               <div class="actions-row between">
                 <button class="btn btn-outline" onclick="go('G4')">← Voltar sem decidir</button>
                 <div style="display:flex;gap:10px;">
-                  <button class="btn btn-outline" id="g2BtnReprovar" style="border-color:#C0392B;color:#C0392B;" onclick="openReprovarMunicipio()">✗ Reprovar</button>
-                  <button class="btn btn-navy" id="g2BtnAprovar" onclick="aprovarMunicipioG2()">✓ Aprovar</button>
+                  <button class="btn btn-outline" id="g2BtnReprovar" style="border-color:#C0392B;color:#C0392B;" onclick="openReprovarMunicipio()"><i data-lucide="x" class="lucide-ic"></i> Reprovar</button>
+                  <button class="btn btn-navy" id="g2BtnAprovar" onclick="aprovarMunicipioG2()"><i data-lucide="check" class="lucide-ic"></i> Aprovar</button>
                 </div>
               </div>
             </div>
@@ -778,7 +783,7 @@
       </div>
       <div class="main">
         <div class="topnav"><div class="brand"><div class="dot"></div>SEDUC · GELOT</div><div class="help">Ajuda</div></div>
-        <div class="breadcrumb">⌂ Início &nbsp;›&nbsp; <a href="#" onclick="go('G0');return false;" style="color:var(--muted);">Ciclos de análise</a> &nbsp;›&nbsp; <a href="#" onclick="go('G1');return false;" style="color:var(--muted);" id="g4BreadcrumbCiclo">Ciclo #4</a> &nbsp;›&nbsp; <b>Revisão e consolidado</b></div>
+        <div class="breadcrumb"><i data-lucide="house" class="lucide-ic"></i> Início &nbsp;›&nbsp; <a href="#" onclick="go('G0');return false;" style="color:var(--muted);">Ciclos de análise</a> &nbsp;›&nbsp; <a href="#" onclick="go('G1');return false;" style="color:var(--muted);" id="g4BreadcrumbCiclo">Ciclo #4</a> &nbsp;›&nbsp; <b>Revisão e consolidado</b></div>
         <div class="content">
           <div class="card">
             <div class="title-band"><span id="g4Titulo">Revisão e consolidado · Ciclo #4 (Tipo Regular)</span> <span class="tag">RF017/RF018/RN007</span></div>
@@ -878,7 +883,7 @@ function toggleNotasRegras(){
   notasVisiveis = !notasVisiveis;
   document.body.classList.toggle('notas-ocultas', !notasVisiveis);
   const btn = document.getElementById('btnToggleNotas');
-  if (btn) btn.textContent = notasVisiveis ? '🙈 Ocultar dicas de regras' : '👁 Mostrar dicas de regras';
+  if (btn) btn.innerHTML = notasVisiveis ? '<i data-lucide="eye-off" class="lucide-ic"></i> Ocultar dicas de regras' : '<i data-lucide="eye" class="lucide-ic"></i> Mostrar dicas de regras';
 }
 
 function go(id){
@@ -906,7 +911,7 @@ function showScreen(){
 
 const modals = {
   fechar: {
-    type:'red', icon:'⊘',
+    type:'red', icon:'<i data-lucide="ban" class="lucide-ic"></i>',
     title:'Fechar análise do município',
     text: () => {
       const statusAtual = municipioStatusRevisaoAtual();
@@ -921,7 +926,7 @@ const modals = {
     onConfirm: () => { fecharMunicipioAtual(); go('A5'); }
   },
   validar: {
-    type:'green', icon:'✓',
+    type:'green', icon:'<i data-lucide="check" class="lucide-ic"></i>',
     title:'Tem certeza que deseja fechar este ciclo?',
     text:'Depois de confirmar, o relatório final consolidado é gerado e fica disponível para extração aqui mesmo, nesta tela, e o ciclo se fecha automaticamente (RN035): os analistas não poderão mais editar nenhuma carga dele. Não será possível voltar a este ciclo depois disso · para uma nova rodada deste tipo, você vai precisar criar (iniciar) uma nova análise em "Ciclos de análise". O arquivo extraído deve ser enviado manualmente (e-mail ou outro meio) à Gerente Superior, que cuida da homologação por fora do SACV (RN028) · esse envio e a homologação em si não acontecem pelo sistema.',
     confirmLabel:'Sim, fechar ciclo', confirmClass:'btn-green',
@@ -1022,7 +1027,7 @@ function openReincluir(rowId){
   const box = document.getElementById('modalBox');
   box.className = 'modal-aviso green';
   box.innerHTML = `
-    <div class="icon-circle">⚠</div>
+    <div class="icon-circle"><i data-lucide="triangle-alert" class="lucide-ic"></i></div>
     <h3>Reincluir carga · ${f.escola}</h3>
     <p>Esta carga foi excluída pela${plural ? 's regras de' : ' regra de'} <b>${regraLabelTxt}</b>. Reincluir mantém uma exceção manual só para este registro · a${plural ? 's regras continuam' : ' regra continua'} valendo para as demais cargas. Registre por que esta carga deve valer como vaga mesmo assim.</p>
     <div class="field" style="margin-bottom:14px;"><label>Justificativa da exceção</label><textarea id="reincluirTextoInput" placeholder="Descreva o motivo da exceção...">${rAtual && rAtual.texto ? rAtual.texto : ''}</textarea></div>
@@ -1080,7 +1085,7 @@ function avaliarCargas(){
       if (badge){ badge.className = 'badge yellow'; badge.textContent = 'Vaga confirmada · exceção manual'; }
       if (vale){ vale.className = 'badge green'; vale.textContent = 'Sim'; }
       if (obs) obs.textContent = 'Exceção manual: mantida como vaga por você, ' + fraseRegrasIgnoradas(rec && rec.regras) + '. Justificativa: ' + (rec && rec.texto && rec.texto.trim() ? rec.texto : '(nenhuma registrada)') + '.';
-      if (acao) acao.innerHTML = '<button class="icon-btn" onclick="openReincluir(\'' + rowId + '\')">Ver justificativa</button> <a href="#" onclick="desfazerReinclusao(\'' + rowId + '\');return false;" style="font-size:11.5px;color:var(--muted);margin-left:6px;">↺ desfazer</a>';
+      if (acao) acao.innerHTML = '<button class="icon-btn" onclick="openReincluir(\'' + rowId + '\')">Ver justificativa</button> <a href="#" onclick="desfazerReinclusao(\'' + rowId + '\');return false;" style="font-size:11.5px;color:var(--muted);margin-left:6px;"><i data-lucide="undo-2" class="lucide-ic"></i> desfazer</a>';
       return;
     }
     if (f.motivo && f.motivo.trim() !== ''){
@@ -1092,13 +1097,13 @@ function avaliarCargas(){
         if (badge){ badge.className = 'badge yellow'; badge.textContent = 'Pendência · precisa justificar'; }
         if (vale){ vale.className = 'badge gray'; vale.textContent = '-'; }
         if (obs) obs.textContent = 'Pendência da base: ' + f.motivo + ' · precisa da sua justificativa manual' + (anexoNome ? (' · comprovante anexado: ' + anexoNome) : '');
-        if (acao) acao.innerHTML = '<button class="icon-btn" onclick="openJustify(\'' + rowId + '\')">Justificar</button> <button class="icon-btn" onclick="openAnexarPend(\'' + rowId + '\')">📎 ' + (anexoNome ? anexoNome : 'Anexar documento') + '</button>';
+        if (acao) acao.innerHTML = '<button class="icon-btn" onclick="openJustify(\'' + rowId + '\')">Justificar</button> <button class="icon-btn" onclick="openAnexarPend(\'' + rowId + '\')"><i data-lucide="paperclip" class="lucide-ic"></i> ' + (anexoNome ? anexoNome : 'Anexar documento') + '</button>';
       } else {
         const valeSim = j.valeVaga === 'sim';
         if (badge){ badge.className = valeSim ? 'badge green' : 'badge red'; badge.textContent = valeSim ? 'Vaga confirmada (justificada)' : 'Excluída (justificada)'; }
         if (vale){ vale.className = valeSim ? 'badge green' : 'badge red'; vale.textContent = valeSim ? 'Sim' : 'Não'; }
         if (obs) obs.textContent = (valeSim ? 'Justificada por você: pendência da base analisada e considerada carga vaga' : 'Justificada por você: pendência da base analisada e NÃO considerada carga vaga') + (anexoNome ? (' · comprovante anexado: ' + anexoNome) : '');
-        if (acao) acao.innerHTML = '<button class="icon-btn" onclick="openJustify(\'' + rowId + '\')">Ver justificativa</button> <button class="icon-btn" onclick="openAnexarPend(\'' + rowId + '\')">📎 ' + (anexoNome ? anexoNome : 'Anexar documento') + '</button> <a href="#" onclick="desfazerJustificativaPend(\'' + rowId + '\');return false;" style="font-size:11.5px;color:var(--muted);margin-left:6px;">↺ desfazer (testar bloqueio)</a>';
+        if (acao) acao.innerHTML = '<button class="icon-btn" onclick="openJustify(\'' + rowId + '\')">Ver justificativa</button> <button class="icon-btn" onclick="openAnexarPend(\'' + rowId + '\')"><i data-lucide="paperclip" class="lucide-ic"></i> ' + (anexoNome ? anexoNome : 'Anexar documento') + '</button> <a href="#" onclick="desfazerJustificativaPend(\'' + rowId + '\');return false;" style="font-size:11.5px;color:var(--muted);margin-left:6px;"><i data-lucide="undo-2" class="lucide-ic"></i> desfazer (testar bloqueio)</a>';
       }
       return;
     }
@@ -1216,7 +1221,7 @@ function renderCargasTable(){
   if (!head || !body) return;
   const colunas = colunasVisiveisAtuais();
   const extrasOcultas = CARGA_COLUMNS.length - colunas.length;
-  if (btn) btn.textContent = '👁 Mostrar mais colunas' + (extrasOcultas > 0 ? ' (' + extrasOcultas + ')' : ' (todas visíveis)');
+  if (btn) btn.innerHTML = '<i data-lucide="eye" class="lucide-ic"></i> Mostrar mais colunas' + (extrasOcultas > 0 ? ' (' + extrasOcultas + ')' : ' (todas visíveis)');
   head.innerHTML = colunas.map(c => '<th>' + c.label + '</th>').join('') +
     '<th>Observação · regra aplicada</th><th>Vale como vaga?</th><th>Situação</th><th>Ação</th>';
   body.innerHTML = Object.keys(CARGA_FIELDS).map(rowId => {
@@ -1345,14 +1350,14 @@ function renderResumo(){
     const justificativaHtml = j ? (
       '<div class="legend" style="margin:0 0 8px 0;background:var(--gray-100);padding:8px 10px;border-radius:6px;">' +
       '<div><b>Sua justificativa:</b> ' + (j.texto && j.texto.trim() ? j.texto : '<i>(nenhum texto registrado · abra "Ver justificativa" para completar)</i>') + '</div>' +
-      '<div><b>Considerada como vaga:</b> ' + (j.valeVaga === 'sim' ? 'Sim' : 'Não') + (anexoNome ? ' · <b>Comprovante:</b> 📎 ' + anexoNome : '') + '</div>' +
+      '<div><b>Considerada como vaga:</b> ' + (j.valeVaga === 'sim' ? 'Sim' : 'Não') + (anexoNome ? ' · <b>Comprovante:</b> <i data-lucide="paperclip" class="lucide-ic"></i> ' + anexoNome : '') + '</div>' +
       '</div>'
     ) : '';
     const rec = reinclusoes[rowId];
     const recRegraLabels = rec ? regraLabelsFromKeys(rec.regras) : [];
     const reinclusaoHtml = rec ? (
       '<div class="legend" style="margin:0 0 8px 0;background:#FEF3D6;padding:8px 10px;border-radius:6px;">' +
-      '<div><b>⚠ Exceção manual · regra' + (recRegraLabels.length > 1 ? 's ignoradas' : ' ignorada') + ':</b> ' + (recRegraLabels.length ? recRegraLabels.join(', ') : '-') + '</div>' +
+      '<div><b><i data-lucide="triangle-alert" class="lucide-ic"></i> Exceção manual · regra' + (recRegraLabels.length > 1 ? 's ignoradas' : ' ignorada') + ':</b> ' + (recRegraLabels.length ? recRegraLabels.join(', ') : '-') + '</div>' +
       '<div><b>Justificativa:</b> ' + (rec.texto && rec.texto.trim() ? rec.texto : '<i>(nenhum texto registrado)</i>') + '</div>' +
       '</div>'
     ) : '';
@@ -1424,9 +1429,9 @@ function openJustify(rowId){
   const box = document.getElementById('modalBox');
   box.className = 'modal-aviso green';
   box.innerHTML = `
-    <div class="icon-circle">✓</div>
+    <div class="icon-circle"><i data-lucide="check" class="lucide-ic"></i></div>
     <h3>Justificar pendência · ${f.escola}</h3>
-    <p>Este registro veio da base com o motivo "<b>${f.motivo}</b>" · sem informação suficiente para decidir sozinho. Registre o motivo e diga se esta carga deve valer como vaga. Se precisar anexar um comprovante, use a ação "📎 Anexar documento" ao lado desta, na tabela de cargas (RN026/RN030, opcional).</p>
+    <p>Este registro veio da base com o motivo "<b>${f.motivo}</b>" · sem informação suficiente para decidir sozinho. Registre o motivo e diga se esta carga deve valer como vaga. Se precisar anexar um comprovante, use a ação "<i data-lucide="paperclip" class="lucide-ic"></i> Anexar documento" ao lado desta, na tabela de cargas (RN026/RN030, opcional).</p>
     <div class="field" style="margin-bottom:14px;"><label>Justificativa</label><textarea id="justificativaTextoInput" placeholder="Descreva o motivo da sua decisão...">${jAtual && jAtual.texto ? jAtual.texto : ''}</textarea></div>
     <div class="field" style="margin-bottom:14px;">
       <label>Esta pendência vale como carga vaga?</label>
@@ -1462,7 +1467,7 @@ function openAnexarPend(rowId){
   const box = document.getElementById('modalBox');
   box.className = 'modal-aviso green';
   box.innerHTML = `
-    <div class="icon-circle">📎</div>
+    <div class="icon-circle"><i data-lucide="paperclip" class="lucide-ic"></i></div>
     <h3>Anexar documento · ${f.escola}</h3>
     <p>Anexe um comprovante que apoie sua decisão sobre esta pendência. Isso é opcional e independente de justificar (RN026/RN030).</p>
     <div class="field" style="margin-bottom:14px;">
@@ -1739,7 +1744,7 @@ function reivindicar(municipio){
   const box = document.getElementById('modalBox');
   box.className = 'modal-aviso green';
   box.innerHTML = `
-    <div class="icon-circle">✓</div>
+    <div class="icon-circle"><i data-lucide="check" class="lucide-ic"></i></div>
     <h3>Reivindicar município</h3>
     <p>Deseja reivindicar <b>${municipio}</b> para o <b>${tipoLabel_}</b>? Você ficará responsável por revisar as cargas correspondentes deste tipo.</p>
     <div class="actions">
@@ -1755,7 +1760,7 @@ function simularConcorrencia(municipio){
   const box = document.getElementById('modalBox');
   box.className = 'modal-aviso red';
   box.innerHTML = `
-    <div class="icon-circle">⊘</div>
+    <div class="icon-circle"><i data-lucide="ban" class="lucide-ic"></i></div>
     <h3>Município já reivindicado</h3>
     <p>Outro analista clicou em <b>${municipio}</b> um instante antes de você · o primeiro clique vence (RN047). Escolha outro município disponível na lista.</p>
     <div class="actions"><button class="btn btn-outline" onclick="closeModal()">Entendi</button></div>`;
@@ -2038,7 +2043,7 @@ function confirmExcluirRegraPadrao(id){
   const box = document.getElementById('modalBox');
   box.className = 'modal-aviso red';
   box.innerHTML = `
-    <div class="icon-circle">⊘</div>
+    <div class="icon-circle"><i data-lucide="ban" class="lucide-ic"></i></div>
     <h3>Excluir "${r.nome}"?</h3>
     <p>${emUso.length ? 'Esta regra está em uso pelo ciclo aberto #' + emUso.map(c => c.id).join(', #') + ' · os ciclos já abertos continuam com os valores já carregados; só a reutilização futura desta regra deixa de existir.' : 'Esta ação não pode ser desfeita.'}</p>
     <div class="actions">
@@ -2083,7 +2088,7 @@ function renderGbPreviewTable(){
   if (!head || !body) return;
   const colunas = gbColunasVisiveisAtuais();
   const extrasOcultas = CARGA_COLUMNS.length - colunas.length;
-  if (btn) btn.textContent = '👁 Mostrar mais colunas' + (extrasOcultas > 0 ? ' (' + extrasOcultas + ')' : ' (todas visíveis)');
+  if (btn) btn.innerHTML = '<i data-lucide="eye" class="lucide-ic"></i> Mostrar mais colunas' + (extrasOcultas > 0 ? ' (' + extrasOcultas + ')' : ' (todas visíveis)');
   head.innerHTML = colunas.map(c => '<th>' + c.label + '</th>').join('');
   const termo = (gbBuscaTexto || '').trim().toLowerCase();
   const linhas = termo
@@ -2171,7 +2176,7 @@ function openAbrirCiclo(){
   if (abertoRegular && abertoIndigena){
     box.className = 'modal-aviso red';
     box.innerHTML = `
-      <div class="icon-circle">⊘</div>
+      <div class="icon-circle"><i data-lucide="ban" class="lucide-ic"></i></div>
       <h3>Não é possível iniciar outra análise</h3>
       <p>Já existe um ciclo aberto para os dois tipos (Regular #${abertoRegular.id} e Indígena #${abertoIndigena.id}). Feche um deles · validando o consolidado no painel dele · antes de iniciar outro.</p>
       <div class="actions"><button class="btn btn-outline" onclick="closeModal()">Fechar</button></div>`;
@@ -2181,7 +2186,7 @@ function openAbrirCiclo(){
   const tipoDefault = !abertoRegular ? 'regular' : 'indigena';
   box.className = 'modal-aviso green';
   box.innerHTML = `
-    <div class="icon-circle">✓</div>
+    <div class="icon-circle"><i data-lucide="check" class="lucide-ic"></i></div>
     <h3>Iniciar nova análise</h3>
     <p>Escolha o tipo deste novo ciclo. Ele vai usar a base vigente · <b>${baseAtualLabel}</b> · que fica fixa durante todo o ciclo (RN034/RN040); para usar uma base diferente, importe uma nova antes (fora daqui, em "Importar nova base do SILS").</p>
     <div class="field" style="margin-bottom:6px;">
@@ -2218,22 +2223,22 @@ function openImportarBase(){
     const listaCiclos = abertos.map(c => '#' + c.id + ' (' + tipoLabel(c.tipo) + ')').join(' e ');
     box.className = 'modal-aviso red';
     box.innerHTML = `
-      <div class="icon-circle">⊘</div>
+      <div class="icon-circle"><i data-lucide="ban" class="lucide-ic"></i></div>
       <h3>Importar nova base · atenção</h3>
       <p>${abertos.length > 1 ? 'Já existem ciclos abertos' : 'Já existe um ciclo aberto'} usando a base vigente: <b>${listaCiclos}</b>. A base fica fixa durante todo o ciclo (RN034/RN040) · para importar uma nova, o sistema vai <b>cancelar automaticamente</b> ${abertos.length > 1 ? 'esses ciclos' : 'esse ciclo'} antes de aceitar o novo arquivo. Todas as análises feitas ${abertos.length > 1 ? 'neles' : 'nele'} · reivindicações, regras, confirmações, fechamentos e revisões · serão descartadas, sem exceção (RN049/RF036).</p>
-      <button class="btn btn-outline" style="width:100%;justify-content:center;margin-bottom:6px;" type="button" onclick="confirmarImportarBaseComCancelamento()">📄 Selecionar arquivo do SILS e continuar…</button>
-      <p class="legend" style="margin:2px 0 0 0;">🧪 <a href="#" onclick="simularArquivoCorrompido();return false;">simular arquivo corrompido/incompleto (testar RN048)</a></p>
+      <button class="btn btn-outline" style="width:100%;justify-content:center;margin-bottom:6px;" type="button" onclick="confirmarImportarBaseComCancelamento()"><i data-lucide="file-text" class="lucide-ic"></i> Selecionar arquivo do SILS e continuar…</button>
+      <p class="legend" style="margin:2px 0 0 0;"><i data-lucide="flask-conical" class="lucide-ic"></i> <a href="#" onclick="simularArquivoCorrompido();return false;">simular arquivo corrompido/incompleto (testar RN048)</a></p>
       <div class="actions">
         <button class="btn btn-outline" onclick="closeModal()">Cancelar</button>
       </div>`;
   } else {
     box.className = 'modal-aviso green';
     box.innerHTML = `
-      <div class="icon-circle">✓</div>
+      <div class="icon-circle"><i data-lucide="check" class="lucide-ic"></i></div>
       <h3>Importar base do SILS</h3>
       <p>Envie o arquivo (TXT/Excel) do SILS. Ação exclusiva da Gerência (RF001/RN027) · os Analistas não têm acesso a esta tela. A base importada passa a valer para todos os próximos ciclos, até que uma nova seja importada.</p>
-      <button class="btn btn-outline" style="width:100%;justify-content:center;margin-bottom:6px;" type="button" onclick="confirmarImportarBase()">📄 Selecionar arquivo do SILS…</button>
-      <p class="legend" style="margin:2px 0 0 0;">🧪 <a href="#" onclick="simularArquivoCorrompido();return false;">simular arquivo corrompido/incompleto (testar RN048)</a></p>
+      <button class="btn btn-outline" style="width:100%;justify-content:center;margin-bottom:6px;" type="button" onclick="confirmarImportarBase()"><i data-lucide="file-text" class="lucide-ic"></i> Selecionar arquivo do SILS…</button>
+      <p class="legend" style="margin:2px 0 0 0;"><i data-lucide="flask-conical" class="lucide-ic"></i> <a href="#" onclick="simularArquivoCorrompido();return false;">simular arquivo corrompido/incompleto (testar RN048)</a></p>
       <div class="actions">
         <button class="btn btn-outline" onclick="closeModal()">Cancelar</button>
       </div>`;
@@ -2252,7 +2257,7 @@ function confirmarImportarBase(){
   const box = document.getElementById('modalBox');
   box.className = 'modal-aviso green';
   box.innerHTML = `
-    <div class="icon-circle">✓</div>
+    <div class="icon-circle"><i data-lucide="check" class="lucide-ic"></i></div>
     <h3>Base importada</h3>
     <p>Nova base disponível: <b>${baseAtualLabel}</b>. Ela vale para todos os próximos ciclos, até uma nova importação.</p>
     <div class="actions"><button class="btn btn-green" onclick="closeModal()">Entendi</button></div>`;
@@ -2282,7 +2287,7 @@ function confirmarImportarBaseComCancelamento(){
   box.className = 'modal-aviso green';
   const listaCiclos = abertos.map(c => '#' + c.id).join(', ');
   box.innerHTML = `
-    <div class="icon-circle">✓</div>
+    <div class="icon-circle"><i data-lucide="check" class="lucide-ic"></i></div>
     <h3>Base importada · ciclo(s) cancelado(s)</h3>
     <p>${abertos.length > 1 ? 'Os ciclos ' + listaCiclos + ' foram cancelados' : 'O ciclo ' + listaCiclos + ' foi cancelado'} automaticamente antes da importação. Nova base disponível: <b>${baseAtualLabel}</b>. O(s) tipo(s) já ${abertos.length > 1 ? 'estão' : 'está'} liberado(s) para uma nova análise.</p>
     <div class="actions"><button class="btn btn-green" onclick="closeModal()">Entendi</button></div>`;
@@ -2295,7 +2300,7 @@ function simularArquivoCorrompido(){
   const box = document.getElementById('modalBox');
   box.className = 'modal-aviso red';
   box.innerHTML = `
-    <div class="icon-circle">⊘</div>
+    <div class="icon-circle"><i data-lucide="ban" class="lucide-ic"></i></div>
     <h3>Importação rejeitada</h3>
     <p>O arquivo enviado está incompleto ou corrompido · faltam colunas obrigatórias ou o formato não pôde ser lido. A importação foi rejeitada por completo; nada foi alterado (RN048). Corrija o arquivo na origem e tente novamente.</p>
     <div class="actions"><button class="btn btn-outline" onclick="openImportarBase()">Voltar</button></div>`;
@@ -2312,7 +2317,7 @@ function openCancelarCiclo(){
   const box = document.getElementById('modalBox');
   box.className = 'modal-aviso red';
   box.innerHTML = `
-    <div class="icon-circle">⊘</div>
+    <div class="icon-circle"><i data-lucide="ban" class="lucide-ic"></i></div>
     <h3>Cancelar este ciclo</h3>
     <p>Esta ação não pode ser desfeita. Todas as análises feitas neste ciclo · reivindicações, regras aplicadas, confirmações, justificativas, fechamentos e revisões · serão descartadas. O ciclo fica marcado como <b>cancelado</b> no histórico, e o <b>${tipoLabel(c.tipo)}</b> volta a ficar disponível para você abrir uma nova análise.</p>
     <div class="field" style="margin-bottom:14px;">
@@ -2491,7 +2496,7 @@ function renderPainelG4(){
     return `<div class="muni-row" ${m.reeditado ? 'style="background:#FFF7EB;"' : ''}>
       <div><div class="name">${m.nome}</div><div class="meta">${analistaLinha} · ${cargasV2} cargas${(m.reeditado && !modoV2) ? ' · <b style="color:#C0392B;">reeditado pelo analista em ' + m.reeditadoEm + ', depois da sua revisão anterior</b>' : ''}${motivoLinha}</div></div>
       <div style="display:flex;align-items:center;gap:10px;">
-        ${m.reeditado ? '<span class="badge" style="background:#FCE4D6;color:#C0392B;">↺ Reeditado</span>' : ''}
+        ${m.reeditado ? '<span class="badge" style="background:#FCE4D6;color:#C0392B;"><i data-lucide="undo-2" class="lucide-ic"></i> Reeditado</span>' : ''}
         ${statusBadge}
         <button class="btn btn-outline">Baixar relatório</button>
         <button class="btn btn-outline" ${travado ? 'disabled style="opacity:.6;cursor:not-allowed;"' : ''} onclick="abrirRevisaoMunicipio('${m.nome}')">Revisar</button>
@@ -2506,7 +2511,7 @@ function renderPainelG4(){
     nota.innerHTML = 'Este ciclo já foi fechado em ' + c.fechamento + ' · consolidado final gerado. Extraia o relatório final abaixo; o envio à Gerente Superior e a homologação em si acontecem manualmente, fora do SACV (RN028). Consulta somente leitura.';
   } else {
     nota.innerHTML = 'Baixar relatório por município fica sempre disponível, a qualquer momento · inclusive depois de já revisado. Clique em "Revisar" para aprovar ou reprovar (com justificativa) cada município fechado. Municípios ainda não reivindicados aparecem aqui para você cobrar a equipe. <b>Em regra (RN039), o "Consolidado final" só libera quando TODOS os municípios do ciclo estiverem fechados e aprovados</b> · neste protótipo, para permitir testar o fluxo, ele libera assim que os municípios já fechados forem aprovados, mesmo com municípios ainda em análise ou não reivindicados.'
-      + ((reeditados.length && !modoV2) ? ' <span style="color:#C0392B;"><b>Atenção:</b> ' + reeditados.length + ' município' + (reeditados.length>1?'s':'') + ' marcado' + (reeditados.length>1?'s':'') + ' como "↺ Reeditado" foi(ram) alterado(s) pelo analista depois da sua aprovação anterior · a marcação foi desfeita automaticamente, revise de novo.</span>' : '');
+      + ((reeditados.length && !modoV2) ? ' <span style="color:#C0392B;"><b>Atenção:</b> ' + reeditados.length + ' município' + (reeditados.length>1?'s':'') + ' marcado' + (reeditados.length>1?'s':'') + ' como "<i data-lucide="undo-2" class="lucide-ic"></i> Reeditado" foi(ram) alterado(s) pelo analista depois da sua aprovação anterior · a marcação foi desfeita automaticamente, revise de novo.</span>' : '');
   }
   const relWrap = document.getElementById('g4BtnRelatorioFinalWrap');
   if (relWrap){
@@ -2787,7 +2792,7 @@ function renderG2CargasTable(){
   if (!head || !body) return;
   const colunas = g2ColunasVisiveisAtuais();
   const extrasOcultas = CARGA_COLUMNS.length - colunas.length;
-  if (btn) btn.textContent = '👁 Mostrar mais colunas' + (extrasOcultas > 0 ? ' (' + extrasOcultas + ')' : ' (todas visíveis)');
+  if (btn) btn.innerHTML = '<i data-lucide="eye" class="lucide-ic"></i> Mostrar mais colunas' + (extrasOcultas > 0 ? ' (' + extrasOcultas + ')' : ' (todas visíveis)');
   head.innerHTML = colunas.map(c => '<th>' + c.label + '</th>').join('') +
     '<th>Observação · regra aplicada</th><th>Situação</th><th>Ação</th>';
   body.innerHTML = G2_CARGAS_EXEMPLO.map((c, i) => {
@@ -2850,13 +2855,13 @@ function renderG2CargaRow(i){
   if (d && d.tipo === 'reinclusao'){
     row.classList.remove('excluded');
     situacaoTd.innerHTML = '<span class="badge yellow">Vaga confirmada · exceção do Gerente</span>';
-    acaoTd.innerHTML = '<button class="icon-btn" onclick="abrirReincluirGerente(' + i + ')">Ver decisão do Gerente</button> <a href="#" onclick="desfazerDecisaoGerente(' + i + ');return false;" style="font-size:11.5px;color:var(--muted);margin-left:6px;">↺ desfazer</a> <button class="icon-btn" onclick="verJustificativaG2(' + i + ')">Ver justificativa</button>';
+    acaoTd.innerHTML = '<button class="icon-btn" onclick="abrirReincluirGerente(' + i + ')">Ver decisão do Gerente</button> <a href="#" onclick="desfazerDecisaoGerente(' + i + ');return false;" style="font-size:11.5px;color:var(--muted);margin-left:6px;"><i data-lucide="undo-2" class="lucide-ic"></i> desfazer</a> <button class="icon-btn" onclick="verJustificativaG2(' + i + ')">Ver justificativa</button>';
   } else if (d && d.tipo === 'edicao'){
     row.classList.toggle('excluded', d.valeVaga === false);
     situacaoTd.innerHTML = d.valeVaga
       ? '<span class="badge blue">Vaga confirmada · decisão do Gerente</span>'
       : '<span class="badge red">Excluída · decisão do Gerente</span>';
-    acaoTd.innerHTML = '<button class="icon-btn" onclick="abrirEdicaoGerente(' + i + ')">Editar</button> <a href="#" onclick="desfazerDecisaoGerente(' + i + ');return false;" style="font-size:11.5px;color:var(--muted);margin-left:6px;">↺ desfazer</a> <button class="icon-btn" onclick="verJustificativaG2(' + i + ')">Ver justificativa</button>';
+    acaoTd.innerHTML = '<button class="icon-btn" onclick="abrirEdicaoGerente(' + i + ')">Editar</button> <a href="#" onclick="desfazerDecisaoGerente(' + i + ');return false;" style="font-size:11.5px;color:var(--muted);margin-left:6px;"><i data-lucide="undo-2" class="lucide-ic"></i> desfazer</a> <button class="icon-btn" onclick="verJustificativaG2(' + i + ')">Ver justificativa</button>';
   } else {
     row.classList.toggle('excluded', i === 2);
     situacaoTd.innerHTML = g2SituacaoOriginalHtml(i);
@@ -2875,7 +2880,7 @@ function abrirEdicaoGerente(i){
   const box = document.getElementById('modalBox');
   box.className = 'modal-aviso';
   box.innerHTML = `
-    <div class="icon-circle">⚖</div>
+    <div class="icon-circle"><i data-lucide="scale" class="lucide-ic"></i></div>
     <h3>Editar decisão · ${c.escola}</h3>
     <p>Como Gerente, você pode se sobrepor à análise feita pelo Analista para esta carga. A consideração original dele continua disponível em "Ver justificativa". Registre sua própria decisão e a justificativa · a situação vai passar a mostrar que foi confirmada por você.</p>
     <div class="field" style="margin-bottom:14px;"><label>Justificativa da sua decisão</label><textarea id="g2EdicaoTextoInput" placeholder="Descreva o motivo da sua decisão...">${dAtual && dAtual.tipo==='edicao' && dAtual.texto ? dAtual.texto : ''}</textarea></div>
@@ -2913,7 +2918,7 @@ function abrirReincluirGerente(i){
   const box = document.getElementById('modalBox');
   box.className = 'modal-aviso green';
   box.innerHTML = `
-    <div class="icon-circle">⚠</div>
+    <div class="icon-circle"><i data-lucide="triangle-alert" class="lucide-ic"></i></div>
     <h3>Reincluir carga (Gerente) · ${c.escola}</h3>
     <p>Esta carga foi excluída pela${plural ? 's regras de' : ' regra de'} <b>${regraLabelTxt}</b>. Como Gerente, você pode reincluí-la mesmo assim, se sobrepondo à análise do Analista · a${plural ? 's regras continuam' : ' regra continua'} valendo para as demais cargas. Registre a justificativa da sua decisão.</p>
     <div class="field" style="margin-bottom:14px;"><label>Justificativa da exceção</label><textarea id="g2ReincluirTextoInput" placeholder="Descreva o motivo da exceção...">${dAtual && dAtual.tipo==='reinclusao' && dAtual.texto ? dAtual.texto : ''}</textarea></div>
@@ -2938,7 +2943,7 @@ function verJustificativaG2(i){
   const box = document.getElementById('modalBox');
   box.className = 'modal-aviso';
   const temRegras = c.regras && c.regras.length;
-  box.innerHTML = '<div class="icon-circle">📄</div>' +
+  box.innerHTML = '<div class="icon-circle"><i data-lucide="file-text" class="lucide-ic"></i></div>' +
     '<h3>Justificativa · ' + c.escola + '</h3>' +
     (temRegras ? '<p><b>' + (c.regras.length > 1 ? 'Regras aplicadas nesta carga:' : 'Regra aplicada nesta carga:') + '</b> ' + c.regras.join(', ') + '</p>' : '') +
     '<p>' + (c.justificativa ? c.justificativa : '<i>O analista não registrou justificativa para esta carga.</i>') + '</p>' +
@@ -2966,7 +2971,7 @@ function openReprovarMunicipio(){
   const box = document.getElementById('modalBox');
   box.className = 'modal-aviso red';
   box.innerHTML = `
-    <div class="icon-circle">⊘</div>
+    <div class="icon-circle"><i data-lucide="ban" class="lucide-ic"></i></div>
     <h3>Reprovar análise · ${g2MunicipioAtual}</h3>
     <p>${modoV2 ? 'Explique o que precisa ser corrigido. O município fica reprovado, sinalizado para ajuste de regra (RF017/RN007) · a análise volta a rodar automaticamente depois do ajuste.' : 'Explique o que precisa ser corrigido. O Analista vai ver este motivo e o município volta pra fila dele, sinalizado para revisão (RF017/RN007).'}</p>
     <div class="field" style="margin-bottom:14px;">
@@ -3055,7 +3060,7 @@ function atualizaStatusMunicipiosA1(){
   if (!m) return;
   if (m.revisaoStatus === 'reprovado'){
     badge.className = 'badge red';
-    badge.textContent = '⚠ Devolvido pela Gerente';
+    badge.innerHTML = '<i data-lucide="triangle-alert" class="lucide-ic"></i> Devolvido pela Gerente';
     meta.innerHTML = '64 cargas na base importada · reprovado pela Gerente em ' + m.reprovadoEm + ': "' + m.motivoReprovacao + '"';
   } else if (m.revisaoStatus === 'aprovado'){
     badge.className = 'badge green';
@@ -3089,6 +3094,13 @@ function closeModal(){ document.getElementById('overlay').classList.remove('show
 // init
 setPerfil('analista');
 renderChips();
+</script>
+<script src="https://cdn.jsdelivr.net/npm/lucide@0.462.0/dist/umd/lucide.min.js"></script>
+<script>
+  if (window.lucide) {
+    lucide.createIcons();
+    new MutationObserver(function(){ lucide.createIcons(); }).observe(document.body, { childList:true, subtree:true });
+  }
 </script>
 </body>
 </html>
