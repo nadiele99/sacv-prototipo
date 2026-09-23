@@ -3099,7 +3099,19 @@ renderChips();
 <script>
   if (window.lucide) {
     lucide.createIcons();
-    new MutationObserver(function(){ lucide.createIcons(); }).observe(document.body, { childList:true, subtree:true });
+    function temIconePendente(node){
+      if (node.nodeType !== 1) return false;
+      if (node.matches && node.matches('i[data-lucide]')) return true;
+      if (node.querySelector && node.querySelector('i[data-lucide]')) return true;
+      return false;
+    }
+    new MutationObserver(function(muts){
+      for (const m of muts) {
+        for (const n of m.addedNodes) {
+          if (temIconePendente(n)) { lucide.createIcons(); return; }
+        }
+      }
+    }).observe(document.body, { childList:true, subtree:true });
   }
 </script>
 </body>
