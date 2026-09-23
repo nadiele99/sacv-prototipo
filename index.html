@@ -351,12 +351,19 @@
   table tbody tr:hover{background:var(--gray-100);}
   table tbody tr:last-child td{border-bottom:none;}
 
-  .steps-tab{border-radius:10px;}
-  .steps-tab span{border-radius:7px;font-weight:600;}
 
   .picker-list{box-shadow:0 4px 14px rgba(15,27,51,.10);}
   .picker-opt{padding:6px 4px;border-radius:6px;transition:background .1s;}
   .picker-opt:hover{background:var(--gray-100);}
+
+  .th-sort{cursor:pointer;user-select:none;}
+  .th-sort:hover{background:var(--gray-200);}
+  .th-sort-inner{display:inline-flex;align-items:center;gap:5px;}
+  .th-sort .sort-ic{width:12px!important;height:12px!important;color:var(--muted);}
+  .th-sort[data-sort-dir] .sort-ic{color:var(--navy-700);}
+  .table-pagination{display:flex;align-items:center;justify-content:space-between;margin-top:10px;font-size:12px;color:var(--muted);}
+  .table-pagination-btns{display:flex;gap:8px;}
+  .table-pagination button:disabled{opacity:.5;cursor:not-allowed;}
 </style>
 </head>
 <body>
@@ -563,6 +570,7 @@
                     <tbody id="cargasTableBody"></tbody>
                   </table>
                 </div>
+                <div class="table-pagination"><span>Página 1 de 1</span><div class="table-pagination-btns"><button class="icon-btn" disabled><i data-lucide="chevron-left" class="lucide-ic"></i> Anterior</button><button class="icon-btn" disabled>Próxima <i data-lucide="chevron-right" class="lucide-ic"></i></button></div></div>
                 <div class="legend" style="margin-top:-8px;">Experimente: em "Curso/Projeto" ▸ + valor, marque também <b>Técnico</b> e aplique · a linha da E.E. Nova Aliança muda de status e a observação é atualizada na hora.</div>
                 <div class="note warn" id="cargasPendNote" style="margin-top:16px;"></div>
                 <div class="actions-row between" style="margin-top:12px;">
@@ -649,6 +657,7 @@
                   <tbody id="gbPreviewTableBody"></tbody>
                 </table>
               </div>
+              <div class="table-pagination"><span>Página 1 de 1</span><div class="table-pagination-btns"><button class="icon-btn" disabled><i data-lucide="chevron-left" class="lucide-ic"></i> Anterior</button><button class="icon-btn" disabled>Próxima <i data-lucide="chevron-right" class="lucide-ic"></i></button></div></div>
               <div class="legend" style="margin-top:8px;">Pré-visualização de exemplo · mostra uma amostra das linhas para conferência do formato/colunas · o volume real desta base é de <b id="gbPreviewCount"></b> linhas.</div>
               <div class="legend">Depois de importar, use <a href="#" onclick="go('GR');return false;">Regras padrão</a> para definir filtros reutilizáveis com base nesses dados, e <a href="#" onclick="go('G0');return false;">Ciclos de análise</a> para abrir uma nova análise.</div>
             </div>
@@ -797,6 +806,7 @@
                   <tbody id="g2CargasTableBody"></tbody>
                 </table>
               </div>
+              <div class="table-pagination"><span>Página 1 de 1</span><div class="table-pagination-btns"><button class="icon-btn" disabled><i data-lucide="chevron-left" class="lucide-ic"></i> Anterior</button><button class="icon-btn" disabled>Próxima <i data-lucide="chevron-right" class="lucide-ic"></i></button></div></div>
               <div class="actions-row between">
                 <button class="btn btn-outline" onclick="go('G4')">← Voltar sem decidir</button>
                 <div style="display:flex;gap:10px;">
@@ -855,6 +865,35 @@
 
 <div class="flow-label" id="flowLabel"></div>
 
+
+function thOrdenavel(label, tbodyId, colIndex){
+  return '<th class="th-sort" onclick="ordenarTabela(this,\'' + tbodyId + '\',' + colIndex + ')"><span class="th-sort-inner">' + label + '<i data-lucide="arrow-up-down" class="lucide-ic sort-ic"></i></span></th>';
+}
+function ordenarTabela(th, tbodyId, colIndex){
+  const tbody = document.getElementById(tbodyId);
+  if (!tbody) return;
+  const headRow = th.parentElement;
+  const dirAtual = th.getAttribute('data-sort-dir') || 'none';
+  const novaDir = dirAtual === 'asc' ? 'desc' : 'asc';
+  [...headRow.children].forEach(function(h){
+    if (h !== th){ h.removeAttribute('data-sort-dir'); var ic = h.querySelector('.sort-ic'); if (ic) ic.setAttribute('data-lucide','arrow-up-down'); }
+  });
+  th.setAttribute('data-sort-dir', novaDir);
+  const rows = [...tbody.querySelectorAll('tr')];
+  rows.sort(function(a,b){
+    const ta = ((a.children[colIndex] && a.children[colIndex].innerText) || '').trim();
+    const tb = ((b.children[colIndex] && b.children[colIndex].innerText) || '').trim();
+    const na = parseFloat(ta.replace(',','.')), nb = parseFloat(tb.replace(',','.'));
+    let cmp;
+    if (!isNaN(na) && !isNaN(nb) && ta !== '' && tb !== ''){ cmp = na - nb; }
+    else { cmp = ta.localeCompare(tb, 'pt-BR'); }
+    return novaDir === 'asc' ? cmp : -cmp;
+  });
+  rows.forEach(function(r){ tbody.appendChild(r); });
+  const ic = th.querySelector('.sort-ic');
+  if (ic) ic.setAttribute('data-lucide', novaDir === 'asc' ? 'arrow-up' : 'arrow-down');
+  if (window.lucide) lucide.createIcons();
+}
 <script>
 const flows = {
   analista: [
@@ -1261,7 +1300,7 @@ function renderCargasTable(){
   const colunas = colunasVisiveisAtuais();
   const extrasOcultas = CARGA_COLUMNS.length - colunas.length;
   if (btn) btn.innerHTML = '<i data-lucide="eye" class="lucide-ic"></i> Mostrar mais colunas' + (extrasOcultas > 0 ? ' (' + extrasOcultas + ')' : ' (todas visíveis)');
-  head.innerHTML = colunas.map(c => '<th>' + c.label + '</th>').join('') +
+  head.innerHTML = colunas.map((c,i) => thOrdenavel(c.label, body.id, i)).join('') +
     '<th>Observação · regra aplicada</th><th>Vale como vaga?</th><th>Situação</th><th>Ação</th>';
   body.innerHTML = Object.keys(CARGA_FIELDS).map(rowId => {
     const f = CARGA_FIELDS[rowId];
@@ -2128,7 +2167,7 @@ function renderGbPreviewTable(){
   const colunas = gbColunasVisiveisAtuais();
   const extrasOcultas = CARGA_COLUMNS.length - colunas.length;
   if (btn) btn.innerHTML = '<i data-lucide="eye" class="lucide-ic"></i> Mostrar mais colunas' + (extrasOcultas > 0 ? ' (' + extrasOcultas + ')' : ' (todas visíveis)');
-  head.innerHTML = colunas.map(c => '<th>' + c.label + '</th>').join('');
+  head.innerHTML = colunas.map((c,i) => thOrdenavel(c.label, body.id, i)).join('');
   const termo = (gbBuscaTexto || '').trim().toLowerCase();
   const linhas = termo
     ? BASE_PREVIEW_ROWS.filter(row => Object.values(row).some(v => String(v).toLowerCase().includes(termo)))
@@ -2832,7 +2871,7 @@ function renderG2CargasTable(){
   const colunas = g2ColunasVisiveisAtuais();
   const extrasOcultas = CARGA_COLUMNS.length - colunas.length;
   if (btn) btn.innerHTML = '<i data-lucide="eye" class="lucide-ic"></i> Mostrar mais colunas' + (extrasOcultas > 0 ? ' (' + extrasOcultas + ')' : ' (todas visíveis)');
-  head.innerHTML = colunas.map(c => '<th>' + c.label + '</th>').join('') +
+  head.innerHTML = colunas.map((c,i) => thOrdenavel(c.label, body.id, i)).join('') +
     '<th>Observação · regra aplicada</th><th>Situação</th><th>Ação</th>';
   body.innerHTML = G2_CARGAS_EXEMPLO.map((c, i) => {
     const tds = colunas.map(col => {
