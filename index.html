@@ -593,7 +593,10 @@
               </div>
               <div class="field-head">
                 <label>Pré-visualização da base importada</label>
-                <button class="icon-btn" onclick="toggleGbColunas()" id="btnGbToggleColunas">👁 Mostrar mais colunas</button>
+                <span style="display:flex;align-items:center;gap:8px;">
+                  <input type="text" id="gbBuscaInput" placeholder="🔎 Buscar na base..." oninput="filtrarGbPreview(this.value)" style="padding:7px 10px;font-size:12.5px;border:1px solid var(--gray-300);border-radius:6px;width:220px;">
+                  <button class="icon-btn" onclick="toggleGbColunas()" id="btnGbToggleColunas">👁 Mostrar mais colunas</button>
+                </span>
               </div>
               <div class="picker-list" id="gbColunasPicker" style="display:none;border:1px solid var(--gray-300);border-radius:8px;padding:12px 14px;margin-bottom:14px;max-height:220px;overflow-y:auto;"></div>
               <div style="overflow-x:auto;">
@@ -2065,8 +2068,13 @@ const BASE_PREVIEW_ROWS = [
   { dataRef:'24/07/2026', codDdz:'05', nomeDdz:'São Gabriel da Cachoeira', codEscola:'13051408', escola:'E.E. Indígena Tuyuka', localidade:'Rural', endereco:'Comunidade Tuyuka, s/n', comunidade:'Tuyuka', turno:'Matutino', nomeEnsino:'Ensino Fundamental', tipoCurso:'Indígena', areaEixo:'Linguagens', disciplinas:'Língua Materna', fasesTurmas:'5º ano', horas:16, codCargaHoraria:'CH-5140', dtIncCarga:'01/07/2026', dtAltCarga:'', cursoTec:'-', seqMatricula:'MAT-51408', numProcesso:'2026/00089', motivo:'' },
 ];
 let gbColunasExtrasVisiveis = new Set();
+let gbBuscaTexto = '';
 function gbColunasVisiveisAtuais(){
   return CARGA_COLUMNS.filter(c => c.visible || gbColunasExtrasVisiveis.has(c.key));
+}
+function filtrarGbPreview(texto){
+  gbBuscaTexto = texto;
+  renderGbPreviewTable();
 }
 function renderGbPreviewTable(){
   const head = document.getElementById('gbPreviewTableHead');
@@ -2077,7 +2085,11 @@ function renderGbPreviewTable(){
   const extrasOcultas = CARGA_COLUMNS.length - colunas.length;
   if (btn) btn.textContent = '👁 Mostrar mais colunas' + (extrasOcultas > 0 ? ' (' + extrasOcultas + ')' : ' (todas visíveis)');
   head.innerHTML = colunas.map(c => '<th>' + c.label + '</th>').join('');
-  body.innerHTML = BASE_PREVIEW_ROWS.map(row => {
+  const termo = (gbBuscaTexto || '').trim().toLowerCase();
+  const linhas = termo
+    ? BASE_PREVIEW_ROWS.filter(row => Object.values(row).some(v => String(v).toLowerCase().includes(termo)))
+    : BASE_PREVIEW_ROWS;
+  body.innerHTML = linhas.length ? linhas.map(row => {
     const tds = colunas.map(col => {
       let v = row[col.field];
       if (v === undefined || v === null || v === '') v = '-';
@@ -2085,7 +2097,7 @@ function renderGbPreviewTable(){
       return '<td>' + v + '</td>';
     }).join('');
     return '<tr>' + tds + '</tr>';
-  }).join('');
+  }).join('') : '<tr><td colspan="' + colunas.length + '" style="text-align:center;color:var(--muted);padding:18px;">Nenhum resultado para "' + gbBuscaTexto + '".</td></tr>';
 }
 function toggleGbColunas(){
   const picker = document.getElementById('gbColunasPicker');
