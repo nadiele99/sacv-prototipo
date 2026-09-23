@@ -864,8 +864,7 @@
 </div>
 
 <div class="flow-label" id="flowLabel"></div>
-
-
+<script>
 function thOrdenavel(label, tbodyId, colIndex){
   return '<th class="th-sort" onclick="ordenarTabela(this,\'' + tbodyId + '\',' + colIndex + ')"><span class="th-sort-inner">' + label + '<i data-lucide="arrow-up-down" class="lucide-ic sort-ic"></i></span></th>';
 }
@@ -894,7 +893,6 @@ function ordenarTabela(th, tbodyId, colIndex){
   if (ic) ic.setAttribute('data-lucide', novaDir === 'asc' ? 'arrow-up' : 'arrow-down');
   if (window.lucide) lucide.createIcons();
 }
-<script>
 const flows = {
   analista: [
     {id:'A0', label:'Sessão inicial'},
