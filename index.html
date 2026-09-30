@@ -253,6 +253,8 @@
   .modal-aviso h3{margin:0 0 10px 0;font-size:16px;color:var(--text);}
   .modal-aviso p{margin:0 0 20px 0;font-size:13.5px;color:var(--muted);line-height:1.5;}
   .modal-aviso .actions{display:flex;justify-content:flex-end;gap:10px;}
+  .modal-aviso .inline-warn{background:#FEF3E1;border:1px solid var(--yellow);border-radius:8px;padding:10px 12px;margin:-8px 0 18px 0;font-size:12.5px;color:#7a5b00;line-height:1.45;display:flex;gap:8px;align-items:flex-start;text-align:left;}
+  .modal-aviso .inline-warn i{flex-shrink:0;margin-top:1px;}
 
   .flow-label{position:fixed;bottom:14px;left:16px;background:#20222A;color:#fff;font-size:11px;padding:6px 12px;border-radius:20px;z-index:180;opacity:.85;}
 
@@ -1024,7 +1026,7 @@ const modals = {
 const FIELD_OPTIONS = {
   localidade: ['Urbana','Rural'],
   tipoCurso: ['EJA','Ensino Médio','Técnico','Regular'],
-  escola: ['E.E. Central','E.E. Mayara','E.E. São José','E.E. Nova Aliança','E.E. Vitória Régia'],
+  escola: ['E.E. Central','E.E. Mayara','E.E. São José','E.E. Nova Aliança','E.E. Vitória Régia','E.E. Comunidade Boa Esperança (exemplo)'],
   coordenadoria: ['Coordenadoria 1','Coordenadoria 2','Coordenadoria 3'],
   endereco: ['Comunidade Rio Preto','Comunidade Novo Horizonte','Vila Amazonas','Zona Rural · Km 15','Comunidade São Raimundo'],
   disciplina: ['Matemática','Português','Física','Geografia','História','Ciências'],
@@ -1264,6 +1266,7 @@ const CARGA_FIELDS = {
   rowPend:        { dataRef:'24/07/2026', codDdz:'DDZ-03', nomeDdz:'Manaus - Coordenadoria 3', codEscola:'ESC-1204', localidade:'Urbana', endereco:'Rua Vitória Régia, 88', comunidade:'-', turno:'Vespertino', nomeEnsino:'Ensino Fundamental', tipoCurso:'Regular', areaEixo:'Linguagens', disciplinas:'Português', fasesTurmas:'7º ano · Turma C', horas:14, motivo:'Registro sem informação suficiente para classificar automaticamente', codCargaHoraria:'CH-14', pendenciaCarga:'Sim', dtIncCarga:'20/07/2026', dtAltCarga:'24/07/2026', cursoTec:'Não', seqMatricula:'-', numProcesso:'2026/00120', escola:'E.E. Vitória Régia' },
   rowSaoJose:     { dataRef:'24/07/2026', codDdz:'DDZ-03', nomeDdz:'Manaus - Coordenadoria 3', codEscola:'ESC-1052', localidade:'Urbana', endereco:'Rua São José, 33', comunidade:'-', turno:'Matutino', nomeEnsino:'Ensino Médio', tipoCurso:'Regular', areaEixo:'Exatas', disciplinas:'Física', fasesTurmas:'1ª série · Turma A', horas:8, motivo:'', codCargaHoraria:'CH-08', pendenciaCarga:'Não', dtIncCarga:'20/07/2026', dtAltCarga:'24/07/2026', cursoTec:'Não', seqMatricula:'-', numProcesso:'2026/00121', escola:'E.E. São José' },
   rowNovaAlianca: { dataRef:'24/07/2026', codDdz:'DDZ-03', nomeDdz:'Manaus - Coordenadoria 3', codEscola:'ESC-1316', localidade:'Urbana', endereco:'Rua Nova Aliança, 500', comunidade:'-', turno:'Noturno', nomeEnsino:'Educação Profissional', tipoCurso:'Técnico', areaEixo:'Técnico', disciplinas:'Informática', fasesTurmas:'Módulo II · Turma Única', horas:16, motivo:'', codCargaHoraria:'CH-16', pendenciaCarga:'Não', dtIncCarga:'20/07/2026', dtAltCarga:'24/07/2026', cursoTec:'Sim', seqMatricula:'-', numProcesso:'2026/00122', escola:'E.E. Nova Aliança' },
+  rowRuralDemo:   { dataRef:'24/07/2026', codDdz:'DDZ-03', nomeDdz:'Manaus - Coordenadoria 3', codEscola:'ESC-1450', localidade:'Rural', endereco:'Comunidade Boa Esperança, Zona Rural', comunidade:'Comunidade Boa Esperança', turno:'Matutino', nomeEnsino:'Ensino Fundamental', tipoCurso:'Regular', areaEixo:'Linguagens', disciplinas:'Português', fasesTurmas:'6º ano · Turma Única', horas:12, motivo:'', codCargaHoraria:'CH-12', pendenciaCarga:'Não', dtIncCarga:'20/07/2026', dtAltCarga:'24/07/2026', cursoTec:'Não', seqMatricula:'-', numProcesso:'2026/00123', escola:'E.E. Comunidade Boa Esperança (exemplo)' },
 };
 
 // Todas as colunas reais da base do SILS (RF001). 'visible:true' são as que ficam à mostra por
@@ -1385,10 +1388,15 @@ function abrirAgruparVaga(tipo){
   const explicacao = tipo === 'compartilhada'
     ? 'Um único professor vai atender as ' + ids.length + ' escolas selecionadas (' + escolas + ') para o mesmo componente curricular, dividindo a carga horária entre elas. Juntas, essas cargas vão valer como <b>uma vaga</b>. A divisão exata da carga horária será definida quando houver integração com o sistema de lotação.'
     : 'As ' + ids.length + ' cargas selecionadas (' + escolas + ') referem-se ao mesmo componente curricular, apenas com grafias diferentes na base. Elas vão ser unificadas e contar como <b>uma vaga</b>.';
+  const disciplinasSet = new Set(ids.map(id => (CARGA_FIELDS[id] && CARGA_FIELDS[id].disciplinas) || ''));
+  const avisoDisciplina = disciplinasSet.size > 1
+    ? '<div class="inline-warn"><i data-lucide="triangle-alert" class="lucide-ic"></i><span>As cargas selecionadas estão com <b>componentes curriculares diferentes</b> na base (' + [...disciplinasSet].join(' · ') + '). Confirme se elas realmente se referem ao mesmo componente, só com grafia diferente, antes de continuar.</span></div>'
+    : '';
   box.className = 'modal-aviso green';
   box.innerHTML = '<div class="icon-circle"><i data-lucide="check" class="lucide-ic"></i></div>' +
     '<h3>' + titulo + '</h3>' +
     '<p>' + explicacao + '</p>' +
+    avisoDisciplina +
     '<div class="actions"><button class="btn btn-outline" onclick="closeModal()">Cancelar</button> <button class="btn btn-navy" onclick="confirmarAgruparVaga()">Confirmar</button></div>';
   document.getElementById('overlay').classList.add('show');
 }
