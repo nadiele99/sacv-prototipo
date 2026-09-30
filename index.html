@@ -255,6 +255,7 @@
   .modal-aviso .actions{display:flex;justify-content:flex-end;gap:10px;}
   .modal-aviso .inline-warn{background:#FEF3E1;border:1px solid var(--yellow);border-radius:8px;padding:10px 12px;margin:-8px 0 18px 0;font-size:12.5px;color:#7a5b00;line-height:1.45;display:flex;gap:8px;align-items:flex-start;text-align:left;}
   .modal-aviso .inline-warn i{flex-shrink:0;margin-top:1px;}
+  .badge[title]{cursor:help;}
 
   .flow-label{position:fixed;bottom:14px;left:16px;background:#20222A;color:#fff;font-size:11px;padding:6px 12px;border-radius:20px;z-index:180;opacity:.85;}
 
@@ -1173,6 +1174,7 @@ function avaliarCargas(){
       row.classList.remove('excluded');
       if (badge){ badge.className = 'badge yellow'; badge.textContent = 'Vaga confirmada · exceção manual'; }
       if (vale){ vale.className = 'badge green'; vale.textContent = 'Sim'; }
+      syncGrupoCheckbox(rowId, true);
       if (obs) obs.textContent = 'Exceção manual: mantida como vaga por você, ' + fraseRegrasIgnoradas(rec && rec.regras) + '. Justificativa: ' + (rec && rec.texto && rec.texto.trim() ? rec.texto : '(nenhuma registrada)') + '.';
       if (acao) acao.innerHTML = '<button class="icon-btn" onclick="openReincluir(\'' + rowId + '\')">Ver justificativa</button> <a href="#" onclick="desfazerReinclusao(\'' + rowId + '\');return false;" style="font-size:11.5px;color:var(--muted);margin-left:6px;"><i data-lucide="undo-2" class="lucide-ic"></i> desfazer</a>';
       return;
@@ -1185,12 +1187,14 @@ function avaliarCargas(){
       if (!j){
         if (badge){ badge.className = 'badge yellow'; badge.textContent = 'Pendência · precisa justificar'; }
         if (vale){ vale.className = 'badge gray'; vale.textContent = '-'; }
+        syncGrupoCheckbox(rowId, true);
         if (obs) obs.textContent = 'Pendência da base: ' + f.motivo + ' · precisa da sua justificativa manual' + (anexoNome ? (' · comprovante anexado: ' + anexoNome) : '');
         if (acao) acao.innerHTML = '<button class="icon-btn" onclick="openJustify(\'' + rowId + '\')">Justificar</button> <button class="icon-btn" onclick="openAnexarPend(\'' + rowId + '\')"><i data-lucide="paperclip" class="lucide-ic"></i> ' + (anexoNome ? anexoNome : 'Anexar documento') + '</button>';
       } else {
         const valeSim = j.valeVaga === 'sim';
         if (badge){ badge.className = valeSim ? 'badge green' : 'badge red'; badge.textContent = valeSim ? 'Vaga confirmada (justificada)' : 'Excluída (justificada)'; }
         if (vale){ vale.className = valeSim ? 'badge green' : 'badge red'; vale.textContent = valeSim ? 'Sim' : 'Não'; }
+        syncGrupoCheckbox(rowId, valeSim);
         if (obs) obs.textContent = (valeSim ? 'Justificada por você: pendência da base analisada e considerada carga vaga' : 'Justificada por você: pendência da base analisada e NÃO considerada carga vaga') + (anexoNome ? (' · comprovante anexado: ' + anexoNome) : '');
         if (acao) acao.innerHTML = '<button class="icon-btn" onclick="openJustify(\'' + rowId + '\')">Ver justificativa</button> <button class="icon-btn" onclick="openAnexarPend(\'' + rowId + '\')"><i data-lucide="paperclip" class="lucide-ic"></i> ' + (anexoNome ? anexoNome : 'Anexar documento') + '</button> <a href="#" onclick="desfazerJustificativaPend(\'' + rowId + '\');return false;" style="font-size:11.5px;color:var(--muted);margin-left:6px;"><i data-lucide="undo-2" class="lucide-ic"></i> desfazer (testar bloqueio)</a>';
       }
@@ -1207,6 +1211,7 @@ function avaliarCargas(){
       row.dataset.excludedBy = chavesExclusao.join(',');
       if (badge){ badge.className = 'badge red'; badge.textContent = 'Excluída · regra'; }
       if (vale){ vale.className = 'badge red'; vale.textContent = 'Não'; }
+      syncGrupoCheckbox(rowId, false);
       if (obs) obs.textContent = 'Excluída pela regra · critérios enquadrados: ' + motivosExclusao.join('; ') + '.';
       if (acao) acao.innerHTML = '<button class="icon-btn" onclick="openReincluir(\'' + rowId + '\')">Reincluir</button>';
     } else {
@@ -1214,6 +1219,7 @@ function avaliarCargas(){
       delete row.dataset.excludedBy;
       if (badge){ badge.className = 'badge green'; badge.textContent = 'Vaga confirmada'; }
       if (vale){ vale.className = 'badge green'; vale.textContent = 'Sim'; }
+      syncGrupoCheckbox(rowId, true);
       if (obs) obs.textContent = 'Confirmada · não se enquadra em nenhuma regra de exclusão vigente';
       if (acao) acao.textContent = '-';
     }
@@ -1359,6 +1365,20 @@ function toggleSelecaoGrupo(rowId, checked){
   atualizarToolbarGrupo();
 }
 
+function syncGrupoCheckbox(rowId, podeAgrupar){
+  const row = document.getElementById(rowId);
+  if (!row) return;
+  const chk = row.querySelector('.grupo-chk');
+  if (!chk || rowParaGrupo[rowId]) return;
+  chk.disabled = !podeAgrupar;
+  chk.title = podeAgrupar ? '' : 'Esta carga está excluída e não conta como vaga no momento · reinclua para poder compartilhar ou unificar';
+  if (!podeAgrupar && selecionadosGrupo.has(rowId)){
+    selecionadosGrupo.delete(rowId);
+    chk.checked = false;
+    atualizarToolbarGrupo();
+  }
+}
+
 function atualizarToolbarGrupo(){
   const bar = document.getElementById('grupoToolbar');
   if (!bar) return;
@@ -1433,7 +1453,12 @@ function renderVagaGrupoBadges(){
     if (!grupoId){ cell.innerHTML = '<span class="badge gray">-</span>'; return; }
     const g = gruposVaga[grupoId];
     const label = g.tipo === 'compartilhada' ? 'Compartilhada' : 'Unificada';
-    cell.innerHTML = '<span class="badge blue">' + label + ' · ' + g.rowIds.length + ' escolas</span> <a href="#" onclick="desfazerGrupoVaga(\'' + grupoId + '\');return false;" style="font-size:11px;color:var(--muted);margin-left:4px;"><i data-lucide="undo-2" class="lucide-ic"></i></a>';
+    const detalhes = g.rowIds.map(function(id){
+      const f = CARGA_FIELDS[id];
+      return '• ' + f.escola + ' - ' + f.disciplinas + ' (' + f.horas + 'h)';
+    }).join('\n');
+    const tooltip = (label === 'Compartilhada' ? 'Compartilhada entre ' + g.rowIds.length + ' escolas · 1 professor divide a carga' : 'Unificada de ' + g.rowIds.length + ' escolas') + ' · vale como 1 vaga:\n' + detalhes;
+    cell.innerHTML = '<span class="badge blue" title="' + tooltip.replace(/"/g,'&quot;') + '">' + label + ' · ' + g.rowIds.length + ' escolas</span> <a href="#" onclick="desfazerGrupoVaga(\'' + grupoId + '\');return false;" style="font-size:11px;color:var(--muted);margin-left:4px;"><i data-lucide="undo-2" class="lucide-ic"></i></a>';
   });
   if (window.lucide) lucide.createIcons();
 }
