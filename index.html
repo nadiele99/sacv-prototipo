@@ -364,6 +364,9 @@
   .table-pagination{display:flex;align-items:center;justify-content:space-between;margin-top:10px;font-size:12px;color:var(--muted);}
   .table-pagination-btns{display:flex;gap:8px;}
   .table-pagination button:disabled{opacity:.5;cursor:not-allowed;}
+
+  .grupo-chk{width:15px;height:15px;cursor:pointer;}
+  .grupo-toolbar{display:none;align-items:center;gap:10px;background:var(--gray-100);border:1px solid var(--gray-300);border-radius:8px;padding:9px 12px;margin-bottom:10px;}
 </style>
 </head>
 <body>
@@ -561,9 +564,17 @@
                 </div><div class="note">As regras podem mudar a qualquer momento antes de fechar o município · a coluna <b>Observação</b> abaixo sempre mostra a regra que gerou o status atual de cada carga. É sempre a versão mais recente que vale, aplicada assim que você altera algo.</div>
                 <div class="field-head">
                   <label>Cargas importadas da base</label>
-                  <button class="icon-btn" onclick="toggleColunasCargas()" id="btnToggleColunas"><i data-lucide="eye" class="lucide-ic"></i> Mostrar mais colunas</button>
+                  <span style="display:flex;gap:8px;align-items:center;">
+                    <span class="input-search"><i data-lucide="search" class="input-search-icon lucide-ic"></i><input type="text" id="cargasBuscaInput" placeholder="Buscar cargas..." oninput="filtrarCargas(this.value)"></span>
+                    <button class="icon-btn" onclick="toggleColunasCargas()" id="btnToggleColunas"><i data-lucide="eye" class="lucide-ic"></i> Mostrar mais colunas</button>
+                  </span>
                 </div>
                 <div class="picker-list" id="colunasCargasPicker" style="display:none;border:1px solid var(--gray-300);border-radius:8px;padding:12px 14px;margin-bottom:14px;max-height:220px;overflow-y:auto;"></div>
+                <div class="grupo-toolbar" id="grupoToolbar">
+                  <span id="grupoSelecionadasTxt" style="font-size:12.5px;color:var(--muted);flex:1;"></span>
+                  <button class="btn btn-outline" onclick="abrirAgruparVaga('compartilhada')">Compartilhar vaga</button>
+                  <button class="btn btn-navy" onclick="abrirAgruparVaga('unificada')">Unificar vaga</button>
+                </div>
                 <div style="overflow-x:auto;">
                   <table id="cargasTable">
                     <thead><tr id="cargasTableHead"></tr></thead>
@@ -1298,9 +1309,15 @@ function renderCargasTable(){
   const colunas = colunasVisiveisAtuais();
   const extrasOcultas = CARGA_COLUMNS.length - colunas.length;
   if (btn) btn.innerHTML = '<i data-lucide="eye" class="lucide-ic"></i> Mostrar mais colunas' + (extrasOcultas > 0 ? ' (' + extrasOcultas + ')' : ' (todas visíveis)');
-  head.innerHTML = colunas.map((c,i) => thOrdenavel(c.label, body.id, i)).join('') +
-    '<th>Observação · regra aplicada</th><th>Vale como vaga?</th><th>Situação</th><th>Ação</th>';
-  body.innerHTML = Object.keys(CARGA_FIELDS).map(rowId => {
+  head.innerHTML = '<th></th>' + colunas.map((c,i) => thOrdenavel(c.label, body.id, i+1)).join('') +
+    '<th>Observação · regra aplicada</th><th>Vale como vaga?</th><th>Situação</th><th>Vaga</th><th>Ação</th>';
+  const termoCargas = (cargasBuscaTexto || '').trim().toLowerCase();
+  const idsCargasFiltrados = Object.keys(CARGA_FIELDS).filter(rowId => {
+    if (!termoCargas) return true;
+    const f = CARGA_FIELDS[rowId];
+    return Object.keys(f).some(k => String(f[k]).toLowerCase().includes(termoCargas));
+  });
+  body.innerHTML = idsCargasFiltrados.map(rowId => {
     const f = CARGA_FIELDS[rowId];
     const sufixo = rowId.replace('row', '');
     const tds = colunas.map(c => {
@@ -1309,12 +1326,107 @@ function renderCargasTable(){
       else if (c.suffix) v = v + c.suffix;
       return '<td>' + v + '</td>';
     }).join('');
-    return '<tr id="' + rowId + '">' + tds +
+    const chk = '<td><input type="checkbox" class="grupo-chk" onchange="toggleSelecaoGrupo(\'' + rowId + '\', this.checked)" ' + (rowParaGrupo[rowId] ? 'disabled' : '') + (selecionadosGrupo.has(rowId) ? ' checked' : '') + '></td>';
+    return '<tr id="' + rowId + '">' + chk + tds +
       '<td id="obs' + sufixo + '"></td>' +
       '<td><span class="badge gray" id="vale' + sufixo + '">-</span></td>' +
       '<td><span class="badge gray" id="badge' + sufixo + '">-</span></td>' +
+      '<td id="vagaGrupo' + sufixo + '"></td>' +
       '<td id="acao' + sufixo + '">-</td></tr>';
   }).join('');
+  renderVagaGrupoBadges();
+}
+
+
+let cargasBuscaTexto = '';
+let selecionadosGrupo = new Set();
+let gruposVaga = {};
+let rowParaGrupo = {};
+let grupoContador = 0;
+let grupoPendente = null;
+
+function filtrarCargas(texto){
+  cargasBuscaTexto = texto;
+  renderCargasTable();
+  avaliarCargas();
+}
+
+function toggleSelecaoGrupo(rowId, checked){
+  if (checked) selecionadosGrupo.add(rowId); else selecionadosGrupo.delete(rowId);
+  atualizarToolbarGrupo();
+}
+
+function atualizarToolbarGrupo(){
+  const bar = document.getElementById('grupoToolbar');
+  if (!bar) return;
+  const n = selecionadosGrupo.size;
+  bar.style.display = n >= 2 ? 'flex' : 'none';
+  const txt = document.getElementById('grupoSelecionadasTxt');
+  if (txt) txt.textContent = n + (n === 1 ? ' carga selecionada' : ' cargas selecionadas');
+}
+
+function abrirAgruparVaga(tipo){
+  const ids = [...selecionadosGrupo];
+  if (ids.length < 2) return;
+  const box = document.getElementById('modalBox');
+  const locs = new Set(ids.map(id => (CARGA_FIELDS[id] && CARGA_FIELDS[id].localidade) || ''));
+  if (locs.size > 1){
+    box.className = 'modal-aviso red';
+    box.innerHTML = '<div class="icon-circle"><i data-lucide="ban" class="lucide-ic"></i></div>' +
+      '<h3>Não é possível agrupar estas cargas</h3>' +
+      '<p>Para compartilhar ou unificar uma vaga, as cargas selecionadas precisam ser do mesmo município e da mesma localidade (Rural/Urbana). As cargas selecionadas têm localidades diferentes.</p>' +
+      '<div class="actions"><button class="btn btn-navy" onclick="closeModal()">Entendi</button></div>';
+    document.getElementById('overlay').classList.add('show');
+    return;
+  }
+  grupoPendente = { tipo, ids };
+  const escolas = ids.map(id => CARGA_FIELDS[id].escola).join(', ');
+  const titulo = tipo === 'compartilhada' ? 'Compartilhar vaga' : 'Unificar vaga';
+  const explicacao = tipo === 'compartilhada'
+    ? 'Um único professor vai atender as ' + ids.length + ' escolas selecionadas (' + escolas + ') para o mesmo componente curricular, dividindo a carga horária entre elas. Juntas, essas cargas vão valer como <b>uma vaga</b>. A divisão exata da carga horária será definida quando houver integração com o sistema de lotação.'
+    : 'As ' + ids.length + ' cargas selecionadas (' + escolas + ') referem-se ao mesmo componente curricular, apenas com grafias diferentes na base. Elas vão ser unificadas e contar como <b>uma vaga</b>.';
+  box.className = 'modal-aviso green';
+  box.innerHTML = '<div class="icon-circle"><i data-lucide="check" class="lucide-ic"></i></div>' +
+    '<h3>' + titulo + '</h3>' +
+    '<p>' + explicacao + '</p>' +
+    '<div class="actions"><button class="btn btn-outline" onclick="closeModal()">Cancelar</button> <button class="btn btn-navy" onclick="confirmarAgruparVaga()">Confirmar</button></div>';
+  document.getElementById('overlay').classList.add('show');
+}
+
+function confirmarAgruparVaga(){
+  if (!grupoPendente) return;
+  grupoContador++;
+  const grupoId = 'grp' + grupoContador;
+  gruposVaga[grupoId] = { tipo: grupoPendente.tipo, rowIds: grupoPendente.ids.slice() };
+  grupoPendente.ids.forEach(function(id){ rowParaGrupo[id] = grupoId; });
+  selecionadosGrupo.clear();
+  grupoPendente = null;
+  closeModal();
+  renderCargasTable();
+  avaliarCargas();
+}
+
+function desfazerGrupoVaga(grupoId){
+  const g = gruposVaga[grupoId];
+  if (!g) return;
+  g.rowIds.forEach(function(id){ delete rowParaGrupo[id]; });
+  delete gruposVaga[grupoId];
+  renderCargasTable();
+  avaliarCargas();
+}
+
+function renderVagaGrupoBadges(){
+  Object.keys(CARGA_FIELDS).forEach(function(rowId){
+    const sufixo = rowId.replace('row', '');
+    const cell = document.getElementById('vagaGrupo' + sufixo);
+    if (!cell) return;
+    const grupoId = rowParaGrupo[rowId];
+    if (!grupoId){ cell.innerHTML = '<span class="badge gray">-</span>'; return; }
+    const g = gruposVaga[grupoId];
+    const label = g.tipo === 'compartilhada' ? 'Compartilhada' : 'Unificada';
+    cell.innerHTML = '<span class="badge blue">' + label + ' · ' + g.rowIds.length + ' escolas</span> <a href="#" onclick="desfazerGrupoVaga(\'' + grupoId + '\');return false;" style="font-size:11px;color:var(--muted);margin-left:4px;"><i data-lucide="undo-2" class="lucide-ic"></i></a>';
+  });
+  if (window.lucide) lucide.createIcons();
 }
 
 function toggleColunasCargas(){
