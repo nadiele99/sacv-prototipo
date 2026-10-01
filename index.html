@@ -1319,7 +1319,7 @@ function renderCargasTable(){
   const extrasOcultas = CARGA_COLUMNS.length - colunas.length;
   if (btn) btn.innerHTML = '<i data-lucide="eye" class="lucide-ic"></i> Mostrar mais colunas' + (extrasOcultas > 0 ? ' (' + extrasOcultas + ')' : ' (todas visíveis)');
   head.innerHTML = '<th></th>' + colunas.map((c,i) => thOrdenavel(c.label, body.id, i+1)).join('') +
-    '<th>Observação · regra aplicada</th><th>Vale como vaga?</th><th>Situação</th><th>Vaga</th><th>Ação</th>';
+    '<th>Observação · regra aplicada</th><th>Vale como vaga?</th><th>Situação</th><th>Tipo</th><th>Ação</th>';
   const termoCargas = (cargasBuscaTexto || '').trim().toLowerCase();
   const idsCargasFiltrados = Object.keys(CARGA_FIELDS).filter(rowId => {
     if (!termoCargas) return true;
