@@ -1091,6 +1091,8 @@ function removeChip(btn){
 // exceção pontual por carga, a regra continua valendo para as demais (mesmo padrão do
 // protótipo anterior, agora generalizado para qualquer regra/linha).
 let manualOverrides = new Set();
+let exclusoesManuais = {}; // { [rowId]: { texto } } · exclusão manual do Analista (análise manual, sem regra)
+let excluirManualRowIdAtual = null;
 let reinclusoes = {}; // { [rowId]: { texto, regra } } · excecao manual do Analista sobre uma carga excluida por regra
 const REGRA_LABELS_EXCLUSAO = { localidade:'Localidade', cargaHoraria:'Horas', tipoCurso:'Curso/Projeto', escola:'Nome Escola' };
 // Uma carga pode se enquadrar em mais de um criterio de exclusao ao mesmo tempo (ex.: Horas E Localidade) · por isso
@@ -1139,6 +1141,44 @@ function confirmReincluir(){
   renderResumo();
   closeModal();
 }
+function openExcluirManual(rowId){
+  const f = CARGA_FIELDS[rowId];
+  if (rowParaGrupo[rowId]){
+    const b = document.getElementById('modalBox');
+    b.className = 'modal-aviso red';
+    b.innerHTML = '<div class="icon-circle"><i data-lucide="ban" class="lucide-ic"></i></div><h3>Carga em vaga agrupada</h3><p>Esta carga faz parte de uma vaga compartilhada ou unificada. Desfaça o grupo antes de excluí-la manualmente.</p><div class="actions"><button class="btn btn-navy" onclick="closeModal()">Entendi</button></div>';
+    document.getElementById('overlay').classList.add('show');
+    return;
+  }
+  excluirManualRowIdAtual = rowId;
+  const rAtual = exclusoesManuais[rowId];
+  const box = document.getElementById('modalBox');
+  box.className = 'modal-aviso red';
+  box.innerHTML = '<div class="icon-circle"><i data-lucide="ban" class="lucide-ic"></i></div>' +
+    '<h3>Excluir manualmente · ' + f.escola + '</h3>' +
+    '<p>Use quando a carga não deve contar como vaga por uma análise sua, por exemplo licença médica de período curto, conflito de horário, Área/Eixo preenchida ou pendente de análise. Isso vale só para este registro e não cria regra.</p>' +
+    '<div class="field" style="margin-bottom:6px;"><label>Justificativa da exclusão (obrigatória)</label><textarea id="excluirManualTexto" placeholder="Descreva por que esta carga não é vaga...">' + (rAtual && rAtual.texto ? rAtual.texto : '') + '</textarea></div>' +
+    '<div id="excluirManualErro" style="color:#b91c1c;font-size:12px;min-height:16px;margin-bottom:8px;"></div>' +
+    '<div class="actions"><button class="btn btn-outline" onclick="closeModal()">Cancelar</button> <button class="btn btn-red" onclick="confirmExcluirManual()">Confirmar exclusão</button></div>';
+  document.getElementById('overlay').classList.add('show');
+}
+function confirmExcluirManual(){
+  if (!excluirManualRowIdAtual) return;
+  const el = document.getElementById('excluirManualTexto');
+  const texto = el ? el.value.trim() : '';
+  if (!texto){ const er = document.getElementById('excluirManualErro'); if (er) er.textContent = 'Informe a justificativa para excluir a carga.'; return; }
+  exclusoesManuais[excluirManualRowIdAtual] = { texto };
+  manualOverrides.delete(excluirManualRowIdAtual);
+  delete reinclusoes[excluirManualRowIdAtual];
+  closeModal();
+  avaliarCargas();
+  renderResumo();
+}
+function desfazerExclusaoManual(rowId){
+  delete exclusoesManuais[rowId];
+  avaliarCargas();
+  renderResumo();
+}
 function desfazerReinclusao(rowId){
   manualOverrides.delete(rowId);
   delete reinclusoes[rowId];
@@ -1169,6 +1209,16 @@ function avaliarCargas(){
     const obs = document.getElementById('obs' + sufixo);
     const vale = document.getElementById('vale' + sufixo);
     const acao = document.getElementById('acao' + sufixo);
+    if (exclusoesManuais[rowId]){
+      row.classList.add('excluded');
+      row.dataset.excludedBy = 'manual';
+      if (badge){ badge.className = 'badge red'; badge.textContent = 'Excluída · manual'; }
+      if (vale){ vale.className = 'badge red'; vale.textContent = 'Não'; }
+      syncGrupoCheckbox(rowId, false);
+      if (obs) obs.textContent = 'Excluída manualmente por você (análise manual, sem regra). Justificativa: ' + exclusoesManuais[rowId].texto;
+      if (acao) acao.innerHTML = '<a href=\"#\" onclick=\"desfazerExclusaoManual(\'' + rowId + '\');return false;\" style=\"font-size:11.5px;color:var(--muted);\"><i data-lucide=\"undo-2\" class=\"lucide-ic\"></i> desfazer exclusão</a>';
+      return;
+    }
     if (manualOverrides.has(rowId)){
       const rec = reinclusoes[rowId];
       row.classList.remove('excluded');
@@ -1176,7 +1226,7 @@ function avaliarCargas(){
       if (vale){ vale.className = 'badge green'; vale.textContent = 'Sim'; }
       syncGrupoCheckbox(rowId, true);
       if (obs) obs.textContent = 'Exceção manual: mantida como vaga por você, ' + fraseRegrasIgnoradas(rec && rec.regras) + '. Justificativa: ' + (rec && rec.texto && rec.texto.trim() ? rec.texto : '(nenhuma registrada)') + '.';
-      if (acao) acao.innerHTML = '<button class="icon-btn" onclick="openReincluir(\'' + rowId + '\')">Ver justificativa</button> <a href="#" onclick="desfazerReinclusao(\'' + rowId + '\');return false;" style="font-size:11.5px;color:var(--muted);margin-left:6px;"><i data-lucide="undo-2" class="lucide-ic"></i> desfazer</a>';
+      if (acao) acao.innerHTML = '<button class="icon-btn" onclick="openReincluir(\'' + rowId + '\')">Ver justificativa</button> <a href="#" onclick="desfazerReinclusao(\'' + rowId + '\');return false;" style="font-size:11.5px;color:var(--muted);margin-left:6px;"><i data-lucide="undo-2" class="lucide-ic"></i> desfazer</a> <button class=\"icon-btn\" onclick=\"openExcluirManual(\'' + rowId + '\')\">Excluir manualmente</button>';
       return;
     }
     if (f.motivo && f.motivo.trim() !== ''){
@@ -1221,7 +1271,7 @@ function avaliarCargas(){
       if (vale){ vale.className = 'badge green'; vale.textContent = 'Sim'; }
       syncGrupoCheckbox(rowId, true);
       if (obs) obs.textContent = 'Confirmada · não se enquadra em nenhuma regra de exclusão vigente';
-      if (acao) acao.textContent = '-';
+      if (acao) acao.innerHTML = '<button class=\"icon-btn\" onclick=\"openExcluirManual(\'' + rowId + '\')\">Excluir manualmente</button>';
     }
   });
   const OBRIG = [['localidade','Localidade'],['turno','Turno'],['nomeEnsino','Nome do ensino'],['disciplinas','Disciplina'],['horas','Horas']];
