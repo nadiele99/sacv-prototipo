@@ -2,6 +2,8 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <title>SACV · Protótipo de Baixa Fidelidade</title>
 <style>
   :root{
@@ -372,7 +374,207 @@
   .grupo-toolbar{display:none;align-items:center;gap:10px;background:var(--gray-100);border:1px solid var(--gray-300);border-radius:8px;padding:9px 12px;margin-bottom:10px;}
 #scr-A3.consulta .rules-wrap, #scr-A3.consulta #savedChips, #scr-A3.consulta .grupo-chk, #scr-A3.consulta #grupoToolbar, #scr-A3.consulta #btnFechar, #scr-A3.consulta [id^="acao"]{pointer-events:none;opacity:.5;}
 .fc-bar{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:8px;}.fc-item{position:relative;}.fc-btn{border:1.5px solid var(--gray-300);background:#fff;border-radius:8px;padding:6px 10px;font-size:12.5px;font-family:inherit;cursor:pointer;display:flex;gap:6px;align-items:center;color:var(--text);}.fc-btn.on{border-color:var(--navy-500);background:#E7ECF6;color:var(--navy-700);font-weight:600;}.fc-count{font-weight:700;}.fc-pop{position:absolute;z-index:40;top:calc(100% + 4px);left:0;min-width:260px;background:#fff;border:1px solid var(--gray-300);border-radius:8px;box-shadow:var(--shadow);padding:8px;}.fc-search{width:100%;box-sizing:border-box;border:1.5px solid var(--gray-300);border-radius:6px;padding:7px 9px;font-size:13px;font-family:inherit;margin-bottom:6px;}.fc-opts{max-height:210px;overflow-y:auto;}.fc-opt{display:flex;align-items:center;gap:8px;font-size:13px;padding:4px 2px;cursor:pointer;text-transform:none;font-weight:400;color:var(--text);}.fc-opt span:first-of-type{flex:1;}.fc-n{color:var(--muted);font-size:11.5px;}.fc-foot{border-top:1px solid var(--gray-200);margin-top:6px;padding-top:6px;font-size:12px;}.fc-resumo{display:flex;flex-wrap:wrap;gap:6px;align-items:center;font-size:12.5px;color:var(--muted);margin-bottom:10px;}
-</style>
+
+/* ===== Camada shadcn/ui · componentes internos (não altera estrutura) ===== */
+:root{
+  --fg:#18181B; --muted-fg:#71717A; --placeholder:#A1A1AA;
+  --border:#E4E4E7; --input:#E4E4E7; --muted-bg:#F4F4F5; --subtle:#FAFAFA;
+  --primary:var(--navy-700); --primary-hover:var(--navy-600);
+  --ring:rgba(42,78,133,.22);
+  --r-sm:6px; --r-md:8px; --r-lg:10px; --r-xl:14px;
+  --shadow-xs:0 1px 2px rgba(16,24,40,.05);
+  --shadow-sm:0 1px 3px rgba(16,24,40,.06),0 1px 2px rgba(16,24,40,.04);
+  --shadow-lg:0 12px 32px rgba(16,24,40,.14);
+}
+.card .body,.overlay,#toast{font-family:"Inter","Segoe UI",Roboto,Arial,sans-serif;font-size:14px;color:var(--fg);-webkit-font-smoothing:antialiased;}
+.stack{display:flex;flex-direction:column;gap:20px;}
+.muted{color:var(--muted-fg);}
+svg.lucide{stroke-width:2;}
+
+/* Button */
+.card .body .btn,.overlay .btn{height:36px;padding:0 16px;border-radius:var(--r-md);font-family:inherit;font-size:14px;font-weight:500;line-height:1;gap:8px;border:1px solid transparent;justify-content:center;white-space:nowrap;transition:background .15s,border-color .15s,color .15s,box-shadow .15s;outline:none;}
+.card .body .btn:hover,.overlay .btn:hover,.card .body .btn:active,.overlay .btn:active{filter:none;}
+.card .body .btn svg,.overlay .btn svg,.card .body .btn .lucide-ic,.overlay .btn .lucide-ic{width:16px;height:16px;stroke-width:2;vertical-align:middle;}
+.card .body .btn:focus-visible,.overlay .btn:focus-visible{box-shadow:0 0 0 3px var(--ring);}
+.card .body .btn:disabled,.overlay .btn:disabled{opacity:.5;pointer-events:none;}
+.card .body .btn-navy,.card .body .btn-green,.card .body .btn-primary,.overlay .btn-navy,.overlay .btn-green,.overlay .btn-primary{background:var(--primary);color:#fff;box-shadow:var(--shadow-xs);}
+.card .body .btn-navy:hover,.card .body .btn-green:hover,.card .body .btn-primary:hover,.overlay .btn-navy:hover,.overlay .btn-green:hover,.overlay .btn-primary:hover{background:var(--primary-hover);}
+.card .body .btn-outline,.overlay .btn-outline{background:#fff;color:var(--fg);border:1px solid var(--border);box-shadow:var(--shadow-xs);}
+.card .body .btn-outline:hover,.overlay .btn-outline:hover{background:var(--muted-bg);}
+.card .body .btn-gray,.overlay .btn-gray{background:var(--muted-bg);color:var(--fg);}
+.card .body .btn-gray:hover,.overlay .btn-gray:hover{background:#E9E9EC;}
+.card .body .btn-red,.card .body .btn-destructive,.overlay .btn-red,.overlay .btn-destructive{background:#DC2626;color:#fff;box-shadow:var(--shadow-xs);}
+.card .body .btn-red:hover,.card .body .btn-destructive:hover,.overlay .btn-red:hover,.overlay .btn-destructive:hover{background:#B91C1C;}
+.card .body .btn-ghost{background:transparent;color:var(--fg);}
+.card .body .btn-ghost:hover{background:var(--muted-bg);}
+.card .body .btn-sm{height:32px;padding:0 12px;font-size:13px;gap:6px;}
+.card .body .btn-icon{width:32px;height:32px;padding:0;}
+.card .body .btn-icon.danger:hover{color:#DC2626;background:#FEF2F2;}
+.card .body .btn-ghost.btn-icon{color:var(--muted-fg);}
+.card .body .btn-ghost.btn-icon:hover{color:var(--fg);}
+.card .body .actions-row{margin-top:0;}
+.card .body .icon-btn{height:32px;border:1px solid var(--border);background:#fff;border-radius:var(--r-md);padding:0 10px;font-family:inherit;font-size:13px;font-weight:500;color:var(--fg);box-shadow:var(--shadow-xs);}
+.card .body .icon-btn:hover{background:var(--muted-bg);}
+
+/* Field */
+.card .body .field,.overlay .field{display:flex;flex-direction:column;gap:8px;min-width:0;margin-bottom:0;}
+.card .body .field > label,.overlay .field > label,.card .body .field-head label{font-size:14px;font-weight:500;line-height:1.2;color:var(--fg);text-transform:none;letter-spacing:0;margin:0;display:block;}
+.req{color:#DC2626;margin-left:2px;}
+.hint{font-size:13px;color:var(--muted-fg);line-height:1.4;}
+.card .body .field input:not([type=checkbox]):not([type=radio]),.card .body .field select,.card .body .field textarea,.overlay .field input:not([type=checkbox]):not([type=radio]),.overlay .field select,.overlay .field textarea{
+  width:100%;height:36px;border:1px solid var(--input);border-radius:var(--r-md);padding:0 12px;font:400 14px/1.4 "Inter","Segoe UI",sans-serif;background:#fff;color:var(--fg);box-shadow:var(--shadow-xs);outline:none;}
+.card .body .field textarea,.overlay .field textarea{height:auto;min-height:88px;padding:8px 12px;resize:vertical;}
+.card .body .field input::placeholder,.card .body .field textarea::placeholder{color:var(--placeholder);}
+.card .body .field input:focus,.card .body .field select:focus,.card .body .field textarea:focus,.overlay .field input:focus,.overlay .field select:focus,.overlay .field textarea:focus{border-color:var(--navy-500);box-shadow:0 0 0 3px var(--ring);}
+.card .body .field input[readonly]{background:var(--subtle);color:var(--muted-fg);}
+.card .body .field select,.overlay .field select{appearance:none;-webkit-appearance:none;padding-right:34px;cursor:pointer;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%2371717A' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m7 15 5 5 5-5'/%3E%3Cpath d='m7 9 5-5 5 5'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 10px center;}
+.card .body .grid{gap:18px 20px;}
+.card .body .input-search input{height:36px;padding:0 12px 0 34px;border:1px solid var(--input);border-radius:var(--r-md);font:400 14px "Inter","Segoe UI",sans-serif;box-shadow:var(--shadow-xs);width:260px;}
+.card .body .input-search-icon{left:11px;width:16px!important;height:16px!important;}
+.card .body .input-search input:focus{outline:none;border-color:var(--navy-500);box-shadow:0 0 0 3px var(--ring);}
+
+/* Checkbox */
+.card .body input[type=checkbox],.overlay input[type=checkbox]{appearance:none;-webkit-appearance:none;width:16px;height:16px;border:1px solid #D4D4D8;border-radius:4px;background:#fff;box-shadow:var(--shadow-xs);display:inline-grid;place-content:center;cursor:pointer;margin:0;flex-shrink:0;transition:background .15s;}
+.card .body input[type=checkbox]:checked,.overlay input[type=checkbox]:checked{background:var(--primary);border-color:var(--primary);}
+.card .body input[type=checkbox]:checked::after,.overlay input[type=checkbox]:checked::after{content:"";width:8px;height:4px;border:2px solid #fff;border-top:0;border-right:0;transform:rotate(-45deg) translate(1px,-1px);}
+.card .body input[type=checkbox]:focus-visible,.overlay input[type=checkbox]:focus-visible{box-shadow:0 0 0 3px var(--ring);outline:none;}
+.card .body .grupo-chk{width:16px;height:16px;}
+
+/* Card */
+.ui-card{background:#fff;border:1px solid var(--border);border-radius:var(--r-xl);box-shadow:var(--shadow-sm);}
+.ui-card-h{display:flex;align-items:flex-start;gap:12px;padding:20px 24px 0;}
+.ui-card-h .ic{width:36px;height:36px;border-radius:var(--r-md);border:1px solid var(--border);box-shadow:var(--shadow-xs);display:grid;place-items:center;color:var(--navy-600);flex-shrink:0;}
+.ui-card-h .ic svg{width:18px;height:18px;}
+.ui-card-title{font-size:15px;font-weight:600;letter-spacing:-.01em;line-height:1.3;}
+.ui-card-desc{font-size:13.5px;color:var(--muted-fg);margin-top:3px;}
+.ui-card-h .right{margin-left:auto;}
+.ui-card-c{padding:20px 24px 24px;}
+
+/* KPI -> stat */
+.card .body .kpi-row,.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:16px;margin-bottom:0;}
+.card .body .kpi{background:#fff;border:1px solid var(--border);border-radius:var(--r-xl);box-shadow:var(--shadow-sm);padding:20px;min-width:0;display:flex;flex-direction:column-reverse;gap:6px;}
+.card .body .kpi .num{font-size:28px;font-weight:600;letter-spacing:-.02em;line-height:1.1;color:var(--fg);}
+.card .body .kpi .lbl{font-size:14px;font-weight:500;color:var(--fg);}
+.stat{padding:20px;}
+.stat-h{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;font-size:14px;font-weight:500;}
+.stat-ico{width:32px;height:32px;border-radius:var(--r-md);display:grid;place-items:center;flex-shrink:0;}
+.stat-ico svg{width:16px;height:16px;}
+.tone-blue{background:#EFF4FB;color:var(--navy-600);} .tone-green{background:#ECFDF3;color:#067647;}
+.tone-amber{background:#FFFAEB;color:#B54708;} .tone-red{background:#FEF3F2;color:#B42318;} .tone-gray{background:var(--muted-bg);color:#3F3F46;}
+.stat-v{font-size:28px;font-weight:600;letter-spacing:-.02em;line-height:1.1;margin:8px 0 12px;}
+.card .body .progress,.progress{height:8px;background:var(--muted-bg);border-radius:999px;overflow:hidden;}
+.card .body .progress > div,.progress > div{height:100%;background:var(--primary);border-radius:999px;}
+
+/* Badge */
+.card .body .badge,.overlay .badge{display:inline-flex;align-items:center;gap:5px;height:22px;padding:0 8px;border-radius:var(--r-sm);font-size:12px;font-weight:500;white-space:nowrap;border:1px solid transparent;line-height:1;}
+.badge svg{width:12px;height:12px;}
+.badge .dot{width:6px;height:6px;border-radius:50%;background:currentColor;}
+.card .body .badge.green,.badge.success{background:#ECFDF3;color:#067647;border-color:#D1FADF;}
+.card .body .badge.yellow,.badge.warning{background:#FFFAEB;color:#B54708;border-color:#FEF0C7;}
+.card .body .badge.red,.badge.danger{background:#FEF3F2;color:#B42318;border-color:#FEE4E2;}
+.card .body .badge.blue,.badge.info{background:#EFF4FB;color:var(--navy-600);border-color:#DCE6F3;}
+.card .body .badge.gray,.badge.neutral{background:var(--muted-bg);color:#3F3F46;border-color:var(--border);}
+.card .body .badge:not(.green):not(.yellow):not(.red):not(.blue):not(.gray):not(.success):not(.warning):not(.danger):not(.info):not(.neutral):not(.outline){background:var(--muted-bg);color:#3F3F46;border-color:var(--border);}
+.badge.outline{background:#fff;color:var(--fg);border-color:var(--border);}
+
+/* Alert (.note) */
+.alert{display:flex;gap:12px;align-items:flex-start;}
+.alert,.card .body .note{padding:12px 16px;border:1px solid #DCE6F3;border-left-width:1px;border-radius:var(--r-lg);background:#F7F9FC;line-height:1.5;font-size:13.5px;color:var(--muted-fg);margin-bottom:0;}
+.card .body .note b,.alert b{color:var(--fg);font-weight:500;}
+.alert.info{background:#F7F9FC;border-color:#DCE6F3;}
+.alert > svg,.alert > i{width:18px;height:18px;flex-shrink:0;margin-top:1px;color:var(--navy-600);}
+.card .body .note.warn,.alert.warn{background:#FFFBEB;border-color:#FDE68A;color:#92400E;}
+.card .body .note.warn b,.alert.warn b{color:#78350F;}
+.alert.warn > svg{color:#B45309;}
+.card .body .note.pend,.alert.danger{background:#FEF2F2;border-color:#FECACA;color:#991B1B;}
+.card .body .note.pend b,.alert.danger b{color:#7F1D1D;}
+.alert.danger > svg{color:#B91C1C;}
+
+/* Table */
+.card .body table{font-size:14px;border-collapse:separate;border-spacing:0;}
+.card .body thead th,.card .body th{height:40px;padding:0 16px;text-align:left;font-size:13px;font-weight:500;text-transform:none;letter-spacing:0;color:var(--muted-fg);background:var(--subtle);border-bottom:1px solid var(--border);white-space:nowrap;}
+.card .body td{padding:12px 16px;border-bottom:1px solid var(--border);vertical-align:middle;}
+.card .body tbody tr:last-child td{border-bottom:none;}
+.card .body tbody tr:hover td{background:var(--subtle);}
+.card .body .th-sort:hover{background:var(--muted-bg);}
+.card .body #cargasTable{border:1px solid var(--border);border-radius:var(--r-lg);overflow:hidden;box-shadow:none;}
+.card .body .rules-wrap{border:1px solid var(--border);border-radius:var(--r-lg);}
+.card .body .rules-table select,.card .body .rules-table input{height:32px;border:1px solid var(--input);border-radius:var(--r-md);font-family:inherit;font-size:13px;padding:0 10px;}
+.card .body .table-pagination{font-size:13.5px;color:var(--muted-fg);margin-top:12px;}
+.card .body .table-pagination button{height:32px;font-family:inherit;font-size:13px;font-weight:500;border:1px solid var(--border);background:#fff;border-radius:var(--r-md);padding:0 12px;cursor:pointer;box-shadow:var(--shadow-xs);}
+.card .body .table-pagination button:hover:not(:disabled){background:var(--muted-bg);}
+.tc-toolbar{display:flex;gap:8px;align-items:center;padding:12px 16px;border-bottom:1px solid var(--border);flex-wrap:wrap;}
+.tc-footer{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:12px 16px;border-top:1px solid var(--border);font-size:13.5px;color:var(--muted-fg);flex-wrap:wrap;}
+.table-card{overflow:hidden;}
+.table-wrap{overflow-x:auto;}
+.empty{display:flex;flex-direction:column;align-items:center;text-align:center;padding:36px 16px;gap:6px;}
+.empty .ic{width:40px;height:40px;border-radius:var(--r-lg);background:var(--muted-bg);display:grid;place-items:center;color:var(--muted-fg);margin-bottom:6px;}
+.empty b{font-weight:500;font-size:14px;} .empty span{font-size:13.5px;color:var(--muted-fg);}
+
+/* Layout / dl / item */
+.sep{height:1px;background:var(--border);border:0;margin:0;}
+.form-actions{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;}
+.dl{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:20px 24px;margin:0;}
+.dl dt{font-size:13px;color:var(--muted-fg);} .dl dd{margin:4px 0 0;font-weight:500;}
+.item{display:flex;align-items:center;gap:14px;padding:16px;border:1px solid var(--border);border-radius:var(--r-lg);flex-wrap:wrap;}
+.item.dashed{border-style:dashed;background:var(--subtle);}
+.card .body .muni-list{gap:12px;}
+.card .body .muni-row,.card .body .base-row{background:#fff;border:1px solid var(--border);border-radius:var(--r-lg);box-shadow:var(--shadow-xs);padding:14px 16px;}
+.card .body .muni-row .name,.card .body .base-row .name{font-weight:500;font-size:14px;}
+.card .body .muni-row .meta,.card .body .base-row .meta{font-size:13px;color:var(--muted-fg);}
+.card .body .rule-card{border:1px solid var(--border);border-radius:var(--r-xl);box-shadow:var(--shadow-sm);padding:18px 20px;margin-bottom:0;}
+.card .body .rule-card-head .meta{font-size:13px;font-weight:400;color:var(--muted-fg);}
+.card .body .mini-chip{background:var(--muted-bg);color:var(--fg);border:1px solid var(--border);border-radius:var(--r-sm);padding:3px 8px;font-size:12.5px;font-weight:500;}
+.card .body .mini-chip button{color:var(--muted-fg);}
+.card .body .rule-chip{background:var(--muted-bg);border:1px solid var(--border);border-radius:var(--r-sm);font-size:12.5px;font-weight:500;}
+.card .body .chip-add{border:1px dashed var(--border);border-radius:var(--r-sm);font-weight:500;font-size:12.5px;}
+.card .body .filtros-toggle{background:#fff;border:1px solid var(--border);border-radius:var(--r-lg);box-shadow:var(--shadow-xs);}
+.card .body .filtros-toggle:hover{background:var(--subtle);border-color:var(--border);}
+.card .body .filtros-toggle-label{font-size:14px;font-weight:500;text-transform:none;letter-spacing:0;color:var(--fg);}
+.card .body .filtros-toggle-hint{font-size:12.5px;font-weight:500;color:var(--muted-fg);border-radius:var(--r-sm);}
+.card .body .steps-tab:not(.compact){background:var(--muted-bg);border-radius:var(--r-lg);padding:4px;margin-bottom:0;}
+.card .body .steps-tab:not(.compact) span{border-radius:var(--r-md);font-size:13.5px;font-weight:500;padding:7px 14px;}
+.card .body .steps-tab:not(.compact) span.active{background:#fff;color:var(--fg);box-shadow:var(--shadow-xs);}
+.card .body .legend{font-size:13px;color:var(--muted-fg);}
+.card .body .legend b{color:var(--fg);font-weight:500;}
+
+/* Dialog (.modal-aviso) */
+.overlay{background:rgba(9,9,11,.5);z-index:300;align-items:flex-start;padding:80px 16px;overflow:auto;animation:fade .15s ease;}
+.overlay .modal-aviso{background:#fff;border:1px solid var(--border);border-radius:var(--r-xl);width:100%;max-width:520px;padding:24px;box-shadow:var(--shadow-lg);animation:zoom .15s ease;}
+.overlay .modal-aviso .icon-circle{width:36px;height:36px;border-radius:var(--r-md);border:1px solid var(--border);background:#fff;color:var(--navy-600);box-shadow:var(--shadow-xs);margin-bottom:14px;font-size:16px;}
+.overlay .modal-aviso.red .icon-circle{background:#FEF3F2;color:#B42318;border-color:#FEE4E2;}
+.overlay .modal-aviso.green .icon-circle{background:#ECFDF3;color:#067647;border-color:#D1FADF;}
+.overlay .modal-aviso h3{font-size:18px;font-weight:600;letter-spacing:-.01em;color:var(--fg);margin:0 0 6px;}
+.overlay .modal-aviso p{font-size:14px;color:var(--muted-fg);line-height:1.5;margin:0 0 20px;}
+.overlay .modal-aviso p b,.overlay .modal-aviso p strong{color:var(--fg);font-weight:500;}
+.overlay .modal-aviso .actions{gap:8px;}
+.overlay .modal-aviso .inline-warn{background:#FFFBEB;border:1px solid #FDE68A;border-radius:var(--r-lg);color:#92400E;font-size:13px;margin:-6px 0 18px;}
+.overlay .picker-list{box-shadow:none;border:1px solid var(--border);border-radius:var(--r-lg);padding:4px;gap:0;margin:4px 0 20px;}
+.overlay .picker-opt{padding:8px 10px;border-radius:var(--r-md);font-size:14px;}
+.overlay .picker-opt:hover{background:var(--subtle);}
+@keyframes fade{from{opacity:0}to{opacity:1}}
+@keyframes zoom{from{opacity:.4;transform:scale(.97)}to{opacity:1;transform:none}}
+
+/* Toast */
+#toast{position:fixed;right:20px;bottom:20px;z-index:400;display:flex;flex-direction:column;gap:8px;width:360px;max-width:calc(100vw - 40px);}
+.toast{display:flex;gap:10px;align-items:flex-start;background:#fff;border:1px solid var(--border);border-radius:var(--r-lg);padding:14px 16px;box-shadow:0 6px 18px rgba(16,24,40,.1);font-size:13.5px;line-height:1.45;animation:zoom .15s ease;}
+.toast svg{width:16px;height:16px;margin-top:1px;flex-shrink:0;color:#16A34A;}
+.toast.err svg{color:#DC2626;}
+@media (max-width:1000px){.g4{grid-template-columns:repeat(2,minmax(0,1fr));}.g3,.dl{grid-template-columns:repeat(2,minmax(0,1fr));}}
+.card .body .note svg,.card .body .note .lucide-ic{width:16px;height:16px;vertical-align:-3px;margin-right:4px;}
+.card .body .kpi .lbl,.card .body .field-head label{text-transform:none;letter-spacing:0;}
+.card .body .tab-panel:not([style*="none"]){display:flex!important;flex-direction:column;gap:20px;}
+.tc-toolbar.field-head{margin-bottom:0;justify-content:space-between;}
+.tc-extra{padding:12px 16px;border-bottom:1px solid var(--border);display:flex;flex-direction:column;gap:12px;}
+.tc-extra:not(:has(*:not([style*="none"]))){display:none;}
+.table-card #cargasTable{border:0;border-radius:0;}
+.table-card .table-pagination.tc-footer{margin-top:0;}
+.ui-card.pad{padding:16px 20px;}
+.ui-card .filtros-toggle{border:0;box-shadow:none;background:transparent;padding:2px 0;margin-bottom:0;}
+.ui-card .filtros-toggle:hover{background:transparent;}
+.ui-card #filtrosAvancadosBody{margin-top:14px;}
+
+  </style>
 </head>
 <body>
 <div id="protoBar">
@@ -423,12 +625,13 @@
           <div class="card">
             <div class="title-band">Municípios · Importação 24/07/2026 <span class="tag">RF001 · RF015</span></div>
             <div class="body">
-              <div class="field-head"><label>Esta análise é para qual tipo?</label></div>
+<div class="stack">
+              <div class="ui-card"><div class="ui-card-c" style="display:flex;flex-direction:column;gap:14px;"><div class="field-head"><label>Esta análise é para qual tipo?</label></div>
               <div class="steps-tab" id="tipoToggle" style="max-width:360px;">
                 <span class="active" data-tipo="regular" onclick="setTipoContext('regular')">Tipo Regular</span>
                 <span data-tipo="indigena" onclick="setTipoContext('indigena')">Tipo Indígena</span>
               </div>
-              <div class="note" id="tipoContextNote">Mostrando municípios com vagas para o ensino <b>regular</b>. Reivindicações feitas aqui valem só para este tipo · a análise do Tipo Indígena é feita à parte, escolhendo a outra opção acima.</div>
+              <div class="note" id="tipoContextNote">Mostrando municípios com vagas para o ensino <b>regular</b>. Reivindicações feitas aqui valem só para este tipo · a análise do Tipo Indígena é feita à parte, escolhendo a outra opção acima.</div></div></div>
               <div class="note pend" id="cicloBloqueioNote" style="display:none;"><i data-lucide="lock" class="lucide-ic"></i> Nenhum ciclo de análise está aberto pela Gerência no momento, então não há o que reivindicar nem analisar. Você pode consultar os municípios para ver as informações, mas não pode alterar nada até a Gerente abrir um novo ciclo (RN034).</div>
               <div class="note">A base foi importada do SILS e dividida automaticamente por município. Reivindique um município para começar a análise · cada município só pode ser reivindicado por um analista por vez, e somente enquanto houver um ciclo de análise aberto pela Gerência.</div>
               <div class="note">Depois de fechar um município, você não consegue mais editá-lo por conta própria. Ele fica aguardando a revisão da Gerente · se ela devolver (reprovar), o botão de edição é liberado e você vê a justificativa dela. Depois do Consolidado final, a edição é bloqueada para todos os analistas.</div>
@@ -437,7 +640,7 @@
                 <div class="kpi"><div class="num">3</div><div class="lbl">já fechados</div></div>
                 <div class="kpi"><div class="num">7</div><div class="lbl">disponíveis p/ reivindicar</div></div>
               </div>
-              <div class="muni-list">
+              <div class="ui-card"><div class="ui-card-h"><div class="ic"><i data-lucide="map-pinned"></i></div><div><div class="ui-card-title">Municípios da importação</div><div class="ui-card-desc">Reivindique um município para iniciar a análise.</div></div></div><div class="ui-card-c"><div class="muni-list">
                 <div class="muni-row" data-regular="true" data-indigena="false">
                   <div><div class="name">Manacapuru</div><div class="meta">128 cargas na base importada · sem escolas indígenas · <a href="#" onclick="simularConcorrencia('Manacapuru');return false;" style="color:var(--muted);"><i data-lucide="flask-conical" class="lucide-ic"></i> testar concorrência (RN047)</a></div></div>
                   <div style="display:flex;align-items:center;gap:10px;"><span class="badge gray">Disponível</span><button class="btn btn-navy" onclick="reivindicar('Manacapuru')">Reivindicar</button></div>
@@ -458,8 +661,9 @@
                   <div><div class="name">Parintins</div><div class="meta">reivindicado por outro analista</div></div>
                   <div style="display:flex;align-items:center;gap:10px;"><span class="badge gray">Em análise (Carlos)</span></div>
                 </div>
-              </div>
-              <div class="note warn" style="margin-top:16px;">Aguardando tratamento: a base ainda não tem uma coluna indicando se a escola é indígena · esse tratamento é feito pela Equipe de Dados antes de chegar ao SACV (a Prodam cuida só da infraestrutura, não do conteúdo da base). É essa coluna que vai definir, de verdade, quais municípios aparecem em cada tipo acima; por ora está sinalizado manualmente neste protótipo.</div>
+              </div></div></div>
+              <div class="note warn">Aguardando tratamento: a base ainda não tem uma coluna indicando se a escola é indígena · esse tratamento é feito pela Equipe de Dados antes de chegar ao SACV (a Prodam cuida só da infraestrutura, não do conteúdo da base). É essa coluna que vai definir, de verdade, quais municípios aparecem em cada tipo acima; por ora está sinalizado manualmente neste protótipo.</div>
+            </div>
             </div>
           </div>
         </div>
@@ -482,6 +686,7 @@
           <div class="card">
             <div class="title-band band-light"><span class="band-left"><span class="band-dot"></span><b>Análise de cargas</b><span class="band-sub" id="a3TituloMuni">Manaus, Coordenadoria 3</span></span><div class="steps-tab compact"><span class="active" id="pill-cargas" onclick="switchTab('cargas')">Cargas (241)</span><span id="pill-resumo" onclick="switchTab('resumo')">Resumo</span></div></div>
             <div class="body">
+<div class="stack">
               <div class="note" id="a3TipoNote">Este município não possui escolas indígenas identificadas na base · toda a análise é feita em um único tipo (<b>Regular</b>).</div>
               <div id="tab-cargas" class="tab-panel">
                 <div class="note" id="notaRegrasInterna" style="display:none;">Estas regras estão definidas internamente na aplicação (nível de código) para este município · não podem ser editadas ou excluídas por aqui. Elas continuam sendo aplicadas automaticamente na análise das cargas abaixo. Ainda não foi decidido se essa configuração ficará restrita à equipe técnica ou se será liberada para edição.</div>
@@ -508,7 +713,7 @@
                   </div>
                 </div>
 
-                <div id="regraEditavelBlock">
+                <div id="regraEditavelBlock" class="ui-card pad">
                 <div class="filtros-toggle" id="filtrosAvancadosToggle" onclick="toggleFiltrosAvancados()" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();toggleFiltrosAvancados();}" role="button" tabindex="0" aria-expanded="false"><span class="filtros-toggle-chevron" id="filtrosAvancadosChevron"><i data-lucide="chevron-right" class="lucide-ic filtros-toggle-chevron-icon"></i></span><span class="filtros-toggle-label">Regras em vigor</span><span class="filtros-toggle-hint" id="filtrosAvancadosHint">mostrar filtros</span></div>
                 <div id="filtrosAvancadosBody" style="display:none;">
                 <div class="legend">Município não aparece aqui · você já está analisando só o município que reivindicou (indicado acima, ao lado de "Início"). Tipo também não é um filtro: Regular e Indígena são reivindicados, analisados e fechados separadamente, cada um com seu próprio relatório · veja a nota acima. Quando uma carga já vem com Motivo preenchido pela base, ela vira pendência individual e não depende deste filtro · veja a tabela de cargas mais abaixo.</div>
@@ -567,30 +772,30 @@
 
                 </div>
                 </div><div class="note">As regras podem mudar a qualquer momento antes de fechar o município · a coluna <b>Observação</b> abaixo sempre mostra a regra que gerou o status atual de cada carga. É sempre a versão mais recente que vale, aplicada assim que você altera algo.</div>
-                <div class="field-head">
+                <div class="ui-card table-card"><div class="field-head tc-toolbar">
                   <label>Cargas importadas da base</label>
                   <span style="display:flex;gap:8px;align-items:center;">
                     <span class="input-search"><i data-lucide="search" class="input-search-icon lucide-ic"></i><input type="text" id="cargasBuscaInput" placeholder="Busca livre em todas as colunas..." oninput="filtrarCargas(this.value)"></span>
                     <button class="icon-btn" onclick="toggleColunasCargas()" id="btnToggleColunas"><i data-lucide="eye" class="lucide-ic"></i> Mostrar mais colunas</button>
                   </span>
                 </div>
-                <div class="picker-list" id="colunasCargasPicker" style="display:none;border:1px solid var(--gray-300);border-radius:8px;padding:12px 14px;margin-bottom:14px;max-height:220px;overflow-y:auto;"></div>
+                <div class="tc-extra"><div class="picker-list" id="colunasCargasPicker" style="display:none;border:1px solid var(--gray-300);border-radius:8px;padding:12px 14px;margin-bottom:0;max-height:220px;overflow-y:auto;"></div>
                 <div id="cargasFiltrosCampo"></div>
                 <div class="grupo-toolbar" id="grupoToolbar">
                   <span id="grupoSelecionadasTxt" style="font-size:12.5px;color:var(--muted);flex:1;"></span>
                   <button class="btn btn-outline" onclick="abrirAgruparVaga('compartilhada')">Compartilhar vaga</button>
                   <button class="btn btn-navy" onclick="abrirAgruparVaga('unificada')">Unificar vaga</button>
                 </div>
-                <div style="overflow-x:auto;">
+                </div><div class="table-wrap">
                   <table id="cargasTable">
                     <thead><tr id="cargasTableHead"></tr></thead>
                     <tbody id="cargasTableBody"></tbody>
                   </table>
                 </div>
-                <div class="table-pagination"><span>Página 1 de 1</span><div class="table-pagination-btns"><button class="icon-btn" disabled><i data-lucide="chevron-left" class="lucide-ic"></i> Anterior</button><button class="icon-btn" disabled>Próxima <i data-lucide="chevron-right" class="lucide-ic"></i></button></div></div>
+                <div class="table-pagination tc-footer"><span>Página 1 de 1</span><div class="table-pagination-btns"><button class="icon-btn" disabled><i data-lucide="chevron-left" class="lucide-ic"></i> Anterior</button><button class="icon-btn" disabled>Próxima <i data-lucide="chevron-right" class="lucide-ic"></i></button></div></div></div>
                 <div class="legend" style="margin-top:-8px;">Experimente: em "Curso/Projeto" ▸ + valor, marque também <b>Técnico</b> e aplique · a linha da E.E. Nova Aliança muda de status e a observação é atualizada na hora.</div>
-                <div class="note warn" id="cargasPendNote" style="margin-top:16px;"></div>
-                <div class="actions-row between" style="margin-top:12px;">
+                <div class="note warn" id="cargasPendNote"></div>
+                <div class="actions-row between">
                   <button class="btn btn-outline" onclick="go('A1')">← Voltar ao painel</button>
                   <button class="btn btn-navy" id="btnIrResumo" onclick="switchTab('resumo')">Ir para o Resumo →</button>
                 </div>
@@ -604,13 +809,14 @@
                 </div>
                 <div class="legend" style="margin-top:-10px;">A maior parte das confirmações vem da regra padrão da Gerente e não costuma precisar da sua atenção · use <b>"Aguardando justificativa"</b> para focar direto nas cargas que dependeram de uma decisão sua.</div>
                 <div id="resumoBody"></div>
-                <div class="note warn" id="closeGateNote" style="margin-top:16px;"></div>
+                <div class="note warn" id="closeGateNote"></div>
                 <div class="actions-row between">
                   <button class="btn btn-outline" onclick="switchTab('cargas')">← Voltar às cargas</button>
                   <button class="btn btn-outline" id="btnFechar" disabled style="opacity:.5;cursor:not-allowed;" onclick="openModal('fechar')">Fechar análise do município</button>
                 </div>
               </div>
 
+            </div>
             </div>
           </div>
         </div>
@@ -653,6 +859,7 @@
           <div class="card">
             <div class="title-band">Base do SILS · importação e status <span class="tag">RF001 · RN027</span></div>
             <div class="body">
+<div class="stack">
               <div class="note">A importação da base do SILS é uma ação <b>exclusiva sua</b> (Gerência) · os Analistas nunca importam, só acessam os registros já trazidos para dentro de um ciclo de análise (RF001/RN027). A base sobe uma vez e vale para todos os ciclos até que você importe uma nova; ela fica <b>fixa durante todo o ciclo aberto</b> (RN034/RN040).</div>
               <div class="note warn">Se você importar uma nova base enquanto houver ciclo(s) aberto(s), o sistema cancela automaticamente esse(s) ciclo(s) antes de aceitar o novo arquivo · a troca de base em ciclo aberto (reconciliação linha a linha) foi descartada como regra (RN049/RF036).</div>
               <div class="field-head"><label>Base vigente</label></div>
@@ -678,6 +885,7 @@
               <div class="legend" style="margin-top:8px;">Pré-visualização de exemplo · mostra uma amostra das linhas para conferência do formato/colunas · o volume real desta base é de <b id="gbPreviewCount"></b> linhas.</div>
               <div class="legend">Depois de importar, use <a href="#" onclick="go('GR');return false;">Regras padrão</a> para definir filtros reutilizáveis com base nesses dados, e <a href="#" onclick="go('G0');return false;">Ciclos de análise</a> para abrir uma nova análise.</div>
             </div>
+            </div>
           </div>
         </div>
         <div class="footer"><div class="grad"></div><div class="in"><div class="brandline">SEDUC AM · GELOT</div><div>Manaus – AM</div></div><div class="bottom">SEDUC AM | Protótipo de fluxo · 2026</div></div>
@@ -700,6 +908,7 @@
           <div class="card">
             <div class="title-band">Regras padrão · filtros reutilizáveis entre ciclos <span class="tag">RN044</span></div>
             <div class="body">
+<div class="stack">
               <div class="note" id="notaRegrasPadraoInterna" style="display:none;">Estas regras padrão estão definidas internamente na aplicação (nível de código) · não podem ser criadas, editadas ou excluídas por aqui. Na V2, elas são aplicadas automaticamente na análise de cada ciclo, sem passar pelo filtro de um Analista.</div>
               <div class="note" id="notaRegrasPadraoEditavel">Cadastre aqui os filtros que devem valer, por padrão, para os Analistas · usando os <b>mesmos campos do filtro deles</b> (RF013/RN029). Ao abrir um novo ciclo, você escolhe qual regra padrão aplicar (ou nenhuma); ela é pré-carregada no filtro de cada Analista do ciclo, que ainda pode ajustar os valores · mudanças em relação ao padrão ficam sinalizadas para você, sem bloquear nada (RN045/RN046).</div>
               <div class="legend" id="grBaseNota"></div>
@@ -707,6 +916,7 @@
               <div class="actions-row" id="acoesRegraPadraoEditavel" style="margin-top:6px;">
                 <button class="btn btn-navy" onclick="openNovaRegraPadrao()">+ Nova regra padrão</button>
               </div>
+            </div>
             </div>
           </div>
         </div>
@@ -730,14 +940,16 @@
           <div class="card">
             <div class="title-band">Controle de ciclos de análise <span class="tag">RN034 · RF023</span></div>
             <div class="body">
+<div class="stack">
               <div class="note">Nenhum analista consegue reivindicar ou analisar um município sem que você inicie um ciclo de análise. Cada ciclo pertence a um único tipo (Regular ou Indígena) · só pode haver <b>um ciclo aberto por tipo</b> ao mesmo tempo, mas Regular e Indígena podem estar abertos em paralelo, cada um com seu próprio painel, sempre usando a base vigente (veja <a href="#" onclick="go('GB');return false;">Base do SILS</a>). Um ciclo fecha automaticamente quando você valida o consolidado dele · a partir daí, é preciso iniciar um novo ciclo para aquele tipo.</div>
               <div class="kpi-row" id="cicloStatusRow"></div>
               <div id="cicloAcaoWrap"></div>
-              <div class="field-head" style="margin-top:22px;"><label>Histórico de ciclos</label></div>
+              <div class="ui-card table-card"><div class="ui-card-h"><div class="ic"><i data-lucide="history"></i></div><div><div class="ui-card-title">Histórico de ciclos</div><div class="ui-card-desc">Ciclos abertos e encerrados, com a regra aplicada em cada um.</div></div></div><div class="table-wrap" style="margin-top:16px;border-top:1px solid var(--border);">
               <table>
                 <thead><tr><th>Ciclo</th><th>Tipo</th><th>Base vinculada</th><th>Aberto por</th><th>Abertura</th><th>Fechamento</th><th>Status</th><th></th></tr></thead>
                 <tbody id="ciclosHistBody"></tbody>
-              </table>
+              </table></div></div>
+            </div>
             </div>
           </div>
         </div>
@@ -760,6 +972,7 @@
           <div class="card">
             <div class="title-band"><span id="g1Titulo">Painel do ciclo #4 · Tipo Regular</span> <span class="tag">RF017</span></div>
             <div class="body">
+<div class="stack">
               <div class="note" id="g1Nota">Acompanhe o progresso deste ciclo. Você pode revisar os municípios já fechados pelo analista a qualquer momento · não precisa esperar todos concluírem.</div>
               <div class="kpi-row" id="g1KpiRow"></div>
               <div class="legend" id="g1DadosNota" style="display:none;">Dados de exemplo · em produção, cada ciclo mostraria sua própria lista de municípios; este wireframe reaproveita a mesma lista ilustrativa para qualquer ciclo selecionado.</div>
@@ -774,6 +987,7 @@
                 </div>
                 <button class="btn btn-outline" id="g1BtnCancelarCiclo" style="border-color:#C0392B;color:#C0392B;flex-shrink:0;" onclick="openCancelarCiclo()">Cancelar ciclo</button>
               </div>
+            </div>
             </div>
           </div>
         </div>
@@ -797,6 +1011,7 @@
           <div class="card">
             <div class="title-band"><span id="g2Titulo">Revisão de fechamento</span> <span class="tag">RN007</span></div>
             <div class="body">
+<div class="stack">
               <div class="note" id="g2Nota"></div>
               <div class="note warn" id="g2HistoricoNota" style="display:none;"></div>
               <div class="filtros-toggle" id="g2RegrasToggle" onclick="toggleG2Regras()" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();toggleG2Regras();}" role="button" tabindex="0" aria-expanded="false">
@@ -832,6 +1047,7 @@
                 </div>
               </div>
             </div>
+            </div>
           </div>
         </div>
         <div class="footer"><div class="grad"></div><div class="in"><div class="brandline">SEDUC AM · GELOT</div><div>Manaus – AM</div></div><div class="bottom">SEDUC AM | Protótipo de fluxo · 2026</div></div>
@@ -854,6 +1070,7 @@
           <div class="card">
             <div class="title-band"><span id="g4Titulo">Revisão e consolidado · Ciclo #4 (Tipo Regular)</span> <span class="tag">RF017/RF018/RN007</span></div>
             <div class="body">
+<div class="stack">
               <div class="note" id="g4Nota">Para cada município fechado, baixe o relatório para conferir o que o Analista fez e marque como revisado.</div>
               <div class="kpi-row" id="g4KpiRow"></div>
               <div class="field-head" style="margin-top:22px;"><label>Municípios deste ciclo</label></div>
@@ -865,6 +1082,7 @@
                   <button class="btn btn-navy" id="g4BtnConsolidar" onclick="openModal('validar')">Consolidado final</button>
                 </div>
               </div>
+            </div>
             </div>
           </div>
         </div>
@@ -882,6 +1100,8 @@
 
 <div class="flow-label" id="flowLabel"></div>
 <script>
+function icons(){ if (window.lucide && lucide.createIcons) lucide.createIcons(); }
+window.addEventListener('load', icons);
 function thOrdenavel(label, tbodyId, colIndex){
   return '<th class="th-sort" onclick="ordenarTabela(this,\'' + tbodyId + '\',' + colIndex + ')"><span class="th-sort-inner">' + label + '<i data-lucide="arrow-up-down" class="lucide-ic sort-ic"></i></span></th>';
 }
@@ -908,7 +1128,7 @@ function ordenarTabela(th, tbodyId, colIndex){
   rows.forEach(function(r){ tbody.appendChild(r); });
   const ic = th.querySelector('.sort-ic');
   if (ic) ic.setAttribute('data-lucide', novaDir === 'asc' ? 'arrow-up' : 'arrow-down');
-  if (window.lucide) lucide.createIcons();
+  icons();
 }
 const flows = {
   analista: [
@@ -1626,7 +1846,7 @@ function renderVagaGrupoBadges(){
     const tooltip = (label === 'Compartilhada' ? 'Compartilhada entre ' + g.rowIds.length + ' escolas · 1 professor divide a carga' : 'Unificada de ' + g.rowIds.length + ' escolas') + ' · vale como 1 vaga:\n' + detalhes;
     cell.innerHTML = '<span class="badge blue" title="' + tooltip.replace(/"/g,'&quot;') + '">' + label + ' · ' + g.rowIds.length + ' escolas</span> <a href="#" onclick="desfazerGrupoVaga(\'' + grupoId + '\');return false;" style="font-size:11px;color:var(--muted);margin-left:4px;"><i data-lucide="undo-2" class="lucide-ic"></i></a>';
   });
-  if (window.lucide) lucide.createIcons();
+  icons();
 }
 
 function toggleColunasCargas(){
@@ -2287,7 +2507,7 @@ function salvarRegraDoCiclo(){
   const probs = verificarRegraNaBase({ campos: campos });
   if (probs.length){
     if (erro) erro.innerHTML = '<div class="inline-warn" style="margin:8px 0;background:#FDECEA;border-color:#D93025;"><i data-lucide="ban" class="lucide-ic"></i><span><b>Não é possível aplicar esta regra.</b> Há valores que a base do ciclo não tem. Corrija antes de salvar:<ul style="margin:6px 0 0 18px;">' + probs.map(x => '<li><b>' + x.campo + '</b>: "' + x.valor + '" não existe na base' + (x.sugestoes.length ? ' · na base aparece como ' + x.sugestoes.map(s => '"' + s + '"').join(', ') : '') + '</li>').join('') + '</ul></span></div>';
-    if (window.lucide && lucide.createIcons) lucide.createIcons();
+    icons();
     return;
   }
   const antes = c.regraAplicada.campos;
@@ -2345,7 +2565,7 @@ function confirmarRegraDoCiclo(){
 
 // ===== Regras padrão separadas por tipo (Regular / Indígena) =====
 let regraPadraoTab = 'regular';
-function setRegraPadraoTab(tp){ regraPadraoTab = tp; renderRegrasPadrao(); if (window.lucide && lucide.createIcons) lucide.createIcons(); }
+function setRegraPadraoTab(tp){ regraPadraoTab = tp; renderRegrasPadrao(); icons(); }
 function opcoesRegraPorTipo(tipo){
   return regrasPadrao.filter(r => (r.tipo || 'regular') === tipo).map(r => '<option value="' + r.id + '">' + r.nome + '</option>').join('');
 }
@@ -2362,7 +2582,7 @@ function atualizaAvisoCompatCiclo(){
   if (!sel || !dest) return;
   const regra = regrasPadrao.find(r => String(r.id) === sel.value);
   dest.innerHTML = avisoCompatRegra(regra);
-  if (window.lucide && lucide.createIcons) lucide.createIcons();
+  icons();
 }
 
 const MUNICIPIOS_POOL = [
