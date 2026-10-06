@@ -2060,6 +2060,46 @@ function simularConcorrencia(municipio){
 let baseVersaoAtual = 4;
 let baseAtualLabel = 'Importação #4 · 24/07/2026 (1.787 linhas)';
 
+// ===== Verificação de compatibilidade entre regra e base (RN-novo) =====
+// Cada valor de condição da regra precisa existir na coluna correspondente da base vigente.
+// Aqui a base de exemplo grafa a escola como "E.E. Mayara Redman" (regra cadastrada com "E.E. Mayara"),
+// para mostrar o caso de valor sem correspondência. No sistema real, os valores vêm da própria base importada.
+const BASE_VALORES_VIGENTE = {
+  localidade: ['Urbana','Rural'],
+  tipoCurso: ['EJA','Ensino Médio','Técnico','Regular'],
+  escola: ['E.E. Central','E.E. Mayara Redman','E.E. São José','E.E. Nova Aliança','E.E. Vitória Régia','E.E. Comunidade Boa Esperança (exemplo)']
+};
+function verificarRegraNaBase(regra){
+  const problemas = [];
+  if (!regra) return problemas;
+  CAMPOS_REGRA.forEach(f => {
+    const c = regra.campos[f.key];
+    const baseVals = BASE_VALORES_VIGENTE[f.key];
+    if (!c || !baseVals || f.type !== 'chip') return;
+    (c.valores || []).forEach(v => {
+      if (baseVals.includes(v)) return;
+      const vl = v.toLowerCase();
+      const sugestoes = baseVals.filter(b => b.toLowerCase().includes(vl) || vl.includes(b.toLowerCase()));
+      problemas.push({ campo: f.label, valor: v, sugestoes });
+    });
+  });
+  return problemas;
+}
+function avisoCompatRegra(regra){
+  const p = verificarRegraNaBase(regra);
+  if (!p.length) return '';
+  const itens = p.map(x => '<li><b>' + x.campo + '</b>: o valor "' + x.valor + '" não existe na base' + (x.sugestoes.length ? ' · na base aparece como ' + x.sugestoes.map(s => '"' + s + '"').join(', ') : '') + '</li>').join('');
+  return '<div class="inline-warn" style="margin:8px 0;"><i data-lucide="triangle-alert" class="lucide-ic"></i><span>Esta regra tem valores <b>sem correspondência na base vigente</b> (' + baseAtualLabel + '). Atualize ou corrija antes de depender dela:<ul style="margin:6px 0 0 18px;">' + itens + '</ul></span></div>';
+}
+function atualizaAvisoCompatCiclo(){
+  const sel = document.getElementById('selRegraPadraoCiclo');
+  const dest = document.getElementById('avisoCompatCiclo');
+  if (!sel || !dest) return;
+  const regra = regrasPadrao.find(r => String(r.id) === sel.value);
+  dest.innerHTML = avisoCompatRegra(regra);
+  if (window.lucide && lucide.createIcons) lucide.createIcons();
+}
+
 const MUNICIPIOS_POOL = [
   'Itacoatiara', 'Manaus - Coordenadoria 1', 'Coari', 'Manaus - Coordenadoria 2',
   'Manaus - Coordenadoria 3', 'Parintins', 'Manacapuru', 'Tefé',
@@ -2193,6 +2233,7 @@ function renderRegrasPadrao(){
             <button class="btn btn-outline" style="border-color:#C0392B;color:#C0392B;" onclick="confirmExcluirRegraPadrao(${r.id})">Excluir</button>
           </div>`}
         </div>
+        ${avisoCompatRegra(r)}
         ${linhas ? `<table class="rules-table"><thead><tr><th>Campo</th><th>Condição</th><th>Valor(es)</th></tr></thead><tbody>${linhas}</tbody></table>` : '<div class="legend" style="margin:0;">Nenhum campo configurado.</div>'}
       </div>`;
   }).join('');
@@ -2486,10 +2527,11 @@ function openAbrirCiclo(){
     </div>
     <div class="field" style="margin-bottom:6px;">
       <label style="display:block;font-size:12px;color:var(--muted);font-weight:700;margin-bottom:8px;text-transform:uppercase;letter-spacing:.03em;">Regra padrão a aplicar (RN045)</label>
-      <select id="selRegraPadraoCiclo" style="width:100%;border:1.5px solid var(--gray-300);border-radius:8px;padding:11px 13px;font-size:14px;font-family:inherit;">
+      <select id="selRegraPadraoCiclo" onchange="atualizaAvisoCompatCiclo()" style="width:100%;border:1.5px solid var(--gray-300);border-radius:8px;padding:11px 13px;font-size:14px;font-family:inherit;">
         <option value="">Nenhuma · Analistas começam sem filtro pré-carregado</option>
         ${regrasPadrao.map(r => `<option value="${r.id}">${r.nome}</option>`).join('')}
       </select>
+      <div id="avisoCompatCiclo"></div>
     </div>
     <div class="actions">
       <button class="btn btn-outline" onclick="closeModal()">Cancelar</button>
