@@ -371,6 +371,7 @@
   .grupo-chk{width:15px;height:15px;cursor:pointer;}
   .grupo-toolbar{display:none;align-items:center;gap:10px;background:var(--gray-100);border:1px solid var(--gray-300);border-radius:8px;padding:9px 12px;margin-bottom:10px;}
 #scr-A3.consulta .rules-wrap, #scr-A3.consulta #savedChips, #scr-A3.consulta .grupo-chk, #scr-A3.consulta #grupoToolbar, #scr-A3.consulta #btnFechar, #scr-A3.consulta [id^="acao"]{pointer-events:none;opacity:.5;}
+.fc-bar{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:8px;}.fc-item{position:relative;}.fc-btn{border:1.5px solid var(--gray-300);background:#fff;border-radius:8px;padding:6px 10px;font-size:12.5px;font-family:inherit;cursor:pointer;display:flex;gap:6px;align-items:center;color:var(--text);}.fc-btn.on{border-color:var(--navy-500);background:#E7ECF6;color:var(--navy-700);font-weight:600;}.fc-count{font-weight:700;}.fc-pop{position:absolute;z-index:40;top:calc(100% + 4px);left:0;min-width:260px;background:#fff;border:1px solid var(--gray-300);border-radius:8px;box-shadow:var(--shadow);padding:8px;}.fc-search{width:100%;box-sizing:border-box;border:1.5px solid var(--gray-300);border-radius:6px;padding:7px 9px;font-size:13px;font-family:inherit;margin-bottom:6px;}.fc-opts{max-height:210px;overflow-y:auto;}.fc-opt{display:flex;align-items:center;gap:8px;font-size:13px;padding:4px 2px;cursor:pointer;text-transform:none;font-weight:400;color:var(--text);}.fc-opt span:first-of-type{flex:1;}.fc-n{color:var(--muted);font-size:11.5px;}.fc-foot{border-top:1px solid var(--gray-200);margin-top:6px;padding-top:6px;font-size:12px;}.fc-resumo{display:flex;flex-wrap:wrap;gap:6px;align-items:center;font-size:12.5px;color:var(--muted);margin-bottom:10px;}
 </style>
 </head>
 <body>
@@ -569,11 +570,12 @@
                 <div class="field-head">
                   <label>Cargas importadas da base</label>
                   <span style="display:flex;gap:8px;align-items:center;">
-                    <span class="input-search"><i data-lucide="search" class="input-search-icon lucide-ic"></i><input type="text" id="cargasBuscaInput" placeholder="Buscar cargas..." oninput="filtrarCargas(this.value)"></span>
+                    <span class="input-search"><i data-lucide="search" class="input-search-icon lucide-ic"></i><input type="text" id="cargasBuscaInput" placeholder="Busca livre em todas as colunas..." oninput="filtrarCargas(this.value)"></span>
                     <button class="icon-btn" onclick="toggleColunasCargas()" id="btnToggleColunas"><i data-lucide="eye" class="lucide-ic"></i> Mostrar mais colunas</button>
                   </span>
                 </div>
                 <div class="picker-list" id="colunasCargasPicker" style="display:none;border:1px solid var(--gray-300);border-radius:8px;padding:12px 14px;margin-bottom:14px;max-height:220px;overflow-y:auto;"></div>
+                <div id="cargasFiltrosCampo"></div>
                 <div class="grupo-toolbar" id="grupoToolbar">
                   <span id="grupoSelecionadasTxt" style="font-size:12.5px;color:var(--muted);flex:1;"></span>
                   <button class="btn btn-outline" onclick="abrirAgruparVaga('compartilhada')">Compartilhar vaga</button>
@@ -1028,7 +1030,7 @@ const modals = {
 const FIELD_OPTIONS = {
   localidade: ['Urbana','Rural'],
   tipoCurso: ['EJA','Ensino Médio','Técnico','Regular'],
-  escola: ['E.E. Central','E.E. Mayara','E.E. São José','E.E. Nova Aliança','E.E. Vitória Régia','E.E. Comunidade Boa Esperança (exemplo)'],
+  escola: ['E.E. Central','E.E. Mayara','E.E. São José','E.E. Nova Aliança','E.E. Vitória Régia','E.E. Comunidade Boa Esperança (exemplo)','E.E. Dom Bosco','E.E. Santa Luzia','E.E. Giovanni Figliuolo','E.E. Dr. Paulo Freire'],
   coordenadoria: ['Coordenadoria 1','Coordenadoria 2','Coordenadoria 3'],
   endereco: ['Comunidade Rio Preto','Comunidade Novo Horizonte','Vila Amazonas','Zona Rural · Km 15','Comunidade São Raimundo'],
   disciplina: ['Matemática','Português','Física','Geografia','História','Ciências'],
@@ -1333,6 +1335,14 @@ const CARGA_FIELDS = {
   rowSaoJose:     { dataRef:'24/07/2026', codDdz:'DDZ-03', nomeDdz:'Manaus - Coordenadoria 3', codEscola:'ESC-1052', localidade:'Urbana', endereco:'Rua São José, 33', comunidade:'-', turno:'Matutino', nomeEnsino:'Ensino Fundamental', tipoCurso:'Regular', areaEixo:'Exatas', disciplinas:'Matemática', fasesTurmas:'9º ano · Turma A', horas:8, motivo:'', codCargaHoraria:'CH-08', pendenciaCarga:'Não', dtIncCarga:'20/07/2026', dtAltCarga:'24/07/2026', cursoTec:'Não', seqMatricula:'-', numProcesso:'2026/00121', escola:'E.E. São José' },
   rowNovaAlianca: { dataRef:'24/07/2026', codDdz:'DDZ-03', nomeDdz:'Manaus - Coordenadoria 3', codEscola:'ESC-1316', localidade:'Urbana', endereco:'Rua Nova Aliança, 500', comunidade:'-', turno:'Noturno', nomeEnsino:'Educação Profissional', tipoCurso:'Técnico', areaEixo:'Técnico', disciplinas:'Informática', fasesTurmas:'Módulo II · Turma Única', horas:16, motivo:'', codCargaHoraria:'CH-16', pendenciaCarga:'Não', dtIncCarga:'20/07/2026', dtAltCarga:'24/07/2026', cursoTec:'Sim', seqMatricula:'-', numProcesso:'2026/00122', escola:'E.E. Nova Aliança' },
   rowRuralDemo:   { dataRef:'24/07/2026', codDdz:'DDZ-03', nomeDdz:'Manaus - Coordenadoria 3', codEscola:'ESC-1450', localidade:'Rural', endereco:'Comunidade Boa Esperança, Zona Rural', comunidade:'Comunidade Boa Esperança', turno:'Matutino', nomeEnsino:'Ensino Fundamental', tipoCurso:'Regular', areaEixo:'Linguagens', disciplinas:'Português', fasesTurmas:'6º ano · Turma Única', horas:12, motivo:'', codCargaHoraria:'CH-12', pendenciaCarga:'Não', dtIncCarga:'20/07/2026', dtAltCarga:'24/07/2026', cursoTec:'Não', seqMatricula:'-', numProcesso:'2026/00123', escola:'E.E. Comunidade Boa Esperança (exemplo)' },
+  rowDomBosco: { dataRef:'24/07/2026', codDdz:'DDZ-03', nomeDdz:'Manaus - Coordenadoria 3', codEscola:'ESC-1101', localidade:'Urbana', endereco:'Rua Dom Bosco, 120', comunidade:'-', turno:'Matutino', nomeEnsino:'Ensino Fundamental', tipoCurso:'Regular', areaEixo:'Linguagens', disciplinas:'Língua Portuguesa', fasesTurmas:'7º ano · Turma A', horas:10, motivo:'', codCargaHoraria:'CH-10', pendenciaCarga:'Não', dtIncCarga:'20/07/2026', dtAltCarga:'24/07/2026', cursoTec:'Não', seqMatricula:'-', numProcesso:'2026/00131', escola:'E.E. Dom Bosco' },
+  rowSantaLuzia: { dataRef:'24/07/2026', codDdz:'DDZ-03', nomeDdz:'Manaus - Coordenadoria 3', codEscola:'ESC-1102', localidade:'Urbana', endereco:'Av. Santa Luzia, 77', comunidade:'-', turno:'Matutino', nomeEnsino:'Ensino Fundamental', tipoCurso:'Regular', areaEixo:'Linguagens', disciplinas:'Língua Portuguesa', fasesTurmas:'7º ano · Turma B', horas:5, motivo:'', codCargaHoraria:'CH-05', pendenciaCarga:'Não', dtIncCarga:'20/07/2026', dtAltCarga:'24/07/2026', cursoTec:'Não', seqMatricula:'-', numProcesso:'2026/00132', escola:'E.E. Santa Luzia' },
+  rowCentralLP: { dataRef:'24/07/2026', codDdz:'DDZ-03', nomeDdz:'Manaus - Coordenadoria 3', codEscola:'ESC-1091', localidade:'Urbana', endereco:'Av. Getúlio Vargas, 450', comunidade:'-', turno:'Matutino', nomeEnsino:'Ensino Fundamental', tipoCurso:'Regular', areaEixo:'Linguagens', disciplinas:'LINGUA PORTUGUESA', fasesTurmas:'9º ano · Turma A', horas:12, motivo:'', codCargaHoraria:'CH-12', pendenciaCarga:'Não', dtIncCarga:'20/07/2026', dtAltCarga:'24/07/2026', cursoTec:'Não', seqMatricula:'-', numProcesso:'2026/00133', escola:'E.E. Central' },
+  rowMatDomBosco: { dataRef:'24/07/2026', codDdz:'DDZ-03', nomeDdz:'Manaus - Coordenadoria 3', codEscola:'ESC-1101', localidade:'Urbana', endereco:'Rua Dom Bosco, 120', comunidade:'-', turno:'Matutino', nomeEnsino:'Ensino Fundamental', tipoCurso:'Regular', areaEixo:'Exatas', disciplinas:'Matemática', fasesTurmas:'6º ano · Turma A', horas:6, motivo:'', codCargaHoraria:'CH-06', pendenciaCarga:'Não', dtIncCarga:'20/07/2026', dtAltCarga:'24/07/2026', cursoTec:'Não', seqMatricula:'-', numProcesso:'2026/00134', escola:'E.E. Dom Bosco' },
+  rowGiovanni: { dataRef:'24/07/2026', codDdz:'DDZ-03', nomeDdz:'Manaus - Coordenadoria 3', codEscola:'ESC-1103', localidade:'Urbana', endereco:'Rua Figliuolo, 9', comunidade:'-', turno:'Vespertino', nomeEnsino:'Ensino Fundamental', tipoCurso:'Regular', areaEixo:'Linguagens', disciplinas:'Educação Física', fasesTurmas:'8º ano · Turma A', horas:12, motivo:'', codCargaHoraria:'CH-12', pendenciaCarga:'Não', dtIncCarga:'20/07/2026', dtAltCarga:'24/07/2026', cursoTec:'Não', seqMatricula:'-', numProcesso:'2026/00135', escola:'E.E. Giovanni Figliuolo' },
+  rowEJA: { dataRef:'24/07/2026', codDdz:'DDZ-03', nomeDdz:'Manaus - Coordenadoria 3', codEscola:'ESC-1104', localidade:'Urbana', endereco:'Rua Paulo Freire, 300', comunidade:'-', turno:'Noturno', nomeEnsino:'EJA', tipoCurso:'EJA', areaEixo:'Exatas', disciplinas:'Matemática', fasesTurmas:'EJA Médio · 3º seg.', horas:14, motivo:'', codCargaHoraria:'CH-14', pendenciaCarga:'Não', dtIncCarga:'20/07/2026', dtAltCarga:'24/07/2026', cursoTec:'Não', seqMatricula:'1', numProcesso:'2026/00136', escola:'E.E. Dr. Paulo Freire' },
+  rowTecInfo: { dataRef:'24/07/2026', codDdz:'DDZ-03', nomeDdz:'Manaus - Coordenadoria 3', codEscola:'ESC-1316', localidade:'Urbana', endereco:'Rua Nova Aliança, 500', comunidade:'-', turno:'Noturno', nomeEnsino:'Educação Profissional', tipoCurso:'Técnico', areaEixo:'Técnico em Informática', disciplinas:'Redes de Computadores', fasesTurmas:'Módulo III · Turma Única', horas:16, motivo:'', codCargaHoraria:'CH-16', pendenciaCarga:'Não', dtIncCarga:'20/07/2026', dtAltCarga:'24/07/2026', cursoTec:'Sim', seqMatricula:'-', numProcesso:'2026/00137', escola:'E.E. Nova Aliança' },
+  rowLicenca: { dataRef:'24/07/2026', codDdz:'DDZ-03', nomeDdz:'Manaus - Coordenadoria 3', codEscola:'ESC-1102', localidade:'Urbana', endereco:'Av. Santa Luzia, 77', comunidade:'-', turno:'Vespertino', nomeEnsino:'Ensino Fundamental', tipoCurso:'Regular', areaEixo:'Exatas', disciplinas:'Matemática', fasesTurmas:'9º ano · Turma B', horas:20, motivo:'Licença médica (curta)', codCargaHoraria:'CH-20', pendenciaCarga:'Não', dtIncCarga:'20/07/2026', dtAltCarga:'24/07/2026', cursoTec:'Não', seqMatricula:'-', numProcesso:'2026/00138', escola:'E.E. Santa Luzia' },
 };
 
 // Todas as colunas reais da base do SILS (RF001). 'visible:true' são as que ficam à mostra por
@@ -1381,9 +1391,11 @@ function renderCargasTable(){
   head.innerHTML = '<th></th>' + colunas.map((c,i) => thOrdenavel(c.label, body.id, i+1)).join('') +
     '<th>Observação · regra aplicada</th><th>Vale como vaga?</th><th>Situação</th><th>Tipo</th><th>Ação</th>';
   const termoCargas = (cargasBuscaTexto || '').trim().toLowerCase();
+  if (!document.getElementById('fcResumo')) montarFiltrosCampo();
   const idsCargasFiltrados = Object.keys(CARGA_FIELDS).filter(rowId => {
-    if (!termoCargas) return true;
     const f = CARGA_FIELDS[rowId];
+    if (!passaFiltrosCampo(f)) return false;
+    if (!termoCargas) return true;
     return Object.keys(f).some(k => String(f[k]).toLowerCase().includes(termoCargas));
   });
   body.innerHTML = idsCargasFiltrados.map(rowId => {
@@ -1404,10 +1416,97 @@ function renderCargasTable(){
       '<td id="acao' + sufixo + '">-</td></tr>';
   }).join('');
   renderVagaGrupoBadges();
+  atualizaResumoFiltrosCampo(idsCargasFiltrados.length);
 }
 
 
 let cargasBuscaTexto = '';
+
+// ===== Filtros por campo na tabela de cargas (select com busca, múltipla escolha) =====
+// Cada campo tem o seu próprio filtro. Dentro de um campo, os valores marcados valem como "ou";
+// entre campos diferentes, valem como "e". Serve para cruzar informações e achar o que dá para unificar ou compartilhar.
+const FILTROS_CAMPO = [
+  { key: 'nomeDdz', label: 'Coordenadoria/Município' },
+  { key: 'escola', label: 'Nome Escola' },
+  { key: 'localidade', label: 'Localidade' },
+  { key: 'nomeEnsino', label: 'Nome Ensino' },
+  { key: 'disciplinas', label: 'Disciplinas' },
+  { key: 'horas', label: 'Horas', suffix: 'h' },
+  { key: 'areaEixo', label: 'Área/Eixo' },
+  { key: 'turno', label: 'Turno' },
+  { key: 'comunidade', label: 'Comunidade' }
+];
+let filtrosCampo = {};
+function valorFiltro(f, key){ let v = f[key]; if (v === undefined || v === null || v === '') v = '-'; return String(v); }
+function passaFiltrosCampo(f){
+  return FILTROS_CAMPO.every(fc => { const s = filtrosCampo[fc.key]; return !s || !s.size || s.has(valorFiltro(f, fc.key)); });
+}
+function valoresDoCampo(key){
+  const m = new Map();
+  Object.keys(CARGA_FIELDS).forEach(id => { const v = valorFiltro(CARGA_FIELDS[id], key); m.set(v, (m.get(v) || 0) + 1); });
+  return [...m.entries()].sort((a, b) => a[0].localeCompare(b[0], 'pt-BR', { numeric: true }));
+}
+function montarFiltrosCampo(){
+  const box = document.getElementById('cargasFiltrosCampo');
+  if (!box) return;
+  box.innerHTML = '<div class="fc-bar">' + FILTROS_CAMPO.map(fc =>
+    '<div class="fc-item"><button class="fc-btn" id="fcBtn-' + fc.key + '" data-k="' + fc.key + '" onclick="toggleFiltroCampo(this.dataset.k)"><span>' + fc.label + '</span><span class="fc-count" id="fcCount-' + fc.key + '"></span> ▾</button><div class="fc-pop" id="fcPop-' + fc.key + '" style="display:none;"></div></div>'
+  ).join('') + '</div><div class="fc-resumo" id="fcResumo"></div>';
+}
+function fecharPopsFiltros(){ document.querySelectorAll('.fc-pop').forEach(p => { p.style.display = 'none'; }); }
+function toggleFiltroCampo(key){
+  const pop = document.getElementById('fcPop-' + key);
+  if (!pop) return;
+  const abrir = pop.style.display === 'none';
+  fecharPopsFiltros();
+  if (!abrir) return;
+  const fc = FILTROS_CAMPO.find(x => x.key === key);
+  const sel = filtrosCampo[key] || new Set();
+  pop.innerHTML = '<input class="fc-search" data-k="' + key + '" placeholder="Buscar em ' + fc.label + '..." oninput="filtraOpcoesFiltro(this.dataset.k, this.value)">' +
+    '<div class="fc-opts" id="fcOpts-' + key + '">' + valoresDoCampo(key).map(e =>
+      '<label class="fc-opt" data-txt="' + e[0].toLowerCase().replace(/"/g, '') + '"><input type="checkbox" data-k="' + key + '" value="' + encodeURIComponent(e[0]) + '" ' + (sel.has(e[0]) ? 'checked' : '') + ' onchange="toggleValorFiltro(this.dataset.k, decodeURIComponent(this.value), this.checked)"> <span>' + e[0] + (fc.suffix && e[0] !== '-' ? fc.suffix : '') + '</span><span class="fc-n">' + e[1] + '</span></label>'
+    ).join('') + '</div>' +
+    '<div class="fc-foot"><a href="#" data-k="' + key + '" onclick="limparFiltroCampo(this.dataset.k);return false;">Limpar este filtro</a></div>';
+  pop.style.display = 'block';
+  const inp = pop.querySelector('.fc-search'); if (inp) inp.focus();
+}
+function filtraOpcoesFiltro(key, termo){
+  const t = (termo || '').trim().toLowerCase();
+  document.querySelectorAll('#fcOpts-' + key + ' .fc-opt').forEach(l => { l.style.display = !t || l.dataset.txt.includes(t) ? '' : 'none'; });
+}
+function toggleValorFiltro(key, valor, marcado){
+  if (!filtrosCampo[key]) filtrosCampo[key] = new Set();
+  if (marcado) filtrosCampo[key].add(valor); else filtrosCampo[key].delete(valor);
+  renderCargasTable();
+  avaliarCargas();
+  renderResumo();
+}
+function limparFiltroCampo(key){
+  delete filtrosCampo[key];
+  fecharPopsFiltros();
+  renderCargasTable(); avaliarCargas(); renderResumo();
+}
+function limparTodosFiltrosCampo(){
+  filtrosCampo = {};
+  fecharPopsFiltros();
+  renderCargasTable(); avaliarCargas(); renderResumo();
+}
+function atualizaResumoFiltrosCampo(mostradas){
+  const total = Object.keys(CARGA_FIELDS).length;
+  const ativos = FILTROS_CAMPO.filter(fc => filtrosCampo[fc.key] && filtrosCampo[fc.key].size);
+  FILTROS_CAMPO.forEach(fc => {
+    const n = filtrosCampo[fc.key] ? filtrosCampo[fc.key].size : 0;
+    const c = document.getElementById('fcCount-' + fc.key); if (c) c.textContent = n ? ' (' + n + ')' : '';
+    const b = document.getElementById('fcBtn-' + fc.key); if (b) b.classList.toggle('on', n > 0);
+  });
+  const r = document.getElementById('fcResumo');
+  if (!r) return;
+  r.innerHTML = '<span>Mostrando <b>' + mostradas + '</b> de ' + total + ' cargas</span>' +
+    ativos.map(fc => '<span class="mini-chip">' + fc.label + ': ' + [...filtrosCampo[fc.key]].map(v => v + (fc.suffix && v !== '-' ? fc.suffix : '')).join(', ') + ' <button data-k="' + fc.key + '" onclick="limparFiltroCampo(this.dataset.k)">×</button></span>').join('') +
+    (ativos.length ? '<a href="#" onclick="limparTodosFiltrosCampo();return false;">Limpar todos os filtros</a>' : '');
+}
+document.addEventListener('click', function(e){ if (!e.target.closest('.fc-item')) fecharPopsFiltros(); });
+
 let selecionadosGrupo = new Set();
 let gruposVaga = {};
 let rowParaGrupo = {};
@@ -1871,6 +1970,8 @@ function enterAnalise(municipio, tipo){
       note.innerHTML = 'Este município não possui escolas indígenas identificadas na base · toda a análise é feita em um único tipo (<b>Regular</b>).';
     }
   }
+  filtrosCampo = {};
+  montarFiltrosCampo();
   modoConsulta = !statusTipo(tipoContext);
   const scrA3 = document.getElementById('scr-A3');
   if (scrA3) scrA3.classList.toggle('consulta', modoConsulta);
@@ -2076,7 +2177,7 @@ let baseAtualLabel = 'Importação #4 · 24/07/2026 (1.787 linhas)';
 const BASE_VALORES_VIGENTE = {
   localidade: ['Urbana','Rural'],
   tipoCurso: ['EJA','Ensino Médio','Técnico','Regular'],
-  escola: ['E.E. Central','E.E. Mayara Redman','E.E. São José','E.E. Nova Aliança','E.E. Vitória Régia','E.E. Comunidade Boa Esperança (exemplo)']
+  escola: ['E.E. Central','E.E. Mayara Redman','E.E. São José','E.E. Nova Aliança','E.E. Vitória Régia','E.E. Comunidade Boa Esperança (exemplo)','E.E. Dom Bosco','E.E. Santa Luzia','E.E. Giovanni Figliuolo','E.E. Dr. Paulo Freire']
 };
 function verificarRegraNaBase(regra){
   const problemas = [];
