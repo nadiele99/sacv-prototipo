@@ -370,6 +370,7 @@
 
   .grupo-chk{width:15px;height:15px;cursor:pointer;}
   .grupo-toolbar{display:none;align-items:center;gap:10px;background:var(--gray-100);border:1px solid var(--gray-300);border-radius:8px;padding:9px 12px;margin-bottom:10px;}
+#scr-A3.consulta .rules-wrap, #scr-A3.consulta #savedChips, #scr-A3.consulta .grupo-chk, #scr-A3.consulta #grupoToolbar, #scr-A3.consulta #btnFechar, #scr-A3.consulta [id^="acao"]{pointer-events:none;opacity:.5;}
 </style>
 </head>
 <body>
@@ -427,7 +428,7 @@
                 <span data-tipo="indigena" onclick="setTipoContext('indigena')">Tipo Indígena</span>
               </div>
               <div class="note" id="tipoContextNote">Mostrando municípios com vagas para o ensino <b>regular</b>. Reivindicações feitas aqui valem só para este tipo · a análise do Tipo Indígena é feita à parte, escolhendo a outra opção acima.</div>
-              <div class="note pend" id="cicloBloqueioNote" style="display:none;"><i data-lucide="lock" class="lucide-ic"></i> Nenhum ciclo de análise está aberto pela Gerência no momento. Você ainda pode continuar municípios já reivindicados por você, mas não é possível reivindicar nenhum município novo até a Gerente abrir um novo ciclo (RN034).</div>
+              <div class="note pend" id="cicloBloqueioNote" style="display:none;"><i data-lucide="lock" class="lucide-ic"></i> Nenhum ciclo de análise está aberto pela Gerência no momento, então não há o que reivindicar nem analisar. Você pode consultar os municípios para ver as informações, mas não pode alterar nada até a Gerente abrir um novo ciclo (RN034).</div>
               <div class="note">A base foi importada do SILS e dividida automaticamente por município. Reivindique um município para começar a análise · cada município só pode ser reivindicado por um analista por vez, e somente enquanto houver um ciclo de análise aberto pela Gerência.</div>
               <div class="note">Depois de fechar um município, você não consegue mais editá-lo por conta própria. Ele fica aguardando a revisão da Gerente · se ela devolver (reprovar), o botão de edição é liberado e você vê a justificativa dela. Depois do Consolidado final, a edição é bloqueada para todos os analistas.</div>
               <div class="kpi-row">
@@ -1870,6 +1871,10 @@ function enterAnalise(municipio, tipo){
       note.innerHTML = 'Este município não possui escolas indígenas identificadas na base · toda a análise é feita em um único tipo (<b>Regular</b>).';
     }
   }
+  modoConsulta = !statusTipo(tipoContext);
+  const scrA3 = document.getElementById('scr-A3');
+  if (scrA3) scrA3.classList.toggle('consulta', modoConsulta);
+  if (note && modoConsulta) note.innerHTML += '<br><br><b style="color:#B45309;">Modo consulta:</b> não há ciclo aberto para este tipo, então você pode ver as informações deste município, mas não pode alterar nada.';
   const cRA = ciclosHistorico.find(c => c.id === cicloSelecionado);
   const mRA = cRA && cRA.municipios.find(m => m.nome === municipio);
   if (note && mRA && mRA.revisaoStatus === 'regra_alterada') note.innerHTML += '<br><br><b style="color:#B45309;">Reanálise · a regra do ciclo foi alterada em ' + mRA.reanaliseEm + ':</b> "' + mRA.reanaliseMotivo + '". Reavalie as cargas com a regra nova e feche o município de novo.';
@@ -1995,6 +2000,7 @@ function onFiltroCampoChanged(){
 }
 
 let tipoContext = 'regular';
+let modoConsulta = false; // sem ciclo aberto: o Analista só consulta, não altera nada
 let municipioAtual = null; // nome do município sendo analisado agora em A3, usado para achar o registro certo em ciclosHistorico ao fechar
 
 function setTipoContext(tipo){
@@ -3542,11 +3548,22 @@ function atualizaBloqueioA1(){
       btn.style.cursor = habilitado ? '' : 'not-allowed';
     }
     if (badge){
-      if (!habilitado && badge.textContent.trim() === 'Disponível') badge.textContent = 'Aguardando ciclo';
-      else if (habilitado && badge.textContent.trim() === 'Aguardando ciclo') badge.textContent = 'Disponível';
+      if (!habilitado && badge.textContent.trim() === 'Disponível') badge.textContent = 'Sem ciclo aberto';
+      else if (habilitado && badge.textContent.trim() === 'Sem ciclo aberto') badge.textContent = 'Disponível';
     }
   });
+  document.querySelectorAll('.muni-row button[onclick^="enterAnalise("]').forEach(b => {
+    if (abertos.length > 0 && b.dataset.orig){ b.textContent = b.dataset.orig; delete b.dataset.orig; b.disabled = false; b.style.opacity = ''; b.style.cursor = ''; b.title = ''; }
+  });
   atualizaStatusMunicipiosA1();
+  if (abertos.length === 0){
+    document.querySelectorAll('.muni-row button[onclick^="enterAnalise("]').forEach(b => {
+      if (!b.dataset.orig) b.dataset.orig = b.textContent;
+      b.disabled = false; b.style.opacity = ''; b.style.cursor = '';
+      b.textContent = 'Consultar';
+      b.title = 'Sem ciclo aberto · modo consulta: você vê as informações, mas não altera nada';
+    });
+  }
 }
 
 // Reflete no painel do Analista (A1) o resultado da revisão da Gerente para municípios já
