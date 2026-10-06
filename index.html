@@ -1870,6 +1870,9 @@ function enterAnalise(municipio, tipo){
       note.innerHTML = 'Este município não possui escolas indígenas identificadas na base · toda a análise é feita em um único tipo (<b>Regular</b>).';
     }
   }
+  const cRA = ciclosHistorico.find(c => c.id === cicloSelecionado);
+  const mRA = cRA && cRA.municipios.find(m => m.nome === municipio);
+  if (note && mRA && mRA.revisaoStatus === 'regra_alterada') note.innerHTML += '<br><br><b style="color:#B45309;">Reanálise · a regra do ciclo foi alterada em ' + mRA.reanaliseEm + ':</b> "' + mRA.reanaliseMotivo + '". Reavalie as cargas com a regra nova e feche o município de novo.';
   manualOverrides = new Set();
   justificativas = {};
   anexos = {};
@@ -2197,7 +2200,8 @@ function salvarRegraDoCiclo(){
   box.innerHTML = '<h3>Impacto da alteração · Ciclo #' + c.id + '</h3>' +
     '<p>A base é compatível com todos os valores. A nova regra vale para <b>todos os ' + c.municipios.length + ' municípios</b> do ciclo e as cargas serão reavaliadas.</p>' +
     '<ul style="margin:0 0 8px 18px;font-size:13px;">' + mudancas.map(m => '<li><b>' + m.campo + '</b>: ' + m.antes + ' → ' + m.depois + '</li>').join('') + '</ul>' +
-    '<div class="legend" style="margin:6px 0;">Municípios afetados: ' + fech + ' fechado(s), ' + emA + ' em análise, ' + disp + ' ainda disponível(is). O tratamento dos municípios já fechados ainda será definido com o cliente.</div>' +
+    '<div class="legend" style="margin:6px 0;">Municípios afetados: ' + fech + ' fechado(s), ' + emA + ' em análise, ' + disp + ' ainda disponível(is).</div>' +
+    (fech ? '<div class="inline-warn" style="margin:8px 0;"><i data-lucide="triangle-alert" class="lucide-ic"></i><span><b>' + fech + ' município(s) já fechado(s) voltam para análise</b> com o status "Reanálise · regra alterada", para o analista reavaliar as cargas com a regra nova. Justifique o motivo abaixo; o analista vai ver este texto.</span></div><div class="field" style="margin-bottom:6px;"><label>Justificativa para devolver à análise (obrigatória)</label><textarea id="reanaliseJustificativa" placeholder="Ex.: valor da escola corrigido para bater com a base"></textarea></div><div id="erroReanalise" style="color:#b91c1c;font-size:12px;min-height:16px;"></div>' : '') +
     '<div class="actions"><button class="btn btn-outline" onclick="renderRegraPadraoModal()">Voltar e ajustar</button> <button class="btn btn-navy" onclick="confirmarRegraDoCiclo()">Confirmar e aplicar</button></div>';
   document.getElementById('overlay').classList.add('show');
 }
@@ -2206,8 +2210,21 @@ function confirmarRegraDoCiclo(){
   if (!p) return;
   const c = ciclosHistorico.find(x => x.id === p.cicloId);
   if (!c || c.status !== 'aberto') return;
+  const fechados = c.municipios.filter(m => m.status === 'fechado');
+  const jEl = document.getElementById('reanaliseJustificativa');
+  const just = jEl ? jEl.value.trim() : '';
+  if (fechados.length && !just){
+    const er = document.getElementById('erroReanalise');
+    if (er) er.textContent = 'Informe a justificativa para devolver os municípios fechados à análise.';
+    return;
+  }
+  const agora = new Date().toLocaleString('pt-BR');
+  fechados.forEach(m => { m.status = 'em_analise'; m.revisaoStatus = 'regra_alterada'; m.reanaliseMotivo = just; m.reanaliseEm = agora; });
+  c.painel.fechados = c.municipios.filter(m => m.status === 'fechado').length;
+  c.painel.aguardandoRevisao = c.municipios.filter(m => m.status === 'fechado' && !m.revisaoStatus).length;
   c.regraAplicada = { nome: p.nome, campos: cloneCampos(p.campos) };
-  c.regraHistorico.push({ versao: c.regraHistorico.length + 1, em: new Date().toLocaleString('pt-BR'), por: 'Jane', nota: 'Alterada com o ciclo aberto: ' + p.mudancas.map(m => m.campo).join(', '), nome: p.nome, campos: cloneCampos(p.campos) });
+  c.regraHistorico.push({ versao: c.regraHistorico.length + 1, em: agora, por: 'Jane', nota: 'Alterada com o ciclo aberto: ' + p.mudancas.map(m => m.campo).join(', ') + (fechados.length ? ' · ' + fechados.length + ' município(s) devolvido(s) à análise. Justificativa: ' + just : ''), nome: p.nome, campos: cloneCampos(p.campos) });
+  atualizaStatusMunicipiosA1();
   regraCicloPendente = null;
   regraPadraoEmEdicao = null;
   closeModal();
@@ -2900,6 +2917,7 @@ function renderPainelG1(){
     <div class="kpi"><div class="num">${aguardando}</div><div class="lbl">aguardando sua revisão (exemplo)</div></div>
     <div class="kpi"><div class="num">${reprovados}</div><div class="lbl">${modoV2 ? 'reprovados, aguardando ajuste de regra (exemplo)' : 'reprovados, aguardando o analista (exemplo)'}</div></div>
     <div class="kpi"><div class="num">${naoReivindicados}</div><div class="lbl">ainda não reivindicados (exemplo)</div></div>
+    <div class="kpi"><div class="num">${c.municipios.filter(m => m.revisaoStatus === 'regra_alterada').length}</div><div class="lbl">em reanálise por mudança de regra</div></div>
     <div class="kpi"><div class="num">${c.painel.pendencias}</div><div class="lbl">pendências abertas</div></div>
   `;
   if (c.status === 'cancelado'){
@@ -2962,8 +2980,8 @@ function renderPainelG4(){
     }
     if (!modoV2 && m.status === 'em_analise'){
       return `<div class="muni-row" style="opacity:.6;">
-        <div><div class="name">${m.nome}</div><div class="meta">reivindicado por ${m.analista} · ainda em análise</div></div>
-        <span class="badge gray">Em andamento</span>
+        <div><div class="name">${m.nome}</div><div class="meta">${m.revisaoStatus === 'regra_alterada' ? 'voltou para análise em ' + m.reanaliseEm + ' porque a regra do ciclo foi alterada: "' + m.reanaliseMotivo + '"' : 'reivindicado por ' + m.analista + ' · ainda em análise'}</div></div>
+        ${m.revisaoStatus === 'regra_alterada' ? '<span class="badge yellow">Reanálise · regra alterada</span>' : '<span class="badge gray">Em andamento</span>'}
       </div>`;
     }
     const statusBadge = m.revisaoStatus === 'aprovado'
@@ -3039,6 +3057,7 @@ function fecharMunicipioAtual(){
   if (!m) return;
   const statusAnterior = m.status === 'fechado' ? m.revisaoStatus : null;
   m.status = 'fechado';
+  if (m.revisaoStatus === 'regra_alterada'){ m.revisaoStatus = null; m.reanaliseMotivo = null; m.reanaliseEm = null; }
   if (statusAnterior === 'aprovado'){
     m.revisaoStatus = null;
     m.reeditado = true;
@@ -3543,7 +3562,13 @@ function atualizaStatusMunicipiosA1(){
   const c = ciclosHistorico.find(c => c.id === 4);
   const m = c && c.municipios.find(m => m.nome === 'Itacoatiara');
   if (!m) return;
-  if (m.revisaoStatus === 'reprovado'){
+  if (m.revisaoStatus === 'regra_alterada'){
+    liberaEdicao(true);
+    if (btn) btn.textContent = 'Reanalisar';
+    badge.className = 'badge yellow';
+    badge.innerHTML = '<i data-lucide="triangle-alert" class="lucide-ic"></i> Reanálise · regra alterada';
+    meta.textContent = '64 cargas na base importada · a Gerência alterou a regra do ciclo em ' + m.reanaliseEm + ': "' + m.reanaliseMotivo + '" · reavalie as cargas e feche de novo';
+  } else if (m.revisaoStatus === 'reprovado'){
     badge.className = 'badge red';
     badge.innerHTML = '<i data-lucide="triangle-alert" class="lucide-ic"></i> Devolvido pela Gerente';
     liberaEdicao(true);
