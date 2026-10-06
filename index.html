@@ -580,6 +580,14 @@ svg.lucide{stroke-width:2;}
 .card .body .ui-card #filtrosAvancadosBody{margin-top:14px;padding:0 8px 4px;}
   
 #tipoToggle{display:inline-flex!important;width:fit-content;max-width:none!important;align-self:flex-start;}
+  
+.alert-compat{display:flex;gap:12px;align-items:flex-start;padding:12px 16px;margin:8px 0;background:#FFFBEB;border:1px solid #FDE68A;border-radius:10px;color:#92400E;font-family:"Inter","Segoe UI",sans-serif;font-size:13.5px;line-height:1.5;text-align:left;}
+.alert-compat > svg,.alert-compat > i{width:18px;height:18px;flex-shrink:0;margin-top:1px;color:#B45309;}
+.alert-compat .ac-title{font-weight:600;color:#78350F;}
+.alert-compat .ac-desc{color:#92400E;margin-top:1px;}
+.alert-compat ul{margin:8px 0 0;padding-left:18px;}
+.alert-compat li{margin:2px 0;}
+.alert-compat b{color:#78350F;font-weight:500;}
   </style>
 </head>
 <body>
@@ -2425,7 +2433,7 @@ function avisoCompatRegra(regra){
   const p = verificarRegraNaBase(regra);
   if (!p.length) return '';
   const itens = p.map(x => '<li><b>' + x.campo + '</b>: o valor "' + x.valor + '" não existe na base' + (x.sugestoes.length ? ' · na base aparece como ' + x.sugestoes.map(s => '"' + s + '"').join(', ') : '') + '</li>').join('');
-  return '<div class="inline-warn" style="margin:8px 0;"><i data-lucide="triangle-alert" class="lucide-ic"></i><span>Esta regra tem valores <b>sem correspondência na base vigente</b> (' + baseAtualLabel + '). Atualize ou corrija antes de depender dela:<ul style="margin:6px 0 0 18px;">' + itens + '</ul></span></div>';
+  return '<div class="alert-compat"><i data-lucide="triangle-alert" class="lucide-ic"></i><div><div class="ac-title">Valores sem correspondência na base vigente</div><div class="ac-desc">' + baseAtualLabel + ' · atualize ou corrija antes de depender desta regra.</div><ul>' + itens + '</ul></div></div>';
 }
 
 // ===== Regra aplicada por ciclo: snapshot, histórico e edição com ciclo aberto =====
