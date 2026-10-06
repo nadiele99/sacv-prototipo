@@ -1275,7 +1275,7 @@ function avaliarCargas(){
       if (acao) acao.innerHTML = '<button class=\"icon-btn\" onclick=\"openExcluirManual(\'' + rowId + '\')\">Excluir manualmente</button>';
     }
   });
-  const OBRIG = [['localidade','Localidade'],['turno','Turno'],['nomeEnsino','Nome do ensino'],['disciplinas','Disciplina'],['horas','Horas']];
+  const OBRIG = [['dataRef','Data'],['nomeDdz','Nome DDZ'],['localidade','Localidade'],['endereco','Endereço'],['comunidade','Comunidade'],['turno','Turno'],['nomeEnsino','Nome do ensino'],['horas','Hora(s)'],['disciplinas','Disciplina'],['pendenciaCarga','Pendência da carga'],['seqMatricula','Seq. Matrícula']];
   Object.keys(CARGA_FIELDS).forEach(rowId => {
     const f = CARGA_FIELDS[rowId];
     const faltam = OBRIG.filter(o => f[o[0]] === undefined || f[o[0]] === null || String(f[o[0]]).trim() === '').map(o => o[1]);
@@ -2106,6 +2106,9 @@ function avisoCompatRegra(regra){
 // sua versão e o histórico de alterações. Com o ciclo aberto, a Gerente pode editar a regra (vale para
 // todos os municípios do ciclo), desde que os valores existam na base. Fechado o ciclo, a regra congela.
 let regraCicloPendente = null;
+// Impacto real: só voltam para análise os municípios fechados cujas cargas mudam de situação com a regra nova.
+// Neste protótipo o impacto é simulado (não há dado por carga); no sistema real vem da comparação das cargas de cada município com a regra nova.
+function municipiosImpactados(c){ return c.municipios.filter(m => m.status === 'fechado' && m.cargas % 3 !== 0); }
 function cloneCampos(c){ return JSON.parse(JSON.stringify(c)); }
 function garantirRegraAplicada(c){
   if (!c || c.regraAplicada || !c.regraPadraoId) return;
@@ -2197,7 +2200,9 @@ function salvarRegraDoCiclo(){
     if (erro) erro.innerHTML = '<div class="legend" style="margin:8px 0;">Nenhuma alteração em relação à regra atual do ciclo.</div>';
     return;
   }
-  const fech = c.municipios.filter(m => m.status === 'fechado').length;
+  const fechTodos = c.municipios.filter(m => m.status === 'fechado');
+  const fech = municipiosImpactados(c).length;
+  const semImp = fechTodos.length - fech;
   const emA = c.municipios.filter(m => m.status === 'em_analise').length;
   const disp = c.municipios.filter(m => m.status === 'nao_reivindicado').length;
   regraCicloPendente = { cicloId: c.id, nome: r.nome, campos: campos, mudancas: mudancas };
@@ -2206,7 +2211,7 @@ function salvarRegraDoCiclo(){
   box.innerHTML = '<h3>Impacto da alteração · Ciclo #' + c.id + '</h3>' +
     '<p>A base é compatível com todos os valores. A nova regra vale para <b>todos os ' + c.municipios.length + ' municípios</b> do ciclo e as cargas serão reavaliadas.</p>' +
     '<ul style="margin:0 0 8px 18px;font-size:13px;">' + mudancas.map(m => '<li><b>' + m.campo + '</b>: ' + m.antes + ' → ' + m.depois + '</li>').join('') + '</ul>' +
-    '<div class="legend" style="margin:6px 0;">Municípios afetados: ' + fech + ' fechado(s), ' + emA + ' em análise, ' + disp + ' ainda disponível(is).</div>' +
+    '<div class="legend" style="margin:6px 0;">Municípios fechados: ' + fech + ' com impacto (voltam para análise) e ' + semImp + ' sem impacto (continuam fechados). Em análise: ' + emA + ' · ainda disponíveis: ' + disp + '. Neste protótipo o impacto é simulado; no sistema real vem da comparação das cargas de cada município com a regra nova.</div>' +
     (fech ? '<div class="inline-warn" style="margin:8px 0;"><i data-lucide="triangle-alert" class="lucide-ic"></i><span><b>' + fech + ' município(s) já fechado(s) voltam para análise</b> com o status "Reanálise · regra alterada", para o analista reavaliar as cargas com a regra nova. Justifique o motivo abaixo; o analista vai ver este texto.</span></div><div class="field" style="margin-bottom:6px;"><label>Justificativa para devolver à análise (obrigatória)</label><textarea id="reanaliseJustificativa" placeholder="Ex.: valor da escola corrigido para bater com a base"></textarea></div><div id="erroReanalise" style="color:#b91c1c;font-size:12px;min-height:16px;"></div>' : '') +
     '<div class="actions"><button class="btn btn-outline" onclick="renderRegraPadraoModal()">Voltar e ajustar</button> <button class="btn btn-navy" onclick="confirmarRegraDoCiclo()">Confirmar e aplicar</button></div>';
   document.getElementById('overlay').classList.add('show');
@@ -2216,7 +2221,7 @@ function confirmarRegraDoCiclo(){
   if (!p) return;
   const c = ciclosHistorico.find(x => x.id === p.cicloId);
   if (!c || c.status !== 'aberto') return;
-  const fechados = c.municipios.filter(m => m.status === 'fechado');
+  const fechados = municipiosImpactados(c);
   const jEl = document.getElementById('reanaliseJustificativa');
   const just = jEl ? jEl.value.trim() : '';
   if (fechados.length && !just){
