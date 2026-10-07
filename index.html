@@ -588,6 +588,11 @@ svg.lucide{stroke-width:2;}
 .alert-compat ul{margin:8px 0 0;padding-left:18px;}
 .alert-compat li{margin:2px 0;}
 .alert-compat b{color:#78350F;font-weight:500;}
+  
+#regraEditavelBlock .rules-wrap input,#regraEditavelBlock .rules-wrap select,#regraEditavelBlock .rules-wrap .chip-add,#regraEditavelBlock .rules-wrap .mini-chip button{pointer-events:none;}
+#regraEditavelBlock .rules-wrap .chip-add,#regraEditavelBlock .rules-wrap .mini-chip button{display:none;}
+#regraEditavelBlock .rules-wrap select,#regraEditavelBlock .rules-wrap input:not([type=checkbox]){background-color:var(--subtle);color:var(--muted-fg);}
+#savedChips .rule-chip button{display:none;}
   </style>
 </head>
 <body>
@@ -704,7 +709,7 @@ svg.lucide{stroke-width:2;}
               <div class="note" id="a3TipoNote">Este município não possui escolas indígenas identificadas na base · toda a análise é feita em um único tipo (<b>Regular</b>).</div>
               <div id="tab-cargas" class="tab-panel">
                 <div class="note" id="notaRegrasInterna" style="display:none;">Estas regras estão definidas internamente na aplicação (nível de código) para este município · não podem ser editadas ou excluídas por aqui. Elas continuam sendo aplicadas automaticamente na análise das cargas abaixo. Ainda não foi decidido se essa configuração ficará restrita à equipe técnica ou se será liberada para edição.</div>
-                <div class="note" id="notaRegrasEditavel">As regras não são fixas no sistema · é você quem marca quais campos usar como critério. <b>Por padrão, toda carga permanece na lista</b>; as regras abaixo servem para <b>excluir</b> o que não deve entrar. Todos os campos da base importada aparecem aqui, mesmo os que você não costuma usar. <b>Não existe um botão separado de salvar:</b> assim que você marca um campo, digita um valor ou seleciona uma opção, a regra já vale · para este município, imediatamente. Para parar de aplicar uma regra, desmarque o campo correspondente.</div>
+                <div class="note" id="notaRegrasEditavel">As regras em vigor <b>vêm do ciclo</b> (carregadas via ETL e escolhidas pela Gerente ao abrir o ciclo) · aqui você só <b>consulta</b> quais campos estão sendo usados como critério. <b>Por padrão, toda carga permanece na lista</b>; as regras servem para <b>excluir</b> o que não deve entrar. Não é possível criar, editar ou desmarcar regras pelo sistema. Para tratar um caso específico, use a observação/justificativa da carga ou <b>Excluir manualmente</b>.</div>
                 <div class="note warn">O campo <b>Motivo</b> vem preenchido direto da base quando o próprio registro já sinaliza um problema (ex.: dado incompleto). Nesse caso a carga vira <b>pendência para você justificar</b>, independente das regras marcadas abaixo. Só quando o Motivo vem vazio é que as regras de filtro decidem se a carga vale como vaga.</div>
 
                 <div style="margin-bottom:16px;">
@@ -728,10 +733,10 @@ svg.lucide{stroke-width:2;}
                 </div>
 
                 <div id="regraEditavelBlock" class="ui-card pad">
-                <div class="filtros-toggle" id="filtrosAvancadosToggle" onclick="toggleFiltrosAvancados()" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();toggleFiltrosAvancados();}" role="button" tabindex="0" aria-expanded="false"><span class="filtros-toggle-chevron" id="filtrosAvancadosChevron"><i data-lucide="chevron-right" class="lucide-ic filtros-toggle-chevron-icon"></i></span><span class="filtros-toggle-label">Regras em vigor</span><span class="filtros-toggle-hint" id="filtrosAvancadosHint">mostrar filtros</span></div>
+                <div class="filtros-toggle" id="filtrosAvancadosToggle" onclick="toggleFiltrosAvancados()" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();toggleFiltrosAvancados();}" role="button" tabindex="0" aria-expanded="false"><span class="filtros-toggle-chevron" id="filtrosAvancadosChevron"><i data-lucide="chevron-right" class="lucide-ic filtros-toggle-chevron-icon"></i></span><span class="filtros-toggle-label">Regras em vigor <span class="badge info" style="margin-left:8px;">somente consulta</span></span><span class="filtros-toggle-hint" id="filtrosAvancadosHint">mostrar filtros</span></div>
                 <div id="filtrosAvancadosBody" style="display:none;">
                 <div class="legend">Município não aparece aqui · você já está analisando só o município que reivindicou (indicado acima, ao lado de "Início"). Tipo também não é um filtro: Regular e Indígena são reivindicados, analisados e fechados separadamente, cada um com seu próprio relatório · veja a nota acima. Quando uma carga já vem com Motivo preenchido pela base, ela vira pendência individual e não depende deste filtro · veja a tabela de cargas mais abaixo.</div>
-                <div class="legend">Cada linha marcada funciona como: <b>excluir carga quando</b> [Campo] [Condição] [um ou mais valores]. O que não for marcado permanece na lista normalmente. O resumo acima ("Regras em vigor agora") mostra as regras com efeito nesta lista de cargas · clique no × de um chip para desvincular rapidamente.</div>
+                <div class="legend">Cada linha marcada funciona como: <b>excluir carga quando</b> [Campo] [Condição] [valores]. O que não estiver marcado permanece na lista normalmente. A tabela abaixo é <b>somente leitura</b>.</div>
                 <div class="rules-wrap">
                   <table class="rules-table">
                     <thead><tr><th style="width:26px;"></th><th style="width:22%;">Campo</th><th style="width:20%;">Condição</th><th>Valor(es)</th><th style="width:110px;">Origem</th></tr></thead>
@@ -807,7 +812,6 @@ svg.lucide{stroke-width:2;}
                   </table>
                 </div>
                 <div class="table-pagination tc-footer"><span>Página 1 de 1</span><div class="table-pagination-btns"><button class="icon-btn" disabled><i data-lucide="chevron-left" class="lucide-ic"></i> Anterior</button><button class="icon-btn" disabled>Próxima <i data-lucide="chevron-right" class="lucide-ic"></i></button></div></div></div>
-                <div class="legend" style="margin-top:-8px;">Experimente: em "Curso/Projeto" ▸ + valor, marque também <b>Técnico</b> e aplique · a linha da E.E. Nova Aliança muda de status e a observação é atualizada na hora.</div>
                 <div class="note warn" id="cargasPendNote"></div>
                 <div class="actions-row between">
                   <button class="btn btn-outline" onclick="go('A1')">← Voltar ao painel</button>
@@ -924,7 +928,7 @@ svg.lucide{stroke-width:2;}
             <div class="body">
 <div class="stack">
               <div class="note" id="notaRegrasPadraoInterna" style="display:none;">Estas regras padrão estão definidas internamente na aplicação (nível de código) · não podem ser criadas, editadas ou excluídas por aqui. Na V2, elas são aplicadas automaticamente na análise de cada ciclo, sem passar pelo filtro de um Analista.</div>
-              <div class="note" id="notaRegrasPadraoEditavel">Cadastre aqui os filtros que devem valer, por padrão, para os Analistas · usando os <b>mesmos campos do filtro deles</b> (RF013/RN029). Ao abrir um novo ciclo, você escolhe qual regra padrão aplicar (ou nenhuma); ela é pré-carregada no filtro de cada Analista do ciclo, que ainda pode ajustar os valores · mudanças em relação ao padrão ficam sinalizadas para você, sem bloquear nada (RN045/RN046).</div>
+              <div class="note" id="notaRegrasPadraoEditavel">As regras padrão chegam <b>automaticamente via ETL</b> a partir dos dados do cliente · aqui você só <b>consulta</b> o que existe. Não é possível criar, editar ou excluir regras pelo sistema. Ao abrir um ciclo, você escolhe qual das regras disponíveis aplicar (ou nenhuma); ela é carregada para os Analistas do ciclo, que também só consultam (RN044–RN046).</div>
               <div class="legend" id="grBaseNota"></div>
                             <div id="regrasPadraoList"></div>
               <div class="actions-row" id="acoesRegraPadraoEditavel" style="margin-top:6px;">
@@ -2714,7 +2718,7 @@ function renderRegrasPadrao(){
   const acoes = document.getElementById('acoesRegraPadraoEditavel');
   if (notaInterna) notaInterna.style.display = modoV2 ? '' : 'none';
   if (notaEditavel) notaEditavel.style.display = modoV2 ? 'none' : '';
-  if (acoes) acoes.style.display = modoV2 ? 'none' : '';
+  if (acoes) acoes.style.display = 'none';
   const list = document.getElementById('regrasPadraoList');
   if (!list) return;
   const baseNota = document.getElementById('grBaseNota');
@@ -2736,12 +2740,7 @@ function renderRegrasPadrao(){
       <div class="rule-card">
         <div class="rule-card-head">
           <div><b>${r.nome}</b><div class="meta">${Object.keys(r.campos).length} campo(s) configurado(s)${emUso.length ? ' · em uso no ciclo ' + emUso.join(', ') : ''}</div></div>
-          ${modoV2
-            ? '<span class="badge" style="background:#E7ECF6;color:var(--navy-700);" title="Definida internamente, nível de código">fixa no sistema</span>'
-            : `<div style="display:flex;gap:8px;flex-wrap:wrap;">
-            <button class="btn btn-outline" onclick="editarRegraPadrao(${r.id})">Editar</button>
-            <button class="btn btn-outline" style="border-color:#C0392B;color:#C0392B;" onclick="confirmExcluirRegraPadrao(${r.id})">Excluir</button>
-          </div>`}
+          <span class="badge info" title="Regra carregada automaticamente (ETL)"><i data-lucide="database-zap" class="lucide-ic"></i>Carregada via ETL</span>
         </div>
         ${avisoCompatRegra(r)}
         ${linhas ? `<table class="rules-table"><thead><tr><th>Campo</th><th>Condição</th><th>Valor(es)</th></tr></thead><tbody>${linhas}</tbody></table>` : '<div class="legend" style="margin:0;">Nenhum campo configurado.</div>'}
@@ -3007,7 +3006,7 @@ function renderCiclos(){
         <button class="icon-btn" onclick="verCicloPainel(${c.id})">Ver painel</button>
         ${c.status === 'fechado' ? '<button class="icon-btn" title="Modelo de relatório enviado à Gerente Superior">Extrair relatório final</button>' : ''}
         ${c.regraPadraoId ? '<button class="icon-btn" onclick="verRegraDoCiclo(' + c.id + ')">Regra aplicada</button>' : ''}
-        ${c.regraPadraoId && c.status === 'aberto' && !modoV2 ? '<button class="icon-btn" onclick="editarRegraDoCiclo(' + c.id + ')">Editar regra</button>' : ''}
+        
       </td>
     </tr>`;
   }).join('');
