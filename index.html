@@ -599,6 +599,9 @@ svg.lucide{stroke-width:2;}
 #regraEditavelBlock .rules-wrap{max-height:none;}
   
 .card .body #regraEditavelBlock .rules-table select,.card .body #regraEditavelBlock .rules-table input:not([type=checkbox]){appearance:none;-webkit-appearance:none;background:none!important;background-image:none!important;border:0!important;box-shadow:none!important;padding:0!important;height:auto!important;width:auto!important;min-width:0;font-size:14px;font-weight:400;color:var(--fg)!important;pointer-events:none;}
+  
+.fc-btn:disabled{opacity:.55;cursor:not-allowed;background:var(--subtle);}
+.fc-soon{font-size:11px;color:var(--muted-fg);border:1px solid var(--border);border-radius:6px;padding:1px 6px;background:#fff;}
   </style>
 </head>
 <body>
@@ -1669,17 +1672,9 @@ let cargasBuscaTexto = '';
 // ===== Filtros por campo na tabela de cargas (select com busca, múltipla escolha) =====
 // Cada campo tem o seu próprio filtro. Dentro de um campo, os valores marcados valem como "ou";
 // entre campos diferentes, valem como "e". Serve para cruzar informações e achar o que dá para unificar ou compartilhar.
-const FILTROS_CAMPO = [
-  { key: 'nomeDdz', label: 'Coordenadoria/Município' },
-  { key: 'escola', label: 'Nome Escola' },
-  { key: 'localidade', label: 'Localidade' },
-  { key: 'nomeEnsino', label: 'Nome Ensino' },
-  { key: 'disciplinas', label: 'Disciplinas' },
-  { key: 'horas', label: 'Horas', suffix: 'h' },
-  { key: 'areaEixo', label: 'Área/Eixo' },
-  { key: 'turno', label: 'Turno' },
-  { key: 'comunidade', label: 'Comunidade' }
-];
+// Um filtro por coluna da tabela, na mesma ordem das colunas (CARGA_COLUMNS). Só aparece o filtro das colunas visíveis.
+// Motivo fica desabilitado até o cliente padronizar os valores.
+const FILTROS_CAMPO = CARGA_COLUMNS.map(c => ({ key: c.field, colKey: c.key, label: c.label, suffix: c.suffix, disabled: c.key === 'motivo' }));
 let filtrosCampo = {};
 function valorFiltro(f, key){ let v = f[key]; if (v === undefined || v === null || v === '') v = '-'; return String(v); }
 function passaFiltrosCampo(f){
@@ -1693,8 +1688,9 @@ function valoresDoCampo(key){
 function montarFiltrosCampo(){
   const box = document.getElementById('cargasFiltrosCampo');
   if (!box) return;
-  box.innerHTML = '<div class="fc-bar">' + FILTROS_CAMPO.map(fc =>
-    '<div class="fc-item"><button class="fc-btn" id="fcBtn-' + fc.key + '" data-k="' + fc.key + '" onclick="toggleFiltroCampo(this.dataset.k)"><span>' + fc.label + '</span><span class="fc-count" id="fcCount-' + fc.key + '"></span> ▾</button><div class="fc-pop" id="fcPop-' + fc.key + '" style="display:none;"></div></div>'
+  const visCols = new Set(colunasVisiveisAtuais().map(c => c.key));
+  box.innerHTML = '<div class="fc-bar">' + FILTROS_CAMPO.filter(fc => visCols.has(fc.colKey)).map(fc =>
+    '<div class="fc-item"><button class="fc-btn" id="fcBtn-' + fc.key + '" data-k="' + fc.key + '"' + (fc.disabled ? ' disabled title="Disponível quando o Motivo for padronizado"' : '') + ' onclick="toggleFiltroCampo(this.dataset.k)"><span>' + fc.label + '</span><span class="fc-count" id="fcCount-' + fc.key + '"></span>' + (fc.disabled ? ' <span class="fc-soon">em breve</span>' : ' ▾') + '</button><div class="fc-pop" id="fcPop-' + fc.key + '" style="display:none;"></div></div>'
   ).join('') + '</div><div class="fc-resumo" id="fcResumo"></div>';
 }
 function fecharPopsFiltros(){ document.querySelectorAll('.fc-pop').forEach(p => { p.style.display = 'none'; }); }
@@ -1891,7 +1887,8 @@ function toggleColunasCargas(){
 }
 
 function toggleColunaExtra(key, checked){
-  if (checked) colunasExtrasVisiveis.add(key); else colunasExtrasVisiveis.delete(key);
+  if (checked) colunasExtrasVisiveis.add(key); else { colunasExtrasVisiveis.delete(key); const col = CARGA_COLUMNS.find(c => c.key === key); if (col) delete filtrosCampo[col.field]; }
+  montarFiltrosCampo();
   renderCargasTable();
   avaliarCargas();
 }
