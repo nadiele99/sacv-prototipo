@@ -602,6 +602,10 @@ svg.lucide{stroke-width:2;}
   
 .fc-btn:disabled{opacity:.55;cursor:not-allowed;background:var(--subtle);}
 .fc-soon{font-size:11px;color:var(--muted-fg);border:1px solid var(--border);border-radius:6px;padding:1px 6px;background:#fff;}
+  
+.tc-tabs{padding:12px 16px;border-bottom:1px solid var(--border);}
+.tc-tabs .steps-tab{display:inline-flex;margin-bottom:0;}
+.tc-tabs .steps-tab span span{padding:0;margin-left:4px;font-weight:700;background:none;}
   </style>
 </head>
 <body>
@@ -800,7 +804,7 @@ svg.lucide{stroke-width:2;}
 
                 </div>
                 </div><div class="note">As regras podem mudar a qualquer momento antes de fechar o município · a coluna <b>Observação</b> abaixo sempre mostra a regra que gerou o status atual de cada carga. É sempre a versão mais recente que vale, aplicada assim que você altera algo.</div>
-                <div class="ui-card table-card"><div class="field-head tc-toolbar">
+                <div class="ui-card table-card"><div class="tc-tabs"><div class="steps-tab" id="vistaCargas"><span class="active" data-v="principais" onclick="setVistaCargas('principais')">Vagas e pendências <span id="cntVistaPrincipais"></span></span><span data-v="excluidas" onclick="setVistaCargas('excluidas')">Excluídas <span id="cntVistaExcluidas"></span></span></div></div><div class="field-head tc-toolbar">
                   <label>Cargas importadas da base</label>
                   <span style="display:flex;gap:8px;align-items:center;">
                     <span class="input-search"><i data-lucide="search" class="input-search-icon lucide-ic"></i><input type="text" id="cargasBuscaInput" placeholder="Busca livre em todas as colunas..." oninput="filtrarCargas(this.value)"></span>
@@ -3962,6 +3966,36 @@ function openModal(key){
   document.getElementById('overlay').classList.add('show');
 }
 function closeModal(){ document.getElementById('overlay').classList.remove('show'); }
+
+
+// ===== Duas visões das cargas importadas =====
+// 1) Vagas e pendências: confirmadas, exceções e as que precisam de justificativa (prioridade da análise).
+// 2) Excluídas: saíram direto por regra (ou por exclusão manual). Ficam separadas para não poluir a primeira visão.
+let cargasVista = 'principais';
+function setVistaCargas(v){ cargasVista = v; aplicaVistaCargas(); }
+function aplicaVistaCargas(){
+  const body = document.getElementById('cargasTableBody');
+  if (!body) return;
+  let np = 0, ne = 0, vis = 0;
+  body.querySelectorAll('tr[id^="row"]').forEach(tr => {
+    const ex = tr.classList.contains('excluded');
+    if (ex) ne++; else np++;
+    const show = (cargasVista === 'excluidas') === ex;
+    tr.style.display = show ? '' : 'none';
+    if (show) vis++;
+  });
+  const cp = document.getElementById('cntVistaPrincipais'); if (cp) cp.textContent = '(' + np + ')';
+  const ce = document.getElementById('cntVistaExcluidas'); if (ce) ce.textContent = '(' + ne + ')';
+  document.querySelectorAll('#vistaCargas span[data-v]').forEach(s => s.classList.toggle('active', s.dataset.v === cargasVista));
+  const antiga = document.getElementById('vistaVazia'); if (antiga) antiga.remove();
+  if (!vis){
+    const cols = document.querySelectorAll('#cargasTableHead th').length || 1;
+    const msg = cargasVista === 'excluidas' ? 'Nenhuma carga excluída por regra nos filtros atuais.' : 'Nenhuma vaga confirmada ou pendência nos filtros atuais.';
+    body.insertAdjacentHTML('beforeend', '<tr id="vistaVazia"><td colspan="' + cols + '" style="text-align:center;color:var(--muted-fg);padding:28px 16px;">' + msg + '</td></tr>');
+  }
+  const b = document.querySelector('#fcResumo b'); if (b) b.textContent = vis;
+}
+(function(){ const orig = avaliarCargas; avaliarCargas = function(){ const r = orig.apply(this, arguments); aplicaVistaCargas(); return r; }; })();
 
 // init
 setPerfil('analista');
