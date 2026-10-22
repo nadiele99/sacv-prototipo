@@ -1771,8 +1771,7 @@ function toggleSelecaoGrupo(rowId, checked){
 function vistaAtualCargas(){ try { return cargasVista; } catch(e){ return 'principais'; } }
 function chkHabilitado(row){
   if (row.dataset.podeAgrupar !== '1') return false;
-  const ponta = row.dataset.excludedBy === 'cargaHoraria';
-  return vistaAtualCargas() === 'excluidas' ? ponta : !ponta;
+  return true;
 }
 
 function syncGrupoCheckbox(rowId, podeAgrupar){
@@ -1783,7 +1782,7 @@ function syncGrupoCheckbox(rowId, podeAgrupar){
   row.dataset.podeAgrupar = podeAgrupar ? '1' : '0';
   const ehPonta = row.dataset.excludedBy === 'cargaHoraria';
   chk.disabled = !chkHabilitado(row);
-  chk.title = !podeAgrupar ? 'Esta carga está excluída e não conta como vaga no momento · reinclua para poder compartilhar ou unificar' : (ehPonta ? 'Ponta de carga (abaixo do corte de horas) · só pode ser compartilhada, na aba Excluídas' : 'Vaga confirmada ou pendência · só pode ser unificada, na aba Vagas e pendências');
+  chk.title = !podeAgrupar ? 'Esta carga está excluída e não conta como vaga no momento · reinclua para poder compartilhar ou unificar' : (ehPonta ? 'Ponta de carga (abaixo do corte de horas) · pode ser compartilhada' : '');
   if (chk.disabled && selecionadosGrupo.has(rowId)){
     selecionadosGrupo.delete(rowId);
     chk.checked = false;
@@ -1797,8 +1796,6 @@ function atualizarToolbarGrupo(){
   const n = selecionadosGrupo.size;
   const naExcluidas = vistaAtualCargas() === 'excluidas';
   bar.style.display = n >= 2 ? 'flex' : 'none';
-  const bc = document.getElementById('btnCompartilhar'); if (bc) bc.style.display = naExcluidas ? '' : 'none';
-  const bu = document.getElementById('btnUnificar'); if (bu) bu.style.display = naExcluidas ? 'none' : '';
   const txt = document.getElementById('grupoSelecionadasTxt');
   if (txt) txt.textContent = n + (n === 1 ? ' carga selecionada' : ' cargas selecionadas');
 }
@@ -1807,13 +1804,13 @@ function abrirAgruparVaga(tipo){
   const ids = [...selecionadosGrupo];
   if (ids.length < 2) return;
   const box = document.getElementById('modalBox');
-  const attrs = [['localidade','zona (Rural/Urbana)'],['turno','turno'],['comunidade','comunidade'],['nomeEnsino','modalidade/nome do ensino']];
+  // Unificar (cliente, 6.4 e 6.5): mesmo município, zona, componente curricular, turno, comunidade e modalidade de ensino.
+  const attrs = [['localidade','zona (Rural/Urbana)'],['turno','turno'],['comunidade','comunidade'],['nomeEnsino','modalidade/nome do ensino'],['disciplinas','componente curricular (disciplina)']];
   const difs = attrs.filter(a => new Set(ids.map(id => (CARGA_FIELDS[id] && CARGA_FIELDS[id][a[0]]) || '')).size > 1).map(a => a[1]);
   const pontas = ids.filter(id => { const r = document.getElementById(id); return r && r.dataset.excludedBy === 'cargaHoraria'; });
   let bloqueio = '';
-  if (difs.length) bloqueio = 'Para compartilhar ou unificar, as cargas precisam ser do mesmo município, mesma zona, mesma comunidade, mesmo turno e mesma modalidade de ensino. As cargas selecionadas diferem em: <b>' + difs.join(', ') + '</b>.';
-  else if (tipo === 'unificada' && pontas.length) bloqueio = 'Pontas de carga (abaixo do corte de horas) não podem ser unificadas · elas só podem ser compartilhadas. Desmarque a ponta ou use <b>Compartilhar</b>.';
-  else if (tipo === 'compartilhada' && !pontas.length) bloqueio = 'O compartilhamento é só para pontas de carga (abaixo do corte de horas). Nenhuma das cargas selecionadas é uma ponta · se elas são o mesmo componente com grafias diferentes, use <b>Unificar</b>.';
+  if (tipo === 'unificada' && difs.length) bloqueio = 'Para unificar, as cargas precisam ter o mesmo município, a mesma zona, o mesmo componente curricular, o mesmo turno, a mesma comunidade e a mesma modalidade de ensino (respostas 6.4 e 6.5 do cliente). As cargas selecionadas diferem em: <b>' + difs.join(', ') + '</b>.';
+  else if (tipo === 'compartilhada' && pontas.length !== ids.length) bloqueio = 'Somente as pontas de carga são compartilhadas (resposta 6.2 do cliente). Desmarque as cargas que não são pontas.';
   if (bloqueio){
     box.className = 'modal-aviso red';
     box.innerHTML = '<div class="icon-circle"><i data-lucide="ban" class="lucide-ic"></i></div>' +
@@ -1827,17 +1824,12 @@ function abrirAgruparVaga(tipo){
   const escolas = ids.map(id => CARGA_FIELDS[id].escola).join(', ');
   const titulo = tipo === 'compartilhada' ? 'Compartilhar vaga' : 'Unificar vaga';
   const explicacao = tipo === 'compartilhada'
-    ? 'Um único professor vai atender as ' + ids.length + ' escolas selecionadas (' + escolas + ') para o mesmo componente curricular, dividindo a carga horária entre elas. Juntas, essas cargas vão valer como <b>uma vaga</b>. A divisão exata da carga horária será definida quando houver integração com o sistema de lotação.'
-    : 'As ' + ids.length + ' cargas selecionadas (' + escolas + ') referem-se ao mesmo componente curricular, apenas com grafias diferentes na base. Elas vão ser unificadas e contar como <b>uma vaga</b>.';
-  const disciplinasSet = new Set(ids.map(id => (CARGA_FIELDS[id] && CARGA_FIELDS[id].disciplinas) || ''));
-  const avisoDisciplina = disciplinasSet.size > 1
-    ? '<div class="inline-warn"><i data-lucide="triangle-alert" class="lucide-ic"></i><span>As cargas selecionadas estão com <b>componentes curriculares diferentes</b> na base (' + [...disciplinasSet].join(' · ') + '). Confirme se elas realmente se referem ao mesmo componente, só com grafia diferente, antes de continuar.</span></div>'
-    : '';
+    ? 'As ' + ids.length + ' pontas de carga selecionadas (' + escolas + ') serão compartilhadas: um único professor vai atender essas escolas e as cargas juntas valem <b>uma vaga</b>. A divisão exata da carga horária será definida quando houver integração com o sistema de lotação.'
+    : 'As ' + ids.length + ' cargas selecionadas (' + escolas + ') serão consideradas <b>uma única carga</b> (unificada) e contam como uma vaga.';
   box.className = 'modal-aviso green';
   box.innerHTML = '<div class="icon-circle"><i data-lucide="check" class="lucide-ic"></i></div>' +
     '<h3>' + titulo + '</h3>' +
     '<p>' + explicacao + '</p>' +
-    avisoDisciplina +
     '<div class="actions"><button class="btn btn-outline" onclick="closeModal()">Cancelar</button> <button class="btn btn-navy" onclick="confirmarAgruparVaga()">Confirmar</button></div>';
   document.getElementById('overlay').classList.add('show');
 }
@@ -3988,9 +3980,8 @@ function aplicaVistaCargas(){
   const body = document.getElementById('cargasTableBody');
   if (!body) return;
   let np = 0, ne = 0, vis = 0;
-  const compartilhada = id => { const g = rowParaGrupo[id] && gruposVaga[rowParaGrupo[id]]; return !!g && g.tipo === 'compartilhada'; };
   body.querySelectorAll('tr[id^="row"]').forEach(tr => {
-    const ex = tr.classList.contains('excluded') && !compartilhada(tr.id);
+    const ex = tr.classList.contains('excluded');
     if (ex) ne++; else np++;
     const show = (cargasVista === 'excluidas') === ex;
     tr.style.display = show ? '' : 'none';
@@ -4013,9 +4004,7 @@ function aplicaVistaCargas(){
   const b = document.querySelector('#fcResumo b'); if (b) b.textContent = vis;
   const dica = document.getElementById('dicaVista');
   if (dica){
-    dica.innerHTML = cargasVista === 'excluidas'
-      ? '<b>Compartilhar vaga</b> · Um mesmo professor atende duas ou mais escolas e as cargas juntas valem <b>uma vaga</b>. Serve para as <b>pontas de carga</b>: sobras que a regra de horas excluiu por ficarem abaixo do corte. Por isso o Compartilhar fica nesta aba, onde estão as excluídas pela regra de horas. As cargas precisam ser do mesmo município, zona, comunidade, turno e modalidade de ensino. Depois de compartilhada, a vaga passa para a aba Vagas e pendências.'
-      : '<b>Unificar vaga</b> · Junta cargas que são o mesmo componente curricular escrito de formas diferentes na base, para contar <b>uma vaga</b> só. Serve para cargas que já contam como vaga, sem serem pontas. Por isso o Unificar fica nesta aba, onde estão as vagas confirmadas e as pendências. As cargas precisam ser do mesmo município, zona, comunidade, turno e modalidade de ensino. As pontas de carga ficam na aba Excluídas e só podem ser compartilhadas.';
+    dica.innerHTML = '<b>Compartilhar vaga</b> · Conforme o cliente (6.1 a 6.3), somente as <b>pontas de carga</b> são compartilhadas. As cargas são contabilizadas a partir de 10 aulas, e o Analista faz o compartilhamento no ato da posse do candidato ou da alocação do professor em carga. Exemplo do cliente: Escola 1 com 10 aulas e Escola 2 com 5 ou 6 aulas de Língua Portuguesa, no turno matutino.<br><b>Unificar vaga</b> · Conforme o cliente (6.4 a 6.6), duas ou mais cargas são consideradas <b>uma única carga</b> quando têm o mesmo município, a mesma zona (rural ou urbana), o mesmo componente curricular, o mesmo turno, a mesma comunidade e a mesma modalidade de ensino. O cliente informou que não há situação em que cargas assim não devam ser unificadas.<br>As pontas de carga ficam na aba Excluídas e as demais cargas na aba Vagas e pendências. As duas ações aparecem nas duas abas.';
   }
   atualizarToolbarGrupo();
 }
