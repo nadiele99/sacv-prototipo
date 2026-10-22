@@ -158,7 +158,6 @@
   table{width:100%;border-collapse:collapse;font-size:13px;}
   th{text-align:left;color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:.03em;padding:8px 10px;border-bottom:2px solid var(--gray-200);}
   td{padding:11px 10px;border-bottom:1px solid var(--gray-100);vertical-align:middle;}
-  tr.excluded td{opacity:.4;text-decoration:line-through;}
   .badge{display:inline-block;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:700;}
   .badge.green{background:#E4F5E8;color:var(--green-dark);}
   .badge.gray{background:var(--gray-100);color:var(--muted);}
@@ -813,10 +812,11 @@ svg.lucide{stroke-width:2;}
                 </div>
                 <div class="tc-extra"><div class="picker-list" id="colunasCargasPicker" style="display:none;border:1px solid var(--gray-300);border-radius:8px;padding:12px 14px;margin-bottom:0;max-height:220px;overflow-y:auto;"></div>
                 <div id="cargasFiltrosCampo"></div>
+                <div class="note" id="dicaVista" style="margin-bottom:10px;"></div>
                 <div class="grupo-toolbar" id="grupoToolbar">
                   <span id="grupoSelecionadasTxt" style="font-size:12.5px;color:var(--muted);flex:1;"></span>
-                  <button class="btn btn-outline" onclick="abrirAgruparVaga('compartilhada')">Compartilhar vaga</button>
-                  <button class="btn btn-navy" onclick="abrirAgruparVaga('unificada')">Unificar vaga</button>
+                  <button class="btn btn-outline" id="btnCompartilhar" onclick="abrirAgruparVaga('compartilhada')">Compartilhar vaga</button>
+                  <button class="btn btn-navy" id="btnUnificar" onclick="abrirAgruparVaga('unificada')">Unificar vaga</button>
                 </div>
                 </div><div class="table-wrap">
                   <table id="cargasTable">
@@ -1768,15 +1768,23 @@ function toggleSelecaoGrupo(rowId, checked){
   atualizarToolbarGrupo();
 }
 
+function vistaAtualCargas(){ try { return cargasVista; } catch(e){ return 'principais'; } }
+function chkHabilitado(row){
+  if (row.dataset.podeAgrupar !== '1') return false;
+  const ponta = row.dataset.excludedBy === 'cargaHoraria';
+  return vistaAtualCargas() === 'excluidas' ? ponta : !ponta;
+}
+
 function syncGrupoCheckbox(rowId, podeAgrupar){
   const row = document.getElementById(rowId);
   if (!row) return;
   const chk = row.querySelector('.grupo-chk');
   if (!chk || rowParaGrupo[rowId]) return;
-  chk.disabled = !podeAgrupar;
+  row.dataset.podeAgrupar = podeAgrupar ? '1' : '0';
   const ehPonta = row.dataset.excludedBy === 'cargaHoraria';
-  chk.title = podeAgrupar ? (ehPonta ? 'Ponta de carga (abaixo do mínimo de aulas) · só pode ser compartilhada com outra carga' : '') : 'Esta carga está excluída e não conta como vaga no momento · reinclua para poder compartilhar ou unificar';
-  if (!podeAgrupar && selecionadosGrupo.has(rowId)){
+  chk.disabled = !chkHabilitado(row);
+  chk.title = !podeAgrupar ? 'Esta carga está excluída e não conta como vaga no momento · reinclua para poder compartilhar ou unificar' : (ehPonta ? 'Ponta de carga (abaixo do corte de horas) · só pode ser compartilhada, na aba Excluídas' : 'Vaga confirmada ou pendência · só pode ser unificada, na aba Vagas e pendências');
+  if (chk.disabled && selecionadosGrupo.has(rowId)){
     selecionadosGrupo.delete(rowId);
     chk.checked = false;
     atualizarToolbarGrupo();
@@ -1787,7 +1795,10 @@ function atualizarToolbarGrupo(){
   const bar = document.getElementById('grupoToolbar');
   if (!bar) return;
   const n = selecionadosGrupo.size;
+  const naExcluidas = vistaAtualCargas() === 'excluidas';
   bar.style.display = n >= 2 ? 'flex' : 'none';
+  const bc = document.getElementById('btnCompartilhar'); if (bc) bc.style.display = naExcluidas ? '' : 'none';
+  const bu = document.getElementById('btnUnificar'); if (bu) bu.style.display = naExcluidas ? 'none' : '';
   const txt = document.getElementById('grupoSelecionadasTxt');
   if (txt) txt.textContent = n + (n === 1 ? ' carga selecionada' : ' cargas selecionadas');
 }
@@ -1801,8 +1812,8 @@ function abrirAgruparVaga(tipo){
   const pontas = ids.filter(id => { const r = document.getElementById(id); return r && r.dataset.excludedBy === 'cargaHoraria'; });
   let bloqueio = '';
   if (difs.length) bloqueio = 'Para compartilhar ou unificar, as cargas precisam ser do mesmo município, mesma zona, mesma comunidade, mesmo turno e mesma modalidade de ensino. As cargas selecionadas diferem em: <b>' + difs.join(', ') + '</b>.';
-  else if (tipo === 'unificada' && pontas.length) bloqueio = 'Pontas de carga (abaixo do mínimo de aulas) não podem ser unificadas · elas só podem ser compartilhadas. Desmarque a ponta ou use <b>Compartilhar</b>.';
-  else if (tipo === 'compartilhada' && !pontas.length) bloqueio = 'O compartilhamento é só para pontas de carga (abaixo do mínimo de aulas). Nenhuma das cargas selecionadas é uma ponta · se elas são o mesmo componente com grafias diferentes, use <b>Unificar</b>.';
+  else if (tipo === 'unificada' && pontas.length) bloqueio = 'Pontas de carga (abaixo do corte de horas) não podem ser unificadas · elas só podem ser compartilhadas. Desmarque a ponta ou use <b>Compartilhar</b>.';
+  else if (tipo === 'compartilhada' && !pontas.length) bloqueio = 'O compartilhamento é só para pontas de carga (abaixo do corte de horas). Nenhuma das cargas selecionadas é uma ponta · se elas são o mesmo componente com grafias diferentes, use <b>Unificar</b>.';
   if (bloqueio){
     box.className = 'modal-aviso red';
     box.innerHTML = '<div class="icon-circle"><i data-lucide="ban" class="lucide-ic"></i></div>' +
@@ -3977,12 +3988,18 @@ function aplicaVistaCargas(){
   const body = document.getElementById('cargasTableBody');
   if (!body) return;
   let np = 0, ne = 0, vis = 0;
+  const compartilhada = id => { const g = rowParaGrupo[id] && gruposVaga[rowParaGrupo[id]]; return !!g && g.tipo === 'compartilhada'; };
   body.querySelectorAll('tr[id^="row"]').forEach(tr => {
-    const ex = tr.classList.contains('excluded');
+    const ex = tr.classList.contains('excluded') && !compartilhada(tr.id);
     if (ex) ne++; else np++;
     const show = (cargasVista === 'excluidas') === ex;
     tr.style.display = show ? '' : 'none';
     if (show) vis++;
+    const chk = tr.querySelector('.grupo-chk');
+    if (chk && !rowParaGrupo[tr.id]){
+      chk.disabled = !chkHabilitado(tr);
+      if (chk.disabled && selecionadosGrupo.has(tr.id)){ selecionadosGrupo.delete(tr.id); chk.checked = false; }
+    }
   });
   const cp = document.getElementById('cntVistaPrincipais'); if (cp) cp.textContent = '(' + np + ')';
   const ce = document.getElementById('cntVistaExcluidas'); if (ce) ce.textContent = '(' + ne + ')';
@@ -3994,6 +4011,13 @@ function aplicaVistaCargas(){
     body.insertAdjacentHTML('beforeend', '<tr id="vistaVazia"><td colspan="' + cols + '" style="text-align:center;color:var(--muted-fg);padding:28px 16px;">' + msg + '</td></tr>');
   }
   const b = document.querySelector('#fcResumo b'); if (b) b.textContent = vis;
+  const dica = document.getElementById('dicaVista');
+  if (dica){
+    dica.innerHTML = cargasVista === 'excluidas'
+      ? '<b>Compartilhar vaga</b> · Um mesmo professor atende duas ou mais escolas e as cargas juntas valem <b>uma vaga</b>. Serve para as <b>pontas de carga</b>: sobras que a regra de horas excluiu por ficarem abaixo do corte. Por isso o Compartilhar fica nesta aba, onde estão as excluídas pela regra de horas. As cargas precisam ser do mesmo município, zona, comunidade, turno e modalidade de ensino. Depois de compartilhada, a vaga passa para a aba Vagas e pendências.'
+      : '<b>Unificar vaga</b> · Junta cargas que são o mesmo componente curricular escrito de formas diferentes na base, para contar <b>uma vaga</b> só. Serve para cargas que já contam como vaga, sem serem pontas. Por isso o Unificar fica nesta aba, onde estão as vagas confirmadas e as pendências. As cargas precisam ser do mesmo município, zona, comunidade, turno e modalidade de ensino. As pontas de carga ficam na aba Excluídas e só podem ser compartilhadas.';
+  }
+  atualizarToolbarGrupo();
 }
 (function(){ const orig = avaliarCargas; avaliarCargas = function(){ const r = orig.apply(this, arguments); aplicaVistaCargas(); return r; }; })();
 
