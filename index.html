@@ -815,7 +815,6 @@ svg.lucide{stroke-width:2;}
                 <div class="note" id="dicaVista" style="margin-bottom:10px;"></div>
                 <div class="grupo-toolbar" id="grupoToolbar">
                   <span id="grupoSelecionadasTxt" style="font-size:12.5px;color:var(--muted);flex:1;"></span>
-                  <button class="btn btn-outline" id="btnCompartilhar" onclick="abrirAgruparVaga('compartilhada')">Compartilhar vaga</button>
                   <button class="btn btn-navy" id="btnUnificar" onclick="abrirAgruparVaga('unificada')">Unificar vaga</button>
                 </div>
                 </div><div class="table-wrap">
@@ -1771,7 +1770,7 @@ function toggleSelecaoGrupo(rowId, checked){
 function vistaAtualCargas(){ try { return cargasVista; } catch(e){ return 'principais'; } }
 function chkHabilitado(row){
   if (row.dataset.podeAgrupar !== '1') return false;
-  return true;
+  return row.dataset.excludedBy !== 'cargaHoraria';
 }
 
 function syncGrupoCheckbox(rowId, podeAgrupar){
@@ -1782,7 +1781,7 @@ function syncGrupoCheckbox(rowId, podeAgrupar){
   row.dataset.podeAgrupar = podeAgrupar ? '1' : '0';
   const ehPonta = row.dataset.excludedBy === 'cargaHoraria';
   chk.disabled = !chkHabilitado(row);
-  chk.title = !podeAgrupar ? 'Esta carga está excluída e não conta como vaga no momento · reinclua para poder compartilhar ou unificar' : (ehPonta ? 'Ponta de carga (abaixo do corte de horas) · pode ser compartilhada' : '');
+  chk.title = !podeAgrupar ? 'Esta carga está excluída e não conta como vaga no momento · reinclua para poder compartilhar ou unificar' : (ehPonta ? 'Ponta de carga · o compartilhamento é feito pelo Analista na posse do candidato, fora do SACV' : '');
   if (chk.disabled && selecionadosGrupo.has(rowId)){
     selecionadosGrupo.delete(rowId);
     chk.checked = false;
@@ -4004,7 +4003,7 @@ function aplicaVistaCargas(){
   const b = document.querySelector('#fcResumo b'); if (b) b.textContent = vis;
   const dica = document.getElementById('dicaVista');
   if (dica){
-    dica.innerHTML = '<b>Compartilhar vaga</b> · Conforme o cliente (6.1 a 6.3), somente as <b>pontas de carga</b> são compartilhadas. As cargas são contabilizadas a partir de 10 aulas, e o Analista faz o compartilhamento no ato da posse do candidato ou da alocação do professor em carga. Exemplo do cliente: Escola 1 com 10 aulas e Escola 2 com 5 ou 6 aulas de Língua Portuguesa, no turno matutino.<br><b>Unificar vaga</b> · Conforme o cliente (6.4 a 6.6), duas ou mais cargas são consideradas <b>uma única carga</b> quando têm o mesmo município, a mesma zona (rural ou urbana), o mesmo componente curricular, o mesmo turno, a mesma comunidade e a mesma modalidade de ensino. O cliente informou que não há situação em que cargas assim não devam ser unificadas.<br>As pontas de carga ficam na aba Excluídas e as demais cargas na aba Vagas e pendências. As duas ações aparecem nas duas abas.';
+    dica.innerHTML = '<b>Unificar vaga</b> · Conforme o cliente (6.4 a 6.6), duas ou mais cargas são consideradas <b>uma única carga</b> quando têm o mesmo município, a mesma zona (rural ou urbana), o mesmo componente curricular, o mesmo turno, a mesma comunidade e a mesma modalidade de ensino. O cliente informou que não há situação em que cargas assim não devam ser unificadas.<br><b>Compartilhar não é feito no SACV.</b> O cliente informou que somente as pontas de carga são compartilhadas e que o Analista faz isso no ato da posse do candidato ou da alocação do professor em carga (6.1 e 6.2). A posse e a alocação são externas ao SACV e acontecem depois do consolidado final.';
   }
   atualizarToolbarGrupo();
 }
