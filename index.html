@@ -323,7 +323,7 @@
   .chip-add{border-radius:999px;transition:border-color .12s,color .12s;}
   .chip-add:hover{border-color:var(--navy-500);color:var(--navy-600);}
 
-  /* ===== Camada visual estilo shadcn/ui (New York) - V1 ===== */
+  /* ===== Camada visual estilo shadcn/ui (New York) ===== */
   .btn{border-radius:8px;font-weight:600;font-size:13.5px;box-shadow:0 1px 2px rgba(0,0,0,.05);transition:background-color .15s,border-color .15s,box-shadow .15s,opacity .15s;}
   .btn:focus-visible{outline:none;box-shadow:0 0 0 2px #fff,0 0 0 4px var(--navy-500);}
   .btn-navy:hover{background:var(--navy-800);}
@@ -613,10 +613,6 @@ svg.lucide{stroke-width:2;}
   <div class="seg">
     <button id="segAnalista" class="active" onclick="setPerfil('analista')">Análise</button>
     <button id="segGerente" onclick="setPerfil('gerente')">Gerentes</button>
-  </div>
-  <div class="seg" id="segVersao" title="Alternar entre o modelo atual (V1) e o modelo com análise automatizada (V2)">
-    <button id="segV1" class="active" onclick="setVersao('v1')">V1</button>
-    <button id="segV2" onclick="setVersao('v2')">V2</button>
   </div>
   <span class="hint">clique nos botões da tela para avançar, ou pule direto pela barra lateral</span>
   <button id="btnToggleNotas" class="notas-toggle-btn" onclick="toggleNotasRegras()"><i data-lucide="eye-off" class="lucide-ic"></i> Ocultar dicas de regras</button>
@@ -939,7 +935,6 @@ svg.lucide{stroke-width:2;}
             <div class="title-band">Regras padrão · filtros reutilizáveis entre ciclos <span class="tag">RN044</span></div>
             <div class="body">
 <div class="stack">
-              <div class="note" id="notaRegrasPadraoInterna" style="display:none;">Estas regras padrão estão definidas internamente na aplicação (nível de código) · não podem ser criadas, editadas ou excluídas por aqui. Na V2, elas são aplicadas automaticamente na análise de cada ciclo, sem passar pelo filtro de um Analista.</div>
               <div class="note" id="notaRegrasPadraoEditavel">As regras padrão chegam <b>automaticamente via ETL</b> a partir dos dados do cliente · aqui você só <b>consulta</b> o que existe. Não é possível criar, editar ou excluir regras pelo sistema. Ao abrir um ciclo, você escolhe qual das regras disponíveis aplicar (ou nenhuma); ela é carregada para os Analistas do ciclo, que também só consultam (RN044–RN046).</div>
               <div class="legend" id="grBaseNota"></div>
                             <div id="regrasPadraoList"></div>
@@ -1201,24 +1196,6 @@ function setPerfil(p){
   showScreen();
   renderSteps();
   if (p === 'analista' && typeof setTipoContext === 'function') setTipoContext('regular');
-}
-
-let modoV2 = false; // false = V1 (modelo atual, com Analista) · true = V2 (análise automatizada, sem Analista)
-function setVersao(v){
-  modoV2 = (v === 'v2');
-  const btnV1 = document.getElementById('segV1');
-  const btnV2 = document.getElementById('segV2');
-  if (btnV1) btnV1.classList.toggle('active', !modoV2);
-  if (btnV2) btnV2.classList.toggle('active', modoV2);
-  const btnAnalista = document.getElementById('segAnalista');
-  if (btnAnalista){
-    btnAnalista.disabled = modoV2;
-    btnAnalista.style.opacity = modoV2 ? '.4' : '';
-    btnAnalista.style.cursor = modoV2 ? 'not-allowed' : '';
-    btnAnalista.title = modoV2 ? 'Indisponível na V2 · a análise é automática, sem Analista' : '';
-  }
-  if (modoV2 && perfil === 'analista') setPerfil('gerente');
-  else showScreen();
 }
 
 let notasVisiveis = true;
@@ -2722,11 +2699,7 @@ function novoCamposUIVazio(){
 }
 
 function renderRegrasPadrao(){
-  const notaInterna = document.getElementById('notaRegrasPadraoInterna');
-  const notaEditavel = document.getElementById('notaRegrasPadraoEditavel');
   const acoes = document.getElementById('acoesRegraPadraoEditavel');
-  if (notaInterna) notaInterna.style.display = modoV2 ? '' : 'none';
-  if (notaEditavel) notaEditavel.style.display = modoV2 ? 'none' : '';
   if (acoes) acoes.style.display = 'none';
   const list = document.getElementById('regrasPadraoList');
   if (!list) return;
@@ -3269,7 +3242,7 @@ function renderPainelG1(){
   kpiRow.innerHTML = `
     <div class="kpi"><div class="num">${c.painel.fechados} / ${c.painel.total}</div><div class="lbl">municípios fechados</div><div class="progress"><div style="width:${pct}%;"></div></div></div>
     <div class="kpi"><div class="num">${aguardando}</div><div class="lbl">aguardando sua revisão (exemplo)</div></div>
-    <div class="kpi"><div class="num">${reprovados}</div><div class="lbl">${modoV2 ? 'reprovados, aguardando ajuste de regra (exemplo)' : 'reprovados, aguardando o analista (exemplo)'}</div></div>
+    <div class="kpi"><div class="num">${reprovados}</div><div class="lbl">reprovados, aguardando o analista (exemplo)</div></div>
     <div class="kpi"><div class="num">${naoReivindicados}</div><div class="lbl">ainda não reivindicados (exemplo)</div></div>
     <div class="kpi"><div class="num">${c.municipios.filter(m => m.revisaoStatus === 'regra_alterada').length}</div><div class="lbl">em reanálise por mudança de regra</div></div>
     <div class="kpi"><div class="num">${c.painel.pendencias}</div><div class="lbl">pendências abertas</div></div>
@@ -3279,9 +3252,7 @@ function renderPainelG1(){
   } else if (c.status === 'fechado'){
     nota.innerHTML = 'Este ciclo já foi fechado em ' + c.fechamento + ' (base: ' + c.base + '). Consulta somente leitura.';
   } else {
-    nota.innerHTML = (modoV2
-      ? 'Acompanhe o progresso deste ciclo. Você pode revisar os municípios já analisados automaticamente pelo sistema a qualquer momento · não precisa esperar todos concluírem.'
-      : 'Acompanhe o progresso deste ciclo. Você pode revisar os municípios já fechados pelo analista a qualquer momento · não precisa esperar todos concluírem.') + ' Base deste ciclo: ' + c.base + '.';
+    nota.innerHTML = 'Acompanhe o progresso deste ciclo. Você pode revisar os municípios já fechados pelo analista a qualquer momento · não precisa esperar todos concluírem.' + ' Base deste ciclo: ' + c.base + '.';
   }
   kpiRow.style.opacity = (c.status === 'cancelado') ? '.45' : '';
   if (btnRevisar) btnRevisar.textContent = (c.status === 'cancelado') ? 'Ver o que foi descartado (ciclo cancelado)' : (c.status === 'fechado') ? 'Ver revisão (ciclo fechado)' : 'Revisar municípios analisados →';
@@ -3321,18 +3292,18 @@ function renderPainelG4(){
     <div class="kpi"><div class="num">${totalCargas}</div><div class="lbl">cargas confirmadas (exemplo)</div></div>
     <div class="kpi"><div class="num">${c.painel.fechados} / ${c.painel.total}</div><div class="lbl">municípios fechados no ciclo</div></div>
     <div class="kpi"><div class="num">${aprovados.length} / ${fechados.length}</div><div class="lbl">aprovados por você (exemplo)</div></div>
-    <div class="kpi"><div class="num">${reprovados.length}</div><div class="lbl">${modoV2 ? 'reprovados, aguardando ajuste de regra (exemplo)' : 'reprovados, aguardando o analista (exemplo)'}</div></div>
+    <div class="kpi"><div class="num">${reprovados.length}</div><div class="lbl">reprovados, aguardando o analista (exemplo)</div></div>
     <div class="kpi"><div class="num">${naoReivindicados.length}</div><div class="lbl">ainda não reivindicados (exemplo)</div></div>
   `;
   const travado = c.status === 'fechado' || c.status === 'cancelado';
   list.innerHTML = c.municipios.map(m => {
-    if (!modoV2 && m.status === 'nao_reivindicado'){
+    if (m.status === 'nao_reivindicado'){
       return `<div class="muni-row" style="opacity:.7;">
         <div><div class="name">${m.nome}</div><div class="meta">nenhum analista reivindicou ainda · cobrar a equipe</div></div>
         <span class="badge red">Não reivindicado</span>
       </div>`;
     }
-    if (!modoV2 && m.status === 'em_analise'){
+    if (m.status === 'em_analise'){
       return `<div class="muni-row" style="opacity:.6;">
         <div><div class="name">${m.nome}</div><div class="meta">${m.revisaoStatus === 'regra_alterada' ? 'voltou para análise em ' + m.reanaliseEm + ' porque a regra do ciclo foi alterada: "' + m.reanaliseMotivo + '"' : 'reivindicado por ' + m.analista + ' · ainda em análise'}</div></div>
         ${m.revisaoStatus === 'regra_alterada' ? '<span class="badge yellow">Reanálise · regra alterada</span>' : '<span class="badge gray">Em andamento</span>'}
@@ -3341,15 +3312,15 @@ function renderPainelG4(){
     const statusBadge = m.revisaoStatus === 'aprovado'
       ? '<span class="badge green">Aprovado</span>'
       : m.revisaoStatus === 'reprovado'
-      ? '<span class="badge red">' + (modoV2 ? 'Reprovado · aguardando ajuste de regra' : 'Reprovado · aguardando analista') + '</span>'
+      ? '<span class="badge red">' + 'Reprovado · aguardando analista' + '</span>'
       : '<span class="badge yellow">Aguardando revisão</span>';
     const motivoLinha = m.revisaoStatus === 'reprovado'
       ? ' · <b style="color:#C0392B;">reprovado em ' + (m.reprovadoEm || '') + ': "' + m.motivoReprovacao + '"</b>'
       : '';
-    const cargasV2 = m.cargas > 0 ? m.cargas : 60;
-    const analistaLinha = (modoV2 && m.status !== 'fechado') ? 'Sistema · análise automática' : ('fechado por ' + m.analista);
+    const cargasN = m.cargas > 0 ? m.cargas : 60;
+    const analistaLinha = 'fechado por ' + m.analista;
     return `<div class="muni-row" ${m.reeditado ? 'style="background:#FFF7EB;"' : ''}>
-      <div><div class="name">${m.nome}</div><div class="meta">${analistaLinha} · ${cargasV2} cargas${(m.reeditado && !modoV2) ? ' · <b style="color:#C0392B;">reeditado pelo analista em ' + m.reeditadoEm + ', depois da sua revisão anterior</b>' : ''}${motivoLinha}</div></div>
+      <div><div class="name">${m.nome}</div><div class="meta">${analistaLinha} · ${cargasN} cargas${(m.reeditado) ? ' · <b style="color:#C0392B;">reeditado pelo analista em ' + m.reeditadoEm + ', depois da sua revisão anterior</b>' : ''}${motivoLinha}</div></div>
       <div style="display:flex;align-items:center;gap:10px;">
         ${m.reeditado ? '<span class="badge" style="background:#FCE4D6;color:#C0392B;"><i data-lucide="undo-2" class="lucide-ic"></i> Reeditado</span>' : ''}
         ${statusBadge}
@@ -3366,7 +3337,7 @@ function renderPainelG4(){
     nota.innerHTML = 'Este ciclo já foi fechado em ' + c.fechamento + ' · consolidado final gerado. Extraia o relatório final abaixo; o envio à Gerente Superior e a homologação em si acontecem manualmente, fora do SACV (RN028). Consulta somente leitura.';
   } else {
     nota.innerHTML = 'Baixar relatório por município fica sempre disponível, a qualquer momento · inclusive depois de já revisado. Clique em "Revisar" para aprovar ou reprovar (com justificativa) cada município fechado. Municípios ainda não reivindicados aparecem aqui para você cobrar a equipe. <b>Em regra (RN039), o "Consolidado final" só libera quando TODOS os municípios do ciclo estiverem fechados e aprovados</b> · neste protótipo, para permitir testar o fluxo, ele libera assim que os municípios já fechados forem aprovados, mesmo com municípios ainda em análise ou não reivindicados.'
-      + ((reeditados.length && !modoV2) ? ' <span style="color:#C0392B;"><b>Atenção:</b> ' + reeditados.length + ' município' + (reeditados.length>1?'s':'') + ' marcado' + (reeditados.length>1?'s':'') + ' como "<i data-lucide="undo-2" class="lucide-ic"></i> Reeditado" foi(ram) alterado(s) pelo analista depois da sua aprovação anterior · a marcação foi desfeita automaticamente, revise de novo.</span>' : '');
+      + ((reeditados.length) ? ' <span style="color:#C0392B;"><b>Atenção:</b> ' + reeditados.length + ' município' + (reeditados.length>1?'s':'') + ' marcado' + (reeditados.length>1?'s':'') + ' como "<i data-lucide="undo-2" class="lucide-ic"></i> Reeditado" foi(ram) alterado(s) pelo analista depois da sua aprovação anterior · a marcação foi desfeita automaticamente, revise de novo.</span>' : '');
   }
   const relWrap = document.getElementById('g4BtnRelatorioFinalWrap');
   if (relWrap){
@@ -3463,14 +3434,12 @@ function renderG2(){
   if (!m) return;
   if (breadcrumb) breadcrumb.textContent = g2MunicipioAtual;
   if (titulo) titulo.innerHTML = 'Revisão de fechamento · ' + g2MunicipioAtual + ' <span class="tag">RN007</span>';
-  if (nota) nota.innerHTML = modoV2
-    ? 'Análise automática pelo sistema · ' + (m.cargas > 0 ? m.cargas : 60) + ' cargas (exemplo). Confira as cargas abaixo e decida: aprove se está tudo certo, ou reprove explicando o que precisa ser ajustado.'
-    : 'Fechado por <b>' + m.analista + '</b> · ' + m.cargas + ' cargas. Confira as cargas abaixo e decida: aprove se está tudo certo, ou reprove explicando o que precisa ser ajustado · o analista vai ver o motivo no painel dele.';
+  if (nota) nota.innerHTML = 'Fechado por <b>' + m.analista + '</b> · ' + m.cargas + ' cargas. Confira as cargas abaixo e decida: aprove se está tudo certo, ou reprove explicando o que precisa ser ajustado · o analista vai ver o motivo no painel dele.';
   if (historicoNota){
     if (m.revisaoStatus === 'reprovado'){
       historicoNota.style.display = 'block';
-      historicoNota.innerHTML = '<b>Este município já foi reprovado</b> em ' + (m.reprovadoEm || '') + ', com o motivo: "' + m.motivoReprovacao + '". ' + (modoV2 ? 'Aguardando ajuste de regra · a análise volta a rodar automaticamente depois disso.' : 'Ainda está aguardando o analista reenviar.');
-    } else if (m.reeditado && !modoV2){
+      historicoNota.innerHTML = '<b>Este município já foi reprovado</b> em ' + (m.reprovadoEm || '') + ', com o motivo: "' + m.motivoReprovacao + '". ' + 'Ainda está aguardando o analista reenviar.';
+    } else if (m.reeditado){
       historicoNota.style.display = 'block';
       historicoNota.innerHTML = '<b>Reeditado pelo analista</b> em ' + m.reeditadoEm + ', depois da sua aprovação anterior · revise de novo.';
     } else {
@@ -3485,8 +3454,8 @@ function renderG2(){
   renderG2CargasTable();
   [0,1,2].forEach(renderG2CargaRow);
   const filtroBarEl = document.getElementById('g2Filtro');
-  if (filtroBarEl) filtroBarEl.style.display = modoV2 ? '' : 'none';
-  if (!modoV2) g2FiltroAtivo = 'todas';
+  if (filtroBarEl) filtroBarEl.style.display = 'none';
+  g2FiltroAtivo = 'todas';
   aplicarFiltroG2();
 }
 
@@ -3522,11 +3491,7 @@ function renderG2Regras(){
   } else {
     box.innerHTML = '<div class="note">Nenhuma regra padrão foi definida para este ciclo · o analista usou os filtros que considerou necessários, sem um ponto de partida pré-carregado.</div>';
   }
-  altBox.innerHTML = modoV2
-    ? '<div class="legend" style="margin-bottom:8px;"><b>Decisões automatizadas pelo sistema (exemplo):</b></div>' +
-      '<div class="note" style="margin-bottom:6px;"><span class="badge blue" style="margin-right:6px;">Motivo automatizado</span> Carga de <b>E.E. Central Itacoatiara</b> mantida como vaga automaticamente pelo sistema, com base no Motivo cadastrado, passando por cima das regras de Horas e Localidade.</div>' +
-      '<div class="note warn"><span class="badge gray" style="margin-right:6px;">Regra ajustada</span> Critério de Localidade segue restringido pela regra padrão do ciclo, para excluir comunidades fora do perímetro urbano.</div>'
-    : '<div class="legend" style="margin-bottom:8px;"><b>Alterações feitas pelo Analista (exemplo):</b></div>' +
+  altBox.innerHTML = '<div class="legend" style="margin-bottom:8px;"><b>Alterações feitas pelo Analista (exemplo):</b></div>' +
       '<div class="note" style="margin-bottom:6px;"><span class="badge yellow" style="margin-right:6px;">Exceção manual</span> Carga de <b>E.E. Central Itacoatiara</b> reincluída manualmente, passando por cima das regras de Horas e Localidade.</div>' +
       '<div class="note warn"><span class="badge gray" style="margin-right:6px;">Regra ajustada</span> Critério de Localidade foi restringido pelo analista para excluir comunidades fora do perímetro urbano.</div>';
 }
@@ -3547,12 +3512,6 @@ function g2FraseRegras(labels){
   if (!labels || !labels.length) return 'passando por cima da regra em vigor';
   if (labels.length === 1) return 'passando por cima da regra de ' + labels[0];
   return 'passando por cima das regras de ' + labels.join(', ');
-}
-function decisaoAutomaticaPorMotivo(motivo){
-  const texto = (motivo || '').toLowerCase();
-  const impeditivos = ['sem informação', 'insuficiente', 'incompleto', 'divergente não resolvid', 'erro', 'não localizad'];
-  const vale = motivo && motivo.trim() !== '' ? !impeditivos.some(p => texto.includes(p)) : true;
-  return { vale, criterio: vale ? 'motivo classificado como regularizável · sem impedimento cadastral' : 'motivo classificado como impeditivo · pendência não regularizada' };
 }
 let g2FiltroAtivo = 'todas';
 function categoriaG2(i){
@@ -3583,50 +3542,12 @@ function aplicarFiltroG2(){
 }
 const G2_RULE_FIELD = { 'Horas':'horas', 'Localidade':'localidade', 'Curso/Projeto':'tipoCurso', 'Nome Escola':'escola' };
 const G2_CONDICAO_SIMBOLO = { 'Igual a':'=', 'Diferente de':'≠', 'Menor que':'<', 'Maior que':'>' };
-function g2RegrasAplicadasHtml(i){
-  const c = G2_CARGAS_EXEMPLO[i];
-  const ciclo = ciclosHistorico.find(cy => cy.id === cicloSelecionado);
-  const regra = ciclo ? regrasPadrao.find(r => r.id === ciclo.regraPadraoId) : null;
-  const chavesAtivas = regra ? CHAVES_REGRA_ATIVA.filter(key => regra.campos[key]) : CHAVES_REGRA_ATIVA;
-  const rows = chavesAtivas.map(key => {
-    const f = CAMPOS_REGRA.find(f => f.key === key);
-    const label = f ? f.label : key;
-    const field = G2_RULE_FIELD[label];
-    let val = (field && c.campos) ? c.campos[field] : undefined;
-    if (val === undefined || val === null || val === '') val = '-';
-    else if (label === 'Horas') val = val + 'h';
-    const excluiu = (c.regras || []).includes(label);
-    let criterio = label;
-    const campo = regra && regra.campos[key];
-    if (campo){
-      const condSimb = G2_CONDICAO_SIMBOLO[campo.condicao] || campo.condicao;
-      const valorTxt = (f && f.type === 'chip') ? (campo.valores || []).join(', ') : (campo.valor + (key === 'cargaHoraria' ? 'h' : ''));
-      criterio = label + ' ' + condSimb + ' ' + valorTxt;
-    }
-    return g2ChecklistLinha(criterio, label + ' desta carga: ' + val, excluiu ? '<span class="badge red">excluiu esta carga</span>' : '<span class="badge gray">não se aplica</span>');
-  });
-  if (c.campos && c.campos.motivo){
-    const d = decisaoAutomaticaPorMotivo(c.campos.motivo);
-    const badge = d.vale ? '<span class="badge blue">motivo automatizado · vale vaga</span>' : '<span class="badge red">motivo automatizado · não vale vaga</span>';
-    rows.push(g2ChecklistLinha('Motivo', 'Motivo desta carga: ' + c.campos.motivo, badge));
-  }
-  if (!rows.length) return '<div class="legend" style="margin-top:6px;">Nenhuma regra ativa avaliada para esta carga.</div>';
-  return '<div class="g2-regras-aplicadas"><div class="g2-regras-titulo">Regras avaliadas nesta carga</div>' + rows.join('') + '</div>';
-}
-function g2ChecklistLinha(criterio, valor, badgeHtml){
-  return '<div class="g2-regra-linha"><span class="g2-regra-criterio">' + criterio + '</span><span class="g2-regra-valor">' + valor + '</span>' + badgeHtml + '</div>';
-}
 function g2ObsOriginal(i){
   const c = G2_CARGAS_EXEMPLO[i];
   if (c.tipoOriginal === 'excluida'){
     return 'Excluída pela regra · critérios enquadrados: ' + (c.regras && c.regras.length ? c.regras.join(', ') : '-') + '.';
   }
   if (c.tipoOriginal === 'excecao-analista'){
-    if (modoV2){
-      const motivo = c.campos && c.campos.motivo ? c.campos.motivo : '(motivo não informado)';
-      const d = decisaoAutomaticaPorMotivo(motivo);
-      return 'Decidido automaticamente pelo sistema · Motivo: "' + motivo + '" (' + d.criterio + ') · mantida como vaga, ' + g2FraseRegras(c.regras) + '.';
-    }
     return 'Exceção manual do Analista: mantida como vaga, ' + g2FraseRegras(c.regras) + '. Justificativa: ' + (c.justificativa && c.justificativa.trim() ? c.justificativa : '(nenhuma registrada)') + '.';
   }
   return 'Confirmada · não se enquadra em nenhuma regra de exclusão vigente.';
@@ -3693,7 +3614,6 @@ const G2_SITUACAO_ORIGINAL = {
   2: '<span class="badge red">Excluída</span>'
 };
 function g2SituacaoOriginalHtml(i){
-  if (i === 1 && modoV2) return '<span class="badge blue">Vaga confirmada · motivo automatizado</span>';
   return G2_SITUACAO_ORIGINAL[i];
 }
 function g2AcaoOriginalHtml(i){
@@ -3707,7 +3627,7 @@ function renderG2CargaRow(i){
   const obsTd = document.getElementById('g2Obs' + i);
   const row = document.getElementById('g2Row' + i);
   if (!situacaoTd || !acaoTd || !row) return;
-  if (obsTd) obsTd.innerHTML = g2ObsAtual(i) + (modoV2 ? g2RegrasAplicadasHtml(i) : '');
+  if (obsTd) obsTd.innerHTML = g2ObsAtual(i);
   if (d && d.tipo === 'reinclusao'){
     row.classList.remove('excluded');
     situacaoTd.innerHTML = '<span class="badge yellow">Vaga confirmada · exceção do Gerente</span>';
@@ -3829,14 +3749,14 @@ function openReprovarMunicipio(){
   box.innerHTML = `
     <div class="icon-circle"><i data-lucide="ban" class="lucide-ic"></i></div>
     <h3>Reprovar análise · ${g2MunicipioAtual}</h3>
-    <p>${modoV2 ? 'Explique o que precisa ser corrigido. O município fica reprovado, sinalizado para ajuste de regra (RF017/RN007) · a análise volta a rodar automaticamente depois do ajuste.' : 'Explique o que precisa ser corrigido. O Analista vai ver este motivo e o município volta pra fila dele, sinalizado para revisão (RF017/RN007).'}</p>
+    <p>Explique o que precisa ser corrigido. O Analista vai ver este motivo e o município volta pra fila dele, sinalizado para revisão (RF017/RN007).</p>
     <div class="field" style="margin-bottom:14px;">
       <label>Motivo da reprovação (obrigatório)</label>
       <textarea id="motivoReprovacaoInput" oninput="atualizaBtnConfirmarReprovacao()" placeholder="Explique o que precisa ser ajustado..."></textarea>
     </div>
     <div class="actions">
       <button class="btn btn-outline" onclick="closeModal()">Voltar</button>
-      <button class="btn btn-red" id="btnConfirmarReprovacao" disabled style="opacity:.5;cursor:not-allowed;" onclick="confirmarReprovacaoMunicipio()">${modoV2 ? 'Reprovar' : 'Reprovar e notificar Analista'}</button>
+      <button class="btn btn-red" id="btnConfirmarReprovacao" disabled style="opacity:.5;cursor:not-allowed;" onclick="confirmarReprovacaoMunicipio()">Reprovar e notificar Analista</button>
     </div>`;
   document.getElementById('overlay').classList.add('show');
 }
