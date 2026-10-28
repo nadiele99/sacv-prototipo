@@ -1616,7 +1616,7 @@ function renderCargasTable(){
   const extrasOcultas = CARGA_COLUMNS.length - colunas.length;
   if (btn) btn.innerHTML = '<i data-lucide="eye" class="lucide-ic"></i> Mostrar mais colunas' + (extrasOcultas > 0 ? ' (' + extrasOcultas + ')' : ' (todas visíveis)');
   head.innerHTML = '<th></th>' + colunas.map((c,i) => thOrdenavel(c.label, body.id, i+1)).join('') +
-    '<th>Observação · regra aplicada</th><th>Vale como vaga?</th><th>Situação</th><th>Tipo</th><th>Ação</th>';
+    '<th>Observação · regra aplicada</th><th>Vale como vaga?</th><th>Situação</th><th>Ação</th>';
   const termoCargas = (cargasBuscaTexto || '').trim().toLowerCase();
   if (!document.getElementById('fcResumo')) montarFiltrosCampo();
   const idsCargasFiltrados = Object.keys(CARGA_FIELDS).filter(rowId => {
@@ -1639,7 +1639,6 @@ function renderCargasTable(){
       '<td id="obs' + sufixo + '"></td>' +
       '<td><span class="badge gray" id="vale' + sufixo + '">-</span></td>' +
       '<td><span class="badge gray" id="badge' + sufixo + '">-</span></td>' +
-      '<td id="vagaGrupo' + sufixo + '"></td>' +
       '<td id="acao' + sufixo + '">-</td></tr>';
   }).join('');
   renderVagaGrupoBadges();
@@ -1834,12 +1833,15 @@ function desfazerGrupoVaga(grupoId){
 }
 
 function renderVagaGrupoBadges(){
+  // A coluna "Tipo" foi removida: a indicação de vaga agrupada (e o desfazer) aparece junto da Situação.
   Object.keys(CARGA_FIELDS).forEach(function(rowId){
     const sufixo = rowId.replace('row', '');
-    const cell = document.getElementById('vagaGrupo' + sufixo);
-    if (!cell) return;
+    const sit = document.getElementById('badge' + sufixo);
+    if (!sit || !sit.parentElement) return;
+    const td = sit.parentElement;
+    td.querySelectorAll('.grupo-tag').forEach(function(e){ e.remove(); });
     const grupoId = rowParaGrupo[rowId];
-    if (!grupoId){ cell.innerHTML = '<span class="badge gray">-</span>'; return; }
+    if (!grupoId) return;
     const g = gruposVaga[grupoId];
     const label = g.tipo === 'compartilhada' ? 'Compartilhada' : 'Unificada';
     const detalhes = g.rowIds.map(function(id){
@@ -1847,7 +1849,7 @@ function renderVagaGrupoBadges(){
       return '• ' + f.escola + ' - ' + f.disciplinas + ' (' + f.horas + 'h)';
     }).join('\n');
     const tooltip = (label === 'Compartilhada' ? 'Compartilhada entre ' + g.rowIds.length + ' escolas · 1 professor divide a carga' : 'Unificada de ' + g.rowIds.length + ' escolas') + ' · vale como 1 vaga:\n' + detalhes;
-    cell.innerHTML = '<span class="badge blue" title="' + tooltip.replace(/"/g,'&quot;') + '">' + label + ' · ' + g.rowIds.length + ' escolas</span> <a href="#" onclick="desfazerGrupoVaga(\'' + grupoId + '\');return false;" style="font-size:11px;color:var(--muted);margin-left:4px;"><i data-lucide="undo-2" class="lucide-ic"></i></a>';
+    td.insertAdjacentHTML('beforeend', ' <span class="grupo-tag"><span class="badge blue" title="' + tooltip.replace(/"/g,'&quot;') + '">' + label + ' · ' + g.rowIds.length + ' escolas</span> <a href="#" onclick="desfazerGrupoVaga(\'' + grupoId + '\');return false;" style="font-size:11px;color:var(--muted);margin-left:4px;"><i data-lucide="undo-2" class="lucide-ic"></i></a></span>');
   });
   icons();
 }
