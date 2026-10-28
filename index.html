@@ -3043,7 +3043,7 @@ function renderCiclos(){
       <td><span class="badge ${statusBadge}"${tituloCancelado}>${statusLabel}</span></td>
       <td style="white-space:nowrap;">
         <button class="icon-btn" onclick="verCicloPainel(${c.id})">Ver painel</button>
-        ${c.status === 'fechado' ? '<button class="icon-btn" onclick="verConsolidadoFinal(${c.id})">Ver consolidado final</button>' : ''}
+        ${c.status === 'fechado' ? '<button class="icon-btn" onclick="verConsolidadoFinal(' + c.id + ')">Ver consolidado final</button>' : ''}
         ${c.regraPadraoId ? '<button class="icon-btn" onclick="verRegraDoCiclo(' + c.id + ')">Regra aplicada</button>' : ''}
         
       </td>
