@@ -605,7 +605,16 @@ svg.lucide{stroke-width:2;}
 .tc-tabs{padding:12px 16px;border-bottom:1px solid var(--border);}
 .tc-tabs .steps-tab{display:inline-flex;margin-bottom:0;}
 .tc-tabs .steps-tab span span{padding:0;margin-left:4px;font-weight:700;background:none;}
-  </style>
+  
+  /* ===== Consolidado final (GC) ===== */
+  .rel-table td.num,.rel-table th.num{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap;}
+  .rel-table tr.rel-mun td{background:#EEF2FA;font-weight:700;color:var(--navy-700);cursor:pointer;border-top:1px solid var(--gray-200);user-select:none;}
+  .rel-table tr.rel-mun .chev{display:inline-block;margin-right:6px;transition:transform .15s;vertical-align:middle;}
+  .rel-table tr.rel-mun.fechado .chev{transform:rotate(-90deg);}
+  .rel-table tr.rel-sub td{background:var(--gray-100);font-weight:600;color:var(--muted);font-size:12.5px;}
+  .rel-table tr.rel-total td{background:var(--navy-700);color:#fff;font-weight:700;border-bottom:0;}
+  .rel-table td.com{color:var(--muted);font-size:12.5px;}
+</style>
 </head>
 <body>
 <div id="protoBar">
@@ -1080,6 +1089,50 @@ svg.lucide{stroke-width:2;}
     </div>
   </div>
 
+  <!-- GC · Consolidado final (cargas vagas por município e componente) -->
+  <div class="screen" id="scr-GC">
+    <div class="shell">
+      <div class="sidebar">
+        <div class="avatar">J</div>
+        <div class="sidebar-steps-label">Etapas</div>
+        <div class="sidebar-steps"></div>
+      </div>
+      <div class="main">
+        <div class="topnav"><div class="brand"><div class="dot"></div>SEDUC · GELOT</div><div class="help">Ajuda</div></div>
+        <div class="breadcrumb"><i data-lucide="house" class="lucide-ic"></i> Início &nbsp;›&nbsp; <a href="#" onclick="go('G0');return false;" style="color:var(--muted);">Ciclos de análise</a> &nbsp;›&nbsp; <a href="#" onclick="go('G1');return false;" style="color:var(--muted);" id="gcBreadcrumbCiclo">Ciclo #4</a> &nbsp;›&nbsp; <a href="#" onclick="go('G4');return false;" style="color:var(--muted);">Revisão e consolidado</a> &nbsp;›&nbsp; <b>Consolidado final</b></div>
+        <div class="content">
+          <div class="card">
+            <div class="title-band"><span id="gcTitulo">Consolidado final</span> <span class="tag">RN035</span></div>
+            <div class="body">
+<div class="stack">
+              <div class="note" id="gcNota"></div>
+              <div class="kpi-row" id="gcKpiRow"></div>
+              <div class="field-head tc-toolbar">
+                <label>Cargas vagas por município e componente curricular</label>
+                <span style="display:flex;gap:8px;align-items:center;">
+                  <span class="input-search"><i data-lucide="search" class="input-search-icon lucide-ic"></i><input type="text" id="gcBusca" placeholder="Buscar município ou componente..." oninput="renderConsolidadoFinal()"></span>
+                  <button class="icon-btn" id="gcBtnToggle" onclick="gcToggleTodos()">Recolher todos</button>
+                </span>
+              </div>
+              <div class="table-wrap" style="border:1px solid var(--border);border-radius:8px;">
+                <table class="rel-table">
+                  <thead><tr><th>Município</th><th>Comunidade</th><th>Componente curricular</th><th class="num">Cargas vagas</th></tr></thead>
+                  <tbody id="gcBody"></tbody>
+                </table>
+              </div>
+              <div class="legend">Protótipo de baixa fidelidade: municípios, comunidades e quantidades são exemplos, no formato do relatório que a GELOT envia hoje ao GAAS. O arquivo extraído deve ser enviado manualmente à Gerente Superior, fora do SACV (RN028).</div>
+              <div class="actions-row between" style="margin-top:18px;">
+                <button class="btn btn-outline" onclick="go('G4')">← Voltar à revisão</button>
+                <button class="btn btn-navy" id="gcBtnExtrair" onclick="extrairRelatorioFinal()"><i data-lucide="download" class="lucide-ic"></i> Extrair relatório final</button>
+              </div>
+            </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- G4 · Relatório final -->
   <div class="screen" id="scr-G4">
     <div class="shell">
@@ -1168,6 +1221,7 @@ const flows = {
     {id:'G0', label:'Ciclos de análise'},
     {id:'G1', label:'Painel Gerente'},
     {id:'G4', label:'Revisão e consolidado'},
+    {id:'GC', label:'Consolidado final'},
   ]
 };
 let perfil = 'analista';
@@ -1226,6 +1280,7 @@ function showScreen(){
   if (current === 'A1') atualizaBloqueioA1();
   if (current === 'G1') renderPainelG1();
   if (current === 'G4') renderPainelG4();
+  if (current === 'GC') renderConsolidadoFinal();
   if (current === 'G2') renderG2();
 }
 
@@ -1248,9 +1303,9 @@ const modals = {
   validar: {
     type:'green', icon:'<i data-lucide="check" class="lucide-ic"></i>',
     title:'Tem certeza que deseja fechar este ciclo?',
-    text:'Depois de confirmar, o relatório final consolidado é gerado e fica disponível para extração aqui mesmo, nesta tela, e o ciclo se fecha automaticamente (RN035): os analistas não poderão mais editar nenhuma carga dele. Não será possível voltar a este ciclo depois disso · para uma nova rodada deste tipo, você vai precisar criar (iniciar) uma nova análise em "Ciclos de análise". O arquivo extraído deve ser enviado manualmente (e-mail ou outro meio) à Gerente Superior, que cuida da homologação por fora do SACV (RN028) · esse envio e a homologação em si não acontecem pelo sistema.',
+    text:'Depois de confirmar, o consolidado final é gerado e aberto na tela Consolidado final, de onde o relatório pode ser extraído, e o ciclo se fecha automaticamente (RN035): os analistas não poderão mais editar nenhuma carga dele. Não será possível voltar a este ciclo depois disso · para uma nova rodada deste tipo, você vai precisar criar (iniciar) uma nova análise em "Ciclos de análise". O arquivo extraído deve ser enviado manualmente (e-mail ou outro meio) à Gerente Superior, que cuida da homologação por fora do SACV (RN028) · esse envio e a homologação em si não acontecem pelo sistema.',
     confirmLabel:'Sim, fechar ciclo', confirmClass:'btn-green',
-    onConfirm: () => { fecharCicloAtual(); renderPainelG4(); }
+    onConfirm: () => { fecharCicloAtual(); renderPainelG4(); go('GC'); }
   }
 };
 
@@ -2988,7 +3043,7 @@ function renderCiclos(){
       <td><span class="badge ${statusBadge}"${tituloCancelado}>${statusLabel}</span></td>
       <td style="white-space:nowrap;">
         <button class="icon-btn" onclick="verCicloPainel(${c.id})">Ver painel</button>
-        ${c.status === 'fechado' ? '<button class="icon-btn" title="Modelo de relatório enviado à Gerente Superior">Extrair relatório final</button>' : ''}
+        ${c.status === 'fechado' ? '<button class="icon-btn" onclick="verConsolidadoFinal(${c.id})">Ver consolidado final</button>' : ''}
         ${c.regraPadraoId ? '<button class="icon-btn" onclick="verRegraDoCiclo(' + c.id + ')">Regra aplicada</button>' : ''}
         
       </td>
@@ -3336,7 +3391,7 @@ function renderPainelG4(){
   if (c.status === 'cancelado'){
     nota.innerHTML = '<b style="color:#C0392B;">Este ciclo foi cancelado</b> em ' + c.canceladoEm + ' por ' + c.canceladoPor + '. Motivo: "' + c.motivoCancelamento + '". Os municípios abaixo refletem o estado no momento do cancelamento · nada aqui conta para revisão nem consolidado (RN043).';
   } else if (c.status === 'fechado'){
-    nota.innerHTML = 'Este ciclo já foi fechado em ' + c.fechamento + ' · consolidado final gerado. Extraia o relatório final abaixo; o envio à Gerente Superior e a homologação em si acontecem manualmente, fora do SACV (RN028). Consulta somente leitura.';
+    nota.innerHTML = 'Este ciclo já foi fechado em ' + c.fechamento + ' · consolidado final gerado. Abra o consolidado final para conferir as cargas vagas por município e extrair o relatório; o envio à Gerente Superior e a homologação em si acontecem manualmente, fora do SACV (RN028). Consulta somente leitura.';
   } else {
     nota.innerHTML = 'Baixar relatório por município fica sempre disponível, a qualquer momento · inclusive depois de já revisado. Clique em "Revisar" para aprovar ou reprovar (com justificativa) cada município fechado. Municípios ainda não reivindicados aparecem aqui para você cobrar a equipe. <b>Em regra (RN039), o "Consolidado final" só libera quando TODOS os municípios do ciclo estiverem fechados e aprovados</b> · neste protótipo, para permitir testar o fluxo, ele libera assim que os municípios já fechados forem aprovados, mesmo com municípios ainda em análise ou não reivindicados.'
       + ((reeditados.length) ? ' <span style="color:#C0392B;"><b>Atenção:</b> ' + reeditados.length + ' município' + (reeditados.length>1?'s':'') + ' marcado' + (reeditados.length>1?'s':'') + ' como "<i data-lucide="undo-2" class="lucide-ic"></i> Reeditado" foi(ram) alterado(s) pelo analista depois da sua aprovação anterior · a marcação foi desfeita automaticamente, revise de novo.</span>' : '');
@@ -3344,7 +3399,7 @@ function renderPainelG4(){
   const relWrap = document.getElementById('g4BtnRelatorioFinalWrap');
   if (relWrap){
     if (c.status === 'fechado'){
-      relWrap.innerHTML = '<button class="btn btn-navy" title="Modelo de relatório enviado à Gerente Superior">Extrair relatório final</button>';
+      relWrap.innerHTML = '<button class="btn btn-navy" onclick="verConsolidadoFinal(' + c.id + ')">Ver consolidado final</button>';
     } else if (c.status === 'cancelado'){
       relWrap.innerHTML = '';
     } else {
@@ -3930,6 +3985,97 @@ function aplicaVistaCargas(){
   atualizarToolbarGrupo();
 }
 (function(){ const orig = avaliarCargas; avaliarCargas = function(){ const r = orig.apply(this, arguments); aplicaVistaCargas(); return r; }; })();
+
+// ===== Consolidado final (GC): cargas vagas por município e componente =====
+// Dados de exemplo no formato do relatório que a GELOT envia hoje ao GAAS (município > comunidade > componente).
+const GC_DADOS = [
+  { mun:'ALVARAES', grupos:[
+    { com:'', itens:[['ARTES',1],['EDUCACAO FISICA',1],['FILOSOFIA',1],['FISICA-CIENCIAS DA NATUREZA E SUAS TE',1],['MATEMATICA-MATEMATICA E SUAS TECNOLOGIAS',1],['QUIMICA-CIENCIAS DA NATUREZA E SUAS TE',1],['SOCIOLOGIA',1]] } ] },
+  { mun:'AMATURA', grupos:[
+    { com:'', itens:[['BIOLOGIA',1],['CIENCIAS HUMANAS E SOCIAIS APL',1],['HISTORIA',1]] },
+    { com:'COMUNIDADE INDIGENA DE NOVA ITALIA, S/N, ZONA RURAL NOVA ITALIA', itens:[['FISICA E CONHECIMENTOS TRADICIONAIS',1],['MATTE ENFASE 2',1],['PROFESSOR ATENDIMENTO DOMICILIAR',1]] } ] },
+  { mun:'ANAMA', grupos:[
+    { com:'', itens:[['ARTES',2],['CIENCIAS DA NATUREZA E SUAS TE',1],['CIENCIAS HUMANAS E SOCIAIS APL',1],['FILOSOFIA-CIENCIAS HUMANAS E SOCIAIS APL',1],['FISICA',1],['LINGUA INGLESA',1],['LINGUA PORTUGUESA E SUAS LITER',1],['LINGUAGENS E SUAS TECNOLOGIAS',1],['MATEMATICA',1],['MATEMATICA E SUAS TECNOLOGIAS',1],['QUIMICA',1],['SALA RECURSOS',1],['SOCIOLOGIA',2]] } ] },
+  { mun:'ANORI', grupos:[
+    { com:'', itens:[['UCA3 APOIO PSICOSSOCIAL E SAUDE',1]] } ] }
+];
+let gcRecolhidos = new Set();
+function gcSemAcento(t){ return String(t||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase(); }
+function verConsolidadoFinal(id){ cicloSelecionado = id; go('GC'); }
+function gcSoma(arr){ return arr.reduce(function(a,b){ return a + b[1]; }, 0); }
+function gcFiltrados(){
+  const el = document.getElementById('gcBusca');
+  const q = gcSemAcento(el ? el.value : '').trim();
+  return GC_DADOS.map(function(m){
+    if (!q || gcSemAcento(m.mun).indexOf(q) >= 0) return m;
+    const grupos = m.grupos.map(function(g){
+      const itens = g.itens.filter(function(it){ return gcSemAcento(it[0]).indexOf(q) >= 0 || gcSemAcento(g.com).indexOf(q) >= 0; });
+      return { com:g.com, itens:itens };
+    }).filter(function(g){ return g.itens.length; });
+    return grupos.length ? { mun:m.mun, grupos:grupos } : null;
+  }).filter(Boolean);
+}
+function gcToggle(mun){ if (gcRecolhidos.has(mun)) gcRecolhidos.delete(mun); else gcRecolhidos.add(mun); renderConsolidadoFinal(); }
+function gcToggleTodos(){
+  const todos = GC_DADOS.map(function(m){ return m.mun; });
+  if (gcRecolhidos.size >= todos.length) gcRecolhidos = new Set(); else gcRecolhidos = new Set(todos);
+  renderConsolidadoFinal();
+}
+function renderConsolidadoFinal(){
+  const c = ciclosHistorico.find(function(c){ return c.id === cicloSelecionado; }) || ciclosHistorico[ciclosHistorico.length - 1];
+  const titulo = document.getElementById('gcTitulo'); if (titulo) titulo.textContent = 'Consolidado final · Ciclo #' + c.id + ' (' + tipoLabel(c.tipo) + ')';
+  const bc = document.getElementById('gcBreadcrumbCiclo'); if (bc) bc.textContent = 'Ciclo #' + c.id;
+  const nota = document.getElementById('gcNota');
+  const fechado = c.status === 'fechado';
+  if (nota) nota.innerHTML = fechado
+    ? 'Ciclo consolidado em ' + c.fechamento + '. Esta é a quantidade de cargas vagas por município e componente curricular que segue no relatório final. Confira e use <b>Extrair relatório final</b> para gerar o arquivo.'
+    : '<b>Prévia.</b> O consolidado final só é gerado quando todos os municípios do ciclo estiverem aprovados e o ciclo for fechado (RN039). Os números abaixo são um exemplo do que será extraído.';
+  if (nota) nota.className = fechado ? 'note' : 'note warn';
+  const btn = document.getElementById('gcBtnExtrair');
+  if (btn){ btn.disabled = !fechado; btn.style.opacity = fechado ? '' : '.5'; btn.style.cursor = fechado ? '' : 'not-allowed'; }
+  const coms = new Set(); const comps = new Set(); let total = 0;
+  GC_DADOS.forEach(function(m){ m.grupos.forEach(function(g){ if (g.com) coms.add(g.com); g.itens.forEach(function(it){ comps.add(it[0]); total += it[1]; }); }); });
+  const kpi = document.getElementById('gcKpiRow');
+  if (kpi) kpi.innerHTML =
+    '<div class="kpi"><div class="num">' + GC_DADOS.length + '</div><div class="lbl">municípios (exemplo)</div></div>' +
+    '<div class="kpi"><div class="num">' + coms.size + '</div><div class="lbl">comunidades específicas</div></div>' +
+    '<div class="kpi"><div class="num">' + comps.size + '</div><div class="lbl">componentes curriculares</div></div>' +
+    '<div class="kpi"><div class="num">' + total + '</div><div class="lbl">cargas vagas no total</div></div>';
+  const body = document.getElementById('gcBody'); if (!body) return;
+  const lista = gcFiltrados(); let html = ''; let totalVis = 0;
+  lista.forEach(function(m){
+    const todos = [].concat.apply([], m.grupos.map(function(g){ return g.itens; }));
+    const tm = gcSoma(todos); totalVis += tm;
+    const fech = gcRecolhidos.has(m.mun);
+    html += '<tr class="rel-mun' + (fech ? ' fechado' : '') + '" onclick="gcToggle(\'' + m.mun + '\')"><td colspan="3"><i data-lucide="chevron-down" class="lucide-ic chev"></i>' + m.mun + ' <span style="font-weight:500;color:var(--muted);font-size:12px;">· ' + todos.length + ' componente' + (todos.length > 1 ? 's' : '') + '</span></td><td class="num">' + tm + '</td></tr>';
+    if (fech) return;
+    m.grupos.forEach(function(g){
+      g.itens.forEach(function(it, i){
+        html += '<tr><td></td><td class="com">' + (i === 0 ? (g.com || '<span style="opacity:.6;">Sem comunidade específica</span>') : '') + '</td><td>' + it[0] + '</td><td class="num">' + it[1] + '</td></tr>';
+      });
+      html += '<tr class="rel-sub"><td></td><td colspan="2">Total · ' + (g.com ? 'comunidade' : 'sem comunidade específica') + '</td><td class="num">' + gcSoma(g.itens) + '</td></tr>';
+    });
+  });
+  if (!lista.length) html = '<tr><td colspan="4" style="text-align:center;color:var(--muted-fg);padding:28px 16px;">Nenhum município ou componente encontrado.</td></tr>';
+  else html += '<tr class="rel-total"><td colspan="3">Total geral' + (lista.length < GC_DADOS.length ? ' (filtrado)' : '') + '</td><td class="num">' + totalVis + '</td></tr>';
+  body.innerHTML = html;
+  const tg = document.getElementById('gcBtnToggle'); if (tg) tg.textContent = gcRecolhidos.size >= GC_DADOS.length ? 'Expandir todos' : 'Recolher todos';
+  icons();
+}
+function gcCsv(){
+  const linhas = [['Município','Comunidade','Componente curricular','Cargas vagas']];
+  GC_DADOS.forEach(function(m){ m.grupos.forEach(function(g){ g.itens.forEach(function(it){ linhas.push([m.mun, g.com, it[0], it[1]]); }); }); });
+  return linhas.map(function(l){ return l.map(function(x){ return '"' + String(x).replace(/"/g,'""') + '"'; }).join(';'); }).join('\r\n');
+}
+function extrairRelatorioFinal(){
+  const c = ciclosHistorico.find(function(c){ return c.id === cicloSelecionado; });
+  const blob = new Blob(['\ufeff' + gcCsv()], { type:'text/csv;charset=utf-8' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'relatorio-final-ciclo-' + (c ? c.id : '') + '.csv';
+  document.body.appendChild(a); a.click(); document.body.removeChild(a);
+  setTimeout(function(){ URL.revokeObjectURL(a.href); }, 1000);
+}
 
 // init
 setPerfil('analista');
