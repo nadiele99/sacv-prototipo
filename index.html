@@ -3688,6 +3688,20 @@ function g2AcaoOriginalHtml(i){
   if (i === 2) return '<button class="icon-btn" onclick="abrirReincluirGerente(2)">Reincluir</button> <button class="icon-btn" onclick="verJustificativaG2(2)">Ver justificativa</button>';
   return '<button class="icon-btn" onclick="abrirEdicaoGerente(' + i + ')">Editar</button> <button class="icon-btn" onclick="verJustificativaG2(' + i + ')">Ver justificativa</button>';
 }
+function g2Confirmada(i){
+  const d = g2Decisoes[i];
+  if (d && d.tipo === 'reinclusao') return true;
+  if (d && d.tipo === 'edicao') return d.valeVaga !== false;
+  return i !== 2;
+}
+function g2BtnsAcao(i, comDesfazer){
+  const conf = g2Confirmada(i);
+  const principal = conf
+    ? '<button class="icon-btn" onclick="abrirExcluirGerente(' + i + ')">Excluir</button>'
+    : '<button class="icon-btn" onclick="abrirReincluirGerente(' + i + ')">Reincluir</button>';
+  const desf = comDesfazer ? ' <a href="#" onclick="desfazerDecisaoGerente(' + i + ');return false;" style="font-size:11.5px;color:var(--muted);margin-left:6px;"><i data-lucide="undo-2" class="lucide-ic"></i> desfazer</a>' : '';
+  return principal + desf + ' <button class="icon-btn" onclick="verJustificativaG2(' + i + ')">Ver justificativa</button>';
+}
 function renderG2CargaRow(i){
   const d = g2Decisoes[i];
   const situacaoTd = document.getElementById('g2Situacao' + i);
@@ -3699,18 +3713,51 @@ function renderG2CargaRow(i){
   if (d && d.tipo === 'reinclusao'){
     row.classList.remove('excluded');
     situacaoTd.innerHTML = '<span class="badge yellow">Vaga confirmada · exceção do Gerente</span>';
-    acaoTd.innerHTML = '<button class="icon-btn" onclick="abrirReincluirGerente(' + i + ')">Ver decisão do Gerente</button> <a href="#" onclick="desfazerDecisaoGerente(' + i + ');return false;" style="font-size:11.5px;color:var(--muted);margin-left:6px;"><i data-lucide="undo-2" class="lucide-ic"></i> desfazer</a> <button class="icon-btn" onclick="verJustificativaG2(' + i + ')">Ver justificativa</button>';
   } else if (d && d.tipo === 'edicao'){
     row.classList.toggle('excluded', d.valeVaga === false);
     situacaoTd.innerHTML = d.valeVaga
       ? '<span class="badge blue">Vaga confirmada · decisão do Gerente</span>'
       : '<span class="badge red">Excluída · decisão do Gerente</span>';
-    acaoTd.innerHTML = '<button class="icon-btn" onclick="abrirEdicaoGerente(' + i + ')">Editar</button> <a href="#" onclick="desfazerDecisaoGerente(' + i + ');return false;" style="font-size:11.5px;color:var(--muted);margin-left:6px;"><i data-lucide="undo-2" class="lucide-ic"></i> desfazer</a> <button class="icon-btn" onclick="verJustificativaG2(' + i + ')">Ver justificativa</button>';
   } else {
     row.classList.toggle('excluded', i === 2);
     situacaoTd.innerHTML = g2SituacaoOriginalHtml(i);
-    acaoTd.innerHTML = g2AcaoOriginalHtml(i);
   }
+  acaoTd.innerHTML = g2BtnsAcao(i, !!d);
+}
+function abrirExcluirGerente(i){
+  g2ReincluirIdxAtual = i;
+  const c = G2_CARGAS_EXEMPLO[i];
+  const box = document.getElementById('modalBox');
+  box.className = 'modal-aviso red';
+  box.innerHTML = '<div class="icon-circle"><i data-lucide="ban" class="lucide-ic"></i></div>' +
+    '<h3>Excluir carga (Gerente) · ' + c.escola + '</h3>' +
+    '<p>Esta carga está confirmada como vaga. Como Gerente, você pode excluí-la, se sobrepondo à análise do Analista. Registre a justificativa da sua decisão.</p>' +
+    '<div class="field" style="margin-bottom:14px;"><label>Justificativa da exclusão</label><textarea id="g2ExcluirTextoInput" placeholder="Descreva o motivo da exclusão..."></textarea></div>' +
+    '<div class="actions"><button class="btn btn-outline" onclick="closeModal()">Cancelar</button>' +
+    '<button class="btn btn-red" onclick="confirmarExcluirGerente()">Confirmar exclusão</button></div>';
+  document.getElementById('overlay').classList.add('show');
+  icons();
+}
+function confirmarExcluirGerente(){
+  if (g2ReincluirIdxAtual === null) return;
+  const el = document.getElementById('g2ExcluirTextoInput');
+  g2Decisoes[g2ReincluirIdxAtual] = { tipo:'edicao', valeVaga:false, texto: el ? el.value.trim() : '' };
+  renderG2CargaRow(g2ReincluirIdxAtual);
+  closeModal();
+}
+function abrirReincluirGerenteGenerico(i){
+  g2ReincluirIdxAtual = i;
+  const c = G2_CARGAS_EXEMPLO[i];
+  const box = document.getElementById('modalBox');
+  box.className = 'modal-aviso green';
+  box.innerHTML = '<div class="icon-circle"><i data-lucide="triangle-alert" class="lucide-ic"></i></div>' +
+    '<h3>Reincluir carga (Gerente) · ' + c.escola + '</h3>' +
+    '<p>Esta carga está excluída. Como Gerente, você pode reincluí-la como vaga. Registre a justificativa da sua decisão.</p>' +
+    '<div class="field" style="margin-bottom:14px;"><label>Justificativa da reinclusão</label><textarea id="g2ReincluirTextoInput" placeholder="Descreva o motivo da reinclusão..."></textarea></div>' +
+    '<div class="actions"><button class="btn btn-outline" onclick="closeModal()">Cancelar</button>' +
+    '<button class="btn btn-green" onclick="confirmarReincluirGerente()">Confirmar reinclusão</button></div>';
+  document.getElementById('overlay').classList.add('show');
+  icons();
 }
 function desfazerDecisaoGerente(i){
   delete g2Decisoes[i];
@@ -3753,6 +3800,7 @@ function confirmarEdicaoGerente(){
 }
 let g2ReincluirIdxAtual = null;
 function abrirReincluirGerente(i){
+  if (!(i === 2 && !(g2Decisoes[i] && g2Decisoes[i].tipo === 'edicao'))) return abrirReincluirGerenteGenerico(i);
   g2ReincluirIdxAtual = i;
   const c = G2_CARGAS_EXEMPLO[i];
   const dAtual = g2Decisoes[i];
@@ -3777,7 +3825,7 @@ function confirmarReincluirGerente(){
   const textoEl = document.getElementById('g2ReincluirTextoInput');
   const texto = textoEl ? textoEl.value.trim() : '';
   const c = G2_CARGAS_EXEMPLO[g2ReincluirIdxAtual];
-  g2Decisoes[g2ReincluirIdxAtual] = { tipo:'reinclusao', texto, regras: c.regras };
+  g2Decisoes[g2ReincluirIdxAtual] = (g2ReincluirIdxAtual === 2 && !(g2Decisoes[2] && g2Decisoes[2].tipo === 'edicao')) ? { tipo:'reinclusao', texto, regras: c.regras } : { tipo:'edicao', valeVaga:true, texto };
   renderG2CargaRow(g2ReincluirIdxAtual);
   closeModal();
 }
