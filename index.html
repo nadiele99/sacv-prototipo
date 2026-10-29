@@ -1073,8 +1073,8 @@ svg.lucide{stroke-width:2;}
                 <label>Cargas do município</label>
                 <button class="icon-btn" onclick="toggleG2Colunas()" id="btnG2ToggleColunas"><i data-lucide="eye" class="lucide-ic"></i> Mostrar mais colunas</button>
               </div>
-              <div class="steps-tab" id="g2Filtro" style="display:none;">
-                <span class="active" data-filtro="todas" onclick="filtrarG2('todas')">Todas<span id="g2CntTodas"></span></span><span data-filtro="justificativas" onclick="filtrarG2('justificativas')">Por justificativa<span id="g2CntJustificativas"></span></span><span data-filtro="confirmadas" onclick="filtrarG2('confirmadas')">Confirmadas<span id="g2CntConfirmadas"></span></span><span data-filtro="excluidas" onclick="filtrarG2('excluidas')">Excluídas<span id="g2CntExcluidas"></span></span>
+              <div class="steps-tab" id="g2Filtro" style="margin-bottom:14px;">
+                <span class="active" data-filtro="todas" onclick="filtrarG2('todas')">Todas<span id="g2CntTodas"></span></span><span data-filtro="confirmadas" onclick="filtrarG2('confirmadas')">Confirmadas<span id="g2CntConfirmadas"></span></span><span data-filtro="justificativas" onclick="filtrarG2('justificativas')">Justificadas<span id="g2CntJustificativas"></span></span><span data-filtro="excluidas" onclick="filtrarG2('excluidas')">Excluídas<span id="g2CntExcluidas"></span></span>
               </div>
               <div class="picker-list" id="g2ColunasPicker" style="display:none;border:1px solid var(--gray-300);border-radius:8px;padding:12px 14px;margin-bottom:14px;max-height:220px;overflow-y:auto;"></div>
               <div style="overflow-x:auto;">
@@ -3522,7 +3522,7 @@ function renderG2(){
   renderG2CargasTable();
   [0,1,2].forEach(renderG2CargaRow);
   const filtroBarEl = document.getElementById('g2Filtro');
-  if (filtroBarEl) filtroBarEl.style.display = 'none';
+  if (filtroBarEl) filtroBarEl.style.display = '';
   g2FiltroAtivo = 'todas';
   aplicarFiltroG2();
 }
@@ -3584,6 +3584,9 @@ function g2FraseRegras(labels){
 let g2FiltroAtivo = 'todas';
 function categoriaG2(i){
   const c = G2_CARGAS_EXEMPLO[i];
+  const dec = g2Decisoes[i];
+  if (dec && dec.tipo === 'edicao') return dec.valeVaga ? 'confirmadas' : 'excluidas';
+  if (dec && dec.tipo === 'reinclusao') return 'justificativas';
   if (c.tipoOriginal === 'excluida') return 'excluidas';
   if (c.tipoOriginal === 'excecao-analista') return 'justificativas';
   return 'confirmadas';
@@ -3723,6 +3726,7 @@ function renderG2CargaRow(i){
     situacaoTd.innerHTML = g2SituacaoOriginalHtml(i);
   }
   acaoTd.innerHTML = g2BtnsAcao(i, !!d);
+  aplicarFiltroG2();
 }
 function abrirExcluirGerente(i){
   g2ReincluirIdxAtual = i;
