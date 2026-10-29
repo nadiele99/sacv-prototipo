@@ -2648,11 +2648,29 @@ function setRegraPadraoTab(tp){ regraPadraoTab = tp; renderRegrasPadrao(); icons
 function opcoesRegraPorTipo(tipo){
   return regrasPadrao.filter(r => (r.tipo || 'regular') === tipo).map(r => '<option value="' + r.id + '">' + r.nome + '</option>').join('');
 }
+function regraDoTipo(tipo){
+  return regrasPadrao.find(r => (r.tipo || 'regular') === tipo) || null;
+}
+function htmlRegraCiclo(tipo){
+  const r = regraDoTipo(tipo);
+  if (!r) return '<div class="note">Não há regra carregada para este tipo. Solicite a carga do arquivo de regras à TI.</div>';
+  const itens = Object.keys(r.campos).map(key => {
+    const f = CAMPOS_REGRA.find(f => f.key === key);
+    const c = r.campos[key];
+    const val = c.valores ? c.valores.join(', ') : c.valor;
+    return '<li>' + (f ? f.label : key) + ' <i>' + c.condicao.toLowerCase() + '</i> <b>' + val + '</b></li>';
+  }).join('');
+  return '<div style="border:1.5px solid var(--gray-300);border-radius:8px;padding:11px 14px;background:var(--gray-50,#F8FAFC);text-align:left;"><div style="font-size:14px;font-weight:600;">' + r.nome + '</div>' +
+    (itens ? '<ul style="margin:6px 0 0;padding-left:18px;font-size:12.5px;color:var(--muted);line-height:1.6;">' + itens + '</ul>' : '') + '</div>';
+}
 function atualizaOpcoesRegraCiclo(){
-  const sel = document.getElementById('selRegraPadraoCiclo');
+  const hid = document.getElementById('selRegraPadraoCiclo');
+  const box = document.getElementById('boxRegraCiclo');
   const radio = document.querySelector('input[name="tipoCiclo"]:checked');
-  if (!sel || !radio) return;
-  sel.innerHTML = '<option value="">Nenhuma · Analistas começam sem filtro pré-carregado</option>' + opcoesRegraPorTipo(radio.value);
+  if (!hid || !radio) return;
+  const r = regraDoTipo(radio.value);
+  hid.value = r ? r.id : '';
+  if (box) box.innerHTML = htmlRegraCiclo(radio.value);
   atualizaAvisoCompatCiclo();
 }
 function atualizaAvisoCompatCiclo(){
@@ -3089,19 +3107,17 @@ function openAbrirCiclo(){
     <div class="icon-circle"><i data-lucide="check" class="lucide-ic"></i></div>
     <h3>Iniciar nova análise</h3>
     <p>Escolha o tipo deste novo ciclo. Ele vai usar a base vigente · <b>${baseAtualLabel}</b> · que fica fixa durante todo o ciclo (RN034/RN040); para usar uma base diferente, importe uma nova antes (fora daqui, em "Importar nova base do SILS").</p>
-    <div class="field" style="margin-bottom:6px;">
-      <label style="display:block;font-size:12px;color:var(--muted);font-weight:700;margin-bottom:8px;text-transform:uppercase;letter-spacing:.03em;">Tipo deste ciclo</label>
-      <div style="display:flex;flex-direction:column;gap:8px;">
-        <label style="display:flex;align-items:center;gap:8px;font-size:13.5px;font-weight:400;text-transform:none;color:${abertoRegular?'var(--muted)':'var(--text)'};"><input type="radio" name="tipoCiclo" onchange="atualizaOpcoesRegraCiclo()" value="regular" ${tipoDefault==='regular'?'checked':''} ${abertoRegular?'disabled':''}> Tipo Regular ${abertoRegular ? '· já há o ciclo #'+abertoRegular.id+' aberto' : ''}</label>
-        <label style="display:flex;align-items:center;gap:8px;font-size:13.5px;font-weight:400;text-transform:none;color:${abertoIndigena?'var(--muted)':'var(--text)'};"><input type="radio" name="tipoCiclo" onchange="atualizaOpcoesRegraCiclo()" value="indigena" ${tipoDefault==='indigena'?'checked':''} ${abertoIndigena?'disabled':''}> Tipo Indígena ${abertoIndigena ? '· já há o ciclo #'+abertoIndigena.id+' aberto' : ''}</label>
+    <div class="field" style="margin-bottom:14px;text-align:left;">
+      <label style="display:block;font-size:12px;color:var(--muted);font-weight:700;margin-bottom:8px;text-transform:uppercase;letter-spacing:.03em;text-align:left;">Tipo deste ciclo</label>
+      <div style="display:flex;flex-direction:column;align-items:flex-start;gap:8px;">
+        <label style="display:flex;align-items:center;justify-content:flex-start;text-align:left;gap:8px;font-size:13.5px;font-weight:400;text-transform:none;color:${abertoRegular?'var(--muted)':'var(--text)'};"><input type="radio" style="width:auto;flex:none;margin:0;padding:0;" name="tipoCiclo" onchange="atualizaOpcoesRegraCiclo()" value="regular" ${tipoDefault==='regular'?'checked':''} ${abertoRegular?'disabled':''}> Tipo Regular ${abertoRegular ? '· já há o ciclo #'+abertoRegular.id+' aberto' : ''}</label>
+        <label style="display:flex;align-items:center;justify-content:flex-start;text-align:left;gap:8px;font-size:13.5px;font-weight:400;text-transform:none;color:${abertoIndigena?'var(--muted)':'var(--text)'};"><input type="radio" style="width:auto;flex:none;margin:0;padding:0;" name="tipoCiclo" onchange="atualizaOpcoesRegraCiclo()" value="indigena" ${tipoDefault==='indigena'?'checked':''} ${abertoIndigena?'disabled':''}> Tipo Indígena ${abertoIndigena ? '· já há o ciclo #'+abertoIndigena.id+' aberto' : ''}</label>
       </div>
     </div>
-    <div class="field" style="margin-bottom:6px;">
-      <label style="display:block;font-size:12px;color:var(--muted);font-weight:700;margin-bottom:8px;text-transform:uppercase;letter-spacing:.03em;">Regra padrão a aplicar (RN045) · só as do tipo escolhido</label>
-      <select id="selRegraPadraoCiclo" onchange="atualizaAvisoCompatCiclo()" style="width:100%;border:1.5px solid var(--gray-300);border-radius:8px;padding:11px 13px;font-size:14px;font-family:inherit;">
-        <option value="">Nenhuma · Analistas começam sem filtro pré-carregado</option>
-        ${opcoesRegraPorTipo(tipoDefault)}
-      </select>
+    <div class="field" style="margin-bottom:6px;text-align:left;">
+      <label style="display:block;font-size:12px;color:var(--muted);font-weight:700;margin-bottom:8px;text-transform:uppercase;letter-spacing:.03em;text-align:left;">Regra do tipo escolhido (carregada por arquivo)</label>
+      <input type="hidden" id="selRegraPadraoCiclo" value="${regraDoTipo(tipoDefault) ? regraDoTipo(tipoDefault).id : ''}">
+      <div id="boxRegraCiclo">${htmlRegraCiclo(tipoDefault)}</div>
       <div id="avisoCompatCiclo"></div>
     </div>
     <div class="actions">
