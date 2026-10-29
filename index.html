@@ -3395,7 +3395,7 @@ function renderPainelG4(){
     const cargasN = m.cargas > 0 ? m.cargas : 60;
     const analistaLinha = 'fechado por ' + m.analista;
     return `<div class="muni-row" ${m.reeditado ? 'style="background:#FFF7EB;"' : ''}>
-      <div><div class="name">${m.nome}</div><div class="meta">${analistaLinha} · ${cargasN} cargas${(m.reeditado) ? ' · <b style="color:#C0392B;">reeditado pelo analista em ' + m.reeditadoEm + ', depois da sua revisão anterior</b>' : ''}${motivoLinha}</div></div>
+      <div><div class="name">${m.nome}</div><div class="meta">${analistaLinha} · ${cargasN} cargas${(m.reeditado) ? ' · <b style="color:#C0392B;">reeditado pelo analista em ' + m.reeditadoEm + ', depois da sua revisão anterior</b>' : ''}</div></div>
       <div style="display:flex;align-items:center;gap:10px;">
         ${m.reeditado ? '<span class="badge" style="background:#FCE4D6;color:#C0392B;"><i data-lucide="undo-2" class="lucide-ic"></i> Reeditado</span>' : ''}
         ${statusBadge}
