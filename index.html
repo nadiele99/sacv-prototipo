@@ -625,6 +625,12 @@ svg.lucide{stroke-width:2;}
   .acoes .icon-btn{display:inline-flex;align-items:center;justify-content:center;gap:5px;min-height:30px;padding:5px 12px;text-align:center;white-space:nowrap;}
   .acoes-extra{text-align:center;margin-top:5px;}
   #cargasTable .acoes.um .icon-btn{min-width:150px;}
+  .motivo-box{margin-top:8px;padding:10px 14px;border-left:4px solid #C0392B;background:#FDECEA;border-radius:6px;max-width:640px;}
+  .motivo-box.amber{border-left-color:#B7791F;background:#FFF7EB;}
+  .motivo-box .motivo-tit{display:flex;align-items:center;gap:6px;font-size:11.5px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:#C0392B;margin-bottom:3px;}
+  .motivo-box.amber .motivo-tit{color:#B7791F;}
+  .motivo-box .motivo-txt{font-size:14px;font-weight:600;line-height:1.45;color:#3B1212;}
+  .motivo-box.amber .motivo-txt{color:#4A3000;}
 </style>
 </head>
 <body>
@@ -689,15 +695,15 @@ svg.lucide{stroke-width:2;}
               </div>
               <div class="ui-card"><div class="ui-card-h"><div class="ic"><i data-lucide="map-pinned"></i></div><div><div class="ui-card-title">Municípios da importação</div><div class="ui-card-desc">Reivindique um município para iniciar a análise.</div></div></div><div class="ui-card-c"><div class="muni-list">
                 <div class="muni-row" data-regular="true" data-indigena="false">
-                  <div><div class="name">Manacapuru</div><div class="meta">128 cargas na base importada · sem escolas indígenas · <a href="#" onclick="simularConcorrencia('Manacapuru');return false;" style="color:var(--muted);"><i data-lucide="flask-conical" class="lucide-ic"></i> testar concorrência (RN047)</a></div></div>
+                  <div><div class="name">Manacapuru</div><div class="meta">128 cargas na base importada · <a href="#" onclick="simularConcorrencia('Manacapuru');return false;" style="color:var(--muted);"><i data-lucide="flask-conical" class="lucide-ic"></i> testar concorrência (RN047)</a></div></div>
                   <div style="display:flex;align-items:center;gap:10px;"><span class="badge gray">Disponível</span><button class="btn btn-navy" onclick="reivindicar('Manacapuru')">Reivindicar</button></div>
                 </div>
                 <div class="muni-row" data-regular="true" data-indigena="false">
-                  <div><div class="name">Manaus - Coordenadoria 3</div><div class="meta">241 cargas na base importada · sem escolas indígenas</div></div>
+                  <div><div class="name">Manaus - Coordenadoria 3</div><div class="meta">241 cargas na base importada</div></div>
                   <div style="display:flex;align-items:center;gap:10px;"><span class="badge yellow">Em análise (você)</span><button class="btn btn-outline" onclick="enterAnalise('Manaus - Coordenadoria 3','nenhum')">Continuar análise</button></div>
                 </div>
                 <div class="muni-row" data-regular="true" data-indigena="true">
-                  <div><div class="name">São Gabriel da Cachoeira <span class="badge yellow" id="sgBadge" style="margin-left:6px;">escolas regulares</span></div><div class="meta" id="sgMeta">52 cargas em escolas regulares · este município também tem escolas indígenas, tratadas à parte no Tipo Indígena</div></div>
+                  <div><div class="name">São Gabriel da Cachoeira <span class="badge yellow" id="sgBadge" style="margin-left:6px;">escolas regulares</span></div><div class="meta" id="sgMeta">52 cargas em escolas regulares</div></div>
                   <div style="display:flex;align-items:center;gap:10px;"><span class="badge gray">Disponível</span><button class="btn btn-navy" onclick="reivindicar('São Gabriel da Cachoeira')">Reivindicar</button></div>
                 </div>
                 <div class="muni-row" data-regular="true" data-indigena="false">
@@ -2419,10 +2425,10 @@ function setTipoContext(tipo){
   if (sgBadge && sgMeta){
     if (tipo === 'regular'){
       sgBadge.textContent = 'escolas regulares';
-      sgMeta.textContent = '52 cargas em escolas regulares · este município também tem escolas indígenas, tratadas à parte no Tipo Indígena';
+      sgMeta.textContent = '52 cargas em escolas regulares';
     } else {
       sgBadge.textContent = 'escolas indígenas';
-      sgMeta.textContent = '37 cargas em escolas indígenas · este município também tem escolas regulares, tratadas à parte no Tipo Regular';
+      sgMeta.textContent = '37 cargas em escolas indígenas';
     }
   }
 }
@@ -3972,12 +3978,12 @@ function atualizaStatusMunicipiosA1(){
     if (btn) btn.textContent = 'Reanalisar';
     badge.className = 'badge yellow';
     badge.innerHTML = '<i data-lucide="triangle-alert" class="lucide-ic"></i> Reanálise · regra alterada';
-    meta.textContent = '64 cargas na base importada · a Gerência alterou a regra do ciclo em ' + m.reanaliseEm + ': "' + m.reanaliseMotivo + '" · reavalie as cargas e feche de novo';
+    meta.innerHTML = '64 cargas na base importada<div class="motivo-box amber"><div class="motivo-tit"><i data-lucide="triangle-alert" class="lucide-ic"></i> Regra do ciclo alterada pela Gerência · ' + m.reanaliseEm + '</div><div class="motivo-txt">' + m.reanaliseMotivo + ' · reavalie as cargas e feche de novo.</div></div>';
   } else if (m.revisaoStatus === 'reprovado'){
     badge.className = 'badge red';
     badge.innerHTML = '<i data-lucide="triangle-alert" class="lucide-ic"></i> Devolvido pela Gerente';
     liberaEdicao(true);
-    meta.innerHTML = '64 cargas na base importada · devolvido pela Gerente em ' + m.reprovadoEm + ': "' + m.motivoReprovacao + '"';
+    meta.innerHTML = '64 cargas na base importada<div class="motivo-box"><div class="motivo-tit"><i data-lucide="undo-2" class="lucide-ic"></i> Motivo da devolução · ' + m.reprovadoEm + '</div><div class="motivo-txt">' + m.motivoReprovacao + '</div></div>';
   } else if (m.revisaoStatus === 'aprovado'){
     badge.className = 'badge green';
     badge.textContent = 'Aprovado pela Gerente';
