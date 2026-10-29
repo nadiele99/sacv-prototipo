@@ -3566,9 +3566,13 @@ function renderG2Regras(){
   } else {
     box.innerHTML = '<div class="note">Nenhuma regra padrão foi definida para este ciclo · o analista usou os filtros que considerou necessários, sem um ponto de partida pré-carregado.</div>';
   }
-  altBox.innerHTML = '<div class="legend" style="margin-bottom:8px;"><b>Alterações feitas pelo Analista (exemplo):</b></div>' +
-      '<div class="note" style="margin-bottom:6px;"><span class="badge yellow" style="margin-right:6px;">Exceção manual</span> Carga de <b>E.E. Central Itacoatiara</b> reincluída manualmente, passando por cima das regras de Horas e Localidade.</div>' +
-      '<div class="note warn"><span class="badge gray" style="margin-right:6px;">Regra ajustada</span> Critério de Localidade foi restringido pelo analista para excluir comunidades fora do perímetro urbano.</div>';
+  const EXC = [
+    { escola:'E.E. Central Itacoatiara', acao:'Reincluída', regras:'Horas, Localidade', just:'A escola comprovou, por ofício, que a carga é regular apesar da carga horária reduzida e da localidade divergente.' },
+    { escola:'E.E. Nova Esperança', acao:'Excluída', regras:'Nenhuma (carga confirmada pela regra)', just:'Escola desativada em 2026; a carga não será mais ofertada.' }
+  ];
+  const linhasExc = EXC.map(x => '<tr><td>' + x.escola + '</td><td><span class="badge ' + (x.acao === 'Reincluída' ? 'yellow' : 'red') + '">' + x.acao + '</span></td><td>' + x.regras + '</td><td>' + x.just + '</td></tr>').join('');
+  altBox.innerHTML = '<div class="legend" style="margin-bottom:8px;"><b>Exceções manuais do Analista</b> <span class="badge gray" style="margin-left:6px;">' + EXC.length + '</span></div>' +
+    (EXC.length ? '<table class="rules-table"><thead><tr><th>Carga</th><th>Ação</th><th>Regras sobrepostas</th><th>Justificativa</th></tr></thead><tbody>' + linhasExc + '</tbody></table>' : '<div class="note">O Analista não fez exceções manuais neste município.</div>');
 }
 const G2_CARGAS_EXEMPLO = [
   { escola:'E.E. Ribeirinha', regras:[], tipoOriginal:'confirmada', justificativa:'Carga confirmada conforme a regra padrão do ciclo · nenhuma exceção foi necessária.',
