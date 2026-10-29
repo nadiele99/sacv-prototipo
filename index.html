@@ -703,7 +703,7 @@ svg.lucide{stroke-width:2;}
                   <div style="display:flex;align-items:center;gap:10px;"><span class="badge yellow">Em análise (você)</span><button class="btn btn-outline" onclick="enterAnalise('Manaus - Coordenadoria 3','nenhum')">Continuar análise</button></div>
                 </div>
                 <div class="muni-row" data-regular="true" data-indigena="true">
-                  <div><div class="name">São Gabriel da Cachoeira <span class="badge yellow" id="sgBadge" style="margin-left:6px;">escolas regulares</span></div><div class="meta" id="sgMeta">52 cargas em escolas regulares</div></div>
+                  <div><div class="name">São Gabriel da Cachoeira <span class="badge yellow" id="sgBadge" style="margin-left:6px;display:none;">escolas regulares</span></div><div class="meta" id="sgMeta">52 cargas na base importada</div></div>
                   <div style="display:flex;align-items:center;gap:10px;"><span class="badge gray">Disponível</span><button class="btn btn-navy" onclick="reivindicar('São Gabriel da Cachoeira')">Reivindicar</button></div>
                 </div>
                 <div class="muni-row" data-regular="true" data-indigena="false">
@@ -2425,9 +2425,11 @@ function setTipoContext(tipo){
   if (sgBadge && sgMeta){
     if (tipo === 'regular'){
       sgBadge.textContent = 'escolas regulares';
-      sgMeta.textContent = '52 cargas em escolas regulares';
+      sgBadge.style.display = 'none';
+      sgMeta.textContent = '52 cargas na base importada';
     } else {
       sgBadge.textContent = 'escolas indígenas';
+      sgBadge.style.display = '';
       sgMeta.textContent = '37 cargas em escolas indígenas';
     }
   }
